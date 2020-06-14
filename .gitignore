@@ -12,3 +12,5 @@
 /Navyblue.BaseLibrary/obj/project.assets.json
 /Navyblue.BaseLibrary/obj/project.nuget.cache
 /.vs
+/Navyblue.BaseLibrary/obj
+/Navyblue.BaseLibrary/bin
