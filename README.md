@@ -26,13 +26,16 @@ if(str.IsNullOrEmpty())
 }
 ```
 # Samples (int)
-- 3.IsBetween(2, 5);// return true
+- IsBetween
+```
+3.IsBetween(2, 5);// return true
+```
 - Loop
 ```
-  3.Times().Do(p =>
-  {
-      Console.WriteLine("Hello world");
-  });
+3.Times().Do(p =>
+{
+  Console.WriteLine("Hello world");
+});
 ```
 # Samples (GUID)
 ```
