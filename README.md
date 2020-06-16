@@ -2,6 +2,8 @@
 A library for basic usage, like ToJson, FromJson&lt;> and other extensions for int, long, DateTime, Byte, Dictionary, Enum, Guid, MD5 and soon.
 
 This library is not just a extension tool, but also aims to make your code is more like OOP pattern.
+# Install
+nuget install Navyblue.BaseLibrary
 
 # Samples (string)
 - Convert Json Format String to Object
