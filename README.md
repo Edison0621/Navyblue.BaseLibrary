@@ -1,7 +1,8 @@
 # Navyblue.BaseLibrary
 A library for basic usage, like ToJson, FromJson&lt;> and other extensions for int, long, DateTime, Byte, Dictionary, Enum, Guid, MD5 and soon.
+This library has been used by many project and running in production for a long time, so it is very stable. 
+Also, it is not just a extension tool, but also aims to make your code is more like OOP pattern.
 
-This library is not just a extension tool, but also aims to make your code is more like OOP pattern.
 # Install
 nuget install Navyblue.BaseLibrary
 
