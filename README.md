@@ -31,12 +31,12 @@ if(str.IsNullOrEmpty())
 ```
 # Samples (GUID)
 ```
-- Guid.NewGuid().ToGuidString();
-- "XXXXXXXXXXXXXXXXXXXXX".ToGuid()
+Guid.NewGuid().ToGuidString();
+"XXXXXXXXXXXXXXXXXXXXX".ToGuid()
 ```
 ```
-- //Creates a sequential GUID according to SQL Server's ordering rules.
-- GuidUtility.NewSequentialGuid()
+//Creates a sequential GUID according to SQL Server's ordering rules.
+GuidUtility.NewSequentialGuid()
 ```
 # Samples (MD5)
 ```
