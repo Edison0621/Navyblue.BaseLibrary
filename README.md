@@ -40,37 +40,37 @@ if(str.IsNullOrEmpty())
 ```
 # Samples (MD5)
 ```
-- MD5Hash.ComputeMD5Hash("111111111"); // return byte[]
-- MD5Hash.ComputeMD5HashString("111111111"); return string 
+MD5Hash.ComputeMD5Hash("111111111"); // return byte[]
+MD5Hash.ComputeMD5HashString("111111111"); return string 
 ```
 # Samples (Byte)
 ```
-- byteObj.ASCII();
-- byteObj.GetBytesOfASCII();
-- byteObj.Unicode();
-- byteObj.GetBytesOfUnicode();
-- byteObj.Utf8();
-- byteObj.GetBytesOfUTF8();
+byteObj.ASCII();
+byteObj.GetBytesOfASCII();
+byteObj.Unicode();
+byteObj.GetBytesOfUnicode();
+byteObj.Utf8();
+byteObj.GetBytesOfUTF8();
 ......
 ```
 # Samples (DateTime)
 ```
-- dateTimeObj.DurationToNow();
-- dateTimeObj.IsAfter(destination);
-- dateTimeObj.IsAfterOrEqual(destination);
-- dateTimeObj.IsBefore(destination);
-- dateTimeObj.IsBefore(destination);
+dateTimeObj.DurationToNow();
+dateTimeObj.IsAfter(destination);
+dateTimeObj.IsAfterOrEqual(destination);
+dateTimeObj.IsBefore(destination);
+dateTimeObj.IsBefore(destination);
 ......
 ```
 # Samples (IEnumerable)
 ```
-- iEnumerableObj.ForEach(Action);
-- iEnumerableObj.GetLength();
-- iEnumerableObj.GetPage();
-- iEnumerableObj.IsNotNullOrEmpty();
-- iEnumerableObj.Join(destination);
-- iEnumerableObj.IsEnumerableEmpty();
-- iEnumerableObj.IsSequenceNullOrEmpty();
+iEnumerableObj.ForEach(Action);
+iEnumerableObj.GetLength();
+iEnumerableObj.GetPage();
+iEnumerableObj.IsNotNullOrEmpty();
+iEnumerableObj.Join(destination);
+iEnumerableObj.IsEnumerableEmpty();
+iEnumerableObj.IsSequenceNullOrEmpty();
 ......
 ```
-# ***Also, there are many other extension functions for you. Last but note least, please give me a star, many thanks***
+## ***Also, there are many other extension functions for you. Last but note least, please give me a star, many thanks***
