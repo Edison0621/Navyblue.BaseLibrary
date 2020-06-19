@@ -11,7 +11,7 @@ nuget install Navyblue.BaseLibrary
 # Samples (string)
 - Convert Json Format String to Object
 ```
-Object obj = jsonString.FromJson<Object>();
+T obj = jsonString.FromJson<T>();
 ```
 
 - Convert Object to Json Format String
