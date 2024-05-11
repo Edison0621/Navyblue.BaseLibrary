@@ -72,12 +72,12 @@ namespace Navyblue.BaseLibrary
         /// <summary>
         ///     The end
         /// </summary>
-        private readonly int end;
+        private readonly int _end;
 
         /// <summary>
         ///     The start
         /// </summary>
-        private readonly int start;
+        private readonly int _start;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="LoopIterator" /> class.
@@ -90,8 +90,8 @@ namespace Navyblue.BaseLibrary
                 count = 0;
             }
 
-            this.start = 0;
-            this.end = count - 1;
+            this._start = 0;
+            this._end = count - 1;
         }
 
         /// <summary>
@@ -107,8 +107,8 @@ namespace Navyblue.BaseLibrary
                 start = end;
             }
 
-            this.start = start;
-            this.end = end;
+            this._start = start;
+            this._end = end;
         }
 
         #region ILoopIterator Members
@@ -124,7 +124,7 @@ namespace Navyblue.BaseLibrary
                 throw new ArgumentNullException(nameof(action));
             }
 
-            for (int i = this.start; i <= this.end; i++)
+            for (int i = this._start; i <= this._end; i++)
             {
                 action();
             }
@@ -141,7 +141,7 @@ namespace Navyblue.BaseLibrary
                 throw new ArgumentNullException(nameof(action));
             }
 
-            for (int i = this.start; i <= this.end; i++)
+            for (int i = this._start; i <= this._end; i++)
             {
                 action(i);
             }

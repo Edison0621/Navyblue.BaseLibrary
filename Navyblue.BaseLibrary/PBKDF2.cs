@@ -30,7 +30,7 @@ namespace Navyblue.BaseLibrary
     /// <summary>
     ///     Class PBKDF2Utility.
     /// </summary>
-    [SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "PBKDF")]
+    [SuppressMessage("ReSharper", "InconsistentNaming")]
     public static class PBKDF2Utility
     {
         // SHA-256 has a 512-bit block size and gives a 256-bit output
@@ -137,14 +137,14 @@ namespace Navyblue.BaseLibrary
                     innerHash.Initialize();
                     innerHash.TransformBlock(innerKey, 0,
                         BLOCK_SIZE_IN_BYTES, innerKey, 0);
-                    innerHash.TransformFinalBlock(u, 0, u.Length);
+                    innerHash.TransformFinalBlock(u, 0, u!.Length);
 
                     byte[] temp = innerHash.Hash;
 
                     outerHash.Initialize();
                     outerHash.TransformBlock(outerKey, 0,
                         BLOCK_SIZE_IN_BYTES, outerKey, 0);
-                    outerHash.TransformFinalBlock(temp, 0, temp.Length);
+                    outerHash.TransformFinalBlock(temp, 0, temp!.Length);
 
                     u = outerHash.Hash; // U = result of HMAC
 

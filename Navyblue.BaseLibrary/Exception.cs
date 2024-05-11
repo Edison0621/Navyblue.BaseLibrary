@@ -80,7 +80,7 @@ namespace Navyblue.BaseLibrary
                 {
                     case ReflectionTypeLoadException loadException:
                         Exception[] loaderExceptions = loadException.LoaderExceptions;
-                        if (loaderExceptions == null || loaderExceptions.Length == 0)
+                        if (loaderExceptions.Length == 0)
                         {
                             sb.AppendLine($"{indent}No LoaderExceptions found.");
                         }
@@ -94,7 +94,7 @@ namespace Navyblue.BaseLibrary
 
                     case AggregateException aggregateException:
                         ReadOnlyCollection<Exception> innerExceptions = aggregateException.InnerExceptions;
-                        if (innerExceptions == null || innerExceptions.Count == 0)
+                        if (innerExceptions.Count == 0)
                             sb.AppendLine($"{indent}No InnerExceptions found.");
                         else
                         {
@@ -109,7 +109,7 @@ namespace Navyblue.BaseLibrary
                         {
                             sb.Append(Environment.NewLine);
                             exception = exception.InnerException;
-                            indent = indent + "  ";
+                            indent += "  ";
                             continue;
                         }
 

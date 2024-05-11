@@ -13,6 +13,7 @@
 
 using System;
 using System.Collections;
+using System.Diagnostics.CodeAnalysis;
 using Navyblue.BaseLibrary;
 
 namespace NavyBlue.AspNetCore.Lib
@@ -21,6 +22,7 @@ namespace NavyBlue.AspNetCore.Lib
     ///     All throw logic is factored out of the public extension methods and put in this helper class. This
     ///     allows more methods to be a candidate for inlining by the JIT compiler.
     /// </summary>
+    [SuppressMessage("ReSharper", "InconsistentNaming")]
     public static class Throw
     {
         /// <summary>
@@ -47,7 +49,7 @@ namespace NavyBlue.AspNetCore.Lib
             string exceptionMessage = GetFormattedExceptionMessage(ExceptionMessagesManager.CollectionShouldBeEmpty, additionalMessage, objectName);
             try
             {
-                throw (TException)Activator.CreateInstance(typeof(TException), exceptionMessage);
+                throw ((TException)Activator.CreateInstance(typeof(TException), exceptionMessage))!;
             }
             catch
             {
@@ -81,7 +83,7 @@ namespace NavyBlue.AspNetCore.Lib
             string exceptionMessage = GetFormattedExceptionMessage(ExceptionMessagesManager.CollectionShouldContainX, additionalMessage, objectName, value.Stringify());
             try
             {
-                throw (TException)Activator.CreateInstance(typeof(TException), exceptionMessage);
+                throw ((TException)Activator.CreateInstance(typeof(TException), exceptionMessage))!;
             }
             catch
             {
@@ -115,7 +117,7 @@ namespace NavyBlue.AspNetCore.Lib
             string exceptionMessage = GetFormattedExceptionMessage(ExceptionMessagesManager.CollectionShouldContainAllOfX, additionalMessage, objectName, values.Stringify());
             try
             {
-                throw (TException)Activator.CreateInstance(typeof(TException), exceptionMessage);
+                throw ((TException)Activator.CreateInstance(typeof(TException), exceptionMessage))!;
             }
             catch
             {
@@ -149,7 +151,7 @@ namespace NavyBlue.AspNetCore.Lib
             string exceptionMessage = GetFormattedExceptionMessage(ExceptionMessagesManager.CollectionShouldContainAtLeastOneOfX, additionalMessage, objectName, values.Stringify());
             try
             {
-                throw (TException)Activator.CreateInstance(typeof(TException), exceptionMessage);
+                throw ((TException)Activator.CreateInstance(typeof(TException), exceptionMessage))!;
             }
             catch
             {
@@ -183,7 +185,7 @@ namespace NavyBlue.AspNetCore.Lib
             string exceptionMessage = GetFormattedExceptionMessage(ExceptionMessagesManager.CollectionShouldContainXOrLessElements, additionalMessage, objectName, numberOfElements);
             try
             {
-                throw (TException)Activator.CreateInstance(typeof(TException), exceptionMessage);
+                throw ((TException)Activator.CreateInstance(typeof(TException), exceptionMessage))!;
             }
             catch
             {
@@ -221,7 +223,7 @@ namespace NavyBlue.AspNetCore.Lib
                 : GetFormattedExceptionMessage(ExceptionMessagesManager.CollectionShouldContainLessThanXElements, additionalMessage, objectName, numberOfElements);
             try
             {
-                throw (TException)Activator.CreateInstance(typeof(TException), exceptionMessage);
+                throw ((TException)Activator.CreateInstance(typeof(TException), exceptionMessage))!;
             }
             catch
             {
@@ -255,7 +257,7 @@ namespace NavyBlue.AspNetCore.Lib
             string exceptionMessage = GetFormattedExceptionMessage(ExceptionMessagesManager.CollectionShouldContainXOrMoreElements, additionalMessage, objectName, numberOfElements);
             try
             {
-                throw (TException)Activator.CreateInstance(typeof(TException), exceptionMessage);
+                throw ((TException)Activator.CreateInstance(typeof(TException), exceptionMessage))!;
             }
             catch
             {
@@ -293,7 +295,7 @@ namespace NavyBlue.AspNetCore.Lib
                 : GetFormattedExceptionMessage(ExceptionMessagesManager.CollectionShouldContainMoreThanXElements, additionalMessage, objectName, numberOfElements);
             try
             {
-                throw (TException)Activator.CreateInstance(typeof(TException), exceptionMessage);
+                throw ((TException)Activator.CreateInstance(typeof(TException), exceptionMessage))!;
             }
             catch
             {
@@ -331,7 +333,7 @@ namespace NavyBlue.AspNetCore.Lib
                 : GetFormattedExceptionMessage(ExceptionMessagesManager.CollectionShouldContainXElements, additionalMessage, objectName, numberOfElements);
             try
             {
-                throw (TException)Activator.CreateInstance(typeof(TException), exceptionMessage);
+                throw ((TException)Activator.CreateInstance(typeof(TException), exceptionMessage))!;
             }
             catch
             {
@@ -363,7 +365,7 @@ namespace NavyBlue.AspNetCore.Lib
             string exceptionMessage = GetFormattedExceptionMessage(ExceptionMessagesManager.CollectionShouldNotBeEmpty, additionalMessage, objectName);
             try
             {
-                throw (TException)Activator.CreateInstance(typeof(TException), exceptionMessage);
+                throw ((TException)Activator.CreateInstance(typeof(TException), exceptionMessage))!;
             }
             catch
             {
@@ -397,7 +399,7 @@ namespace NavyBlue.AspNetCore.Lib
             string exceptionMessage = GetFormattedExceptionMessage(ExceptionMessagesManager.CollectionShouldNotContainX, additionalMessage, objectName, value.Stringify());
             try
             {
-                throw (TException)Activator.CreateInstance(typeof(TException), exceptionMessage);
+                throw ((TException)Activator.CreateInstance(typeof(TException), exceptionMessage))!;
             }
             catch
             {
@@ -431,7 +433,7 @@ namespace NavyBlue.AspNetCore.Lib
             string exceptionMessage = GetFormattedExceptionMessage(ExceptionMessagesManager.CollectionShouldNotContainAllOfX, additionalMessage, objectName, values.Stringify());
             try
             {
-                throw (TException)Activator.CreateInstance(typeof(TException), exceptionMessage);
+                throw ((TException)Activator.CreateInstance(typeof(TException), exceptionMessage))!;
             }
             catch
             {
@@ -465,7 +467,7 @@ namespace NavyBlue.AspNetCore.Lib
             string exceptionMessage = GetFormattedExceptionMessage(ExceptionMessagesManager.CollectionShouldNotContainAnyOfX, additionalMessage, objectName, values.Stringify());
             try
             {
-                throw (TException)Activator.CreateInstance(typeof(TException), exceptionMessage);
+                throw ((TException)Activator.CreateInstance(typeof(TException), exceptionMessage))!;
             }
             catch
             {
@@ -499,7 +501,7 @@ namespace NavyBlue.AspNetCore.Lib
             string exceptionMessage = GetFormattedExceptionMessage(ExceptionMessagesManager.CollectionShouldNotContainXOrLessElements, additionalMessage, objectName, numberOfElements);
             try
             {
-                throw (TException)Activator.CreateInstance(typeof(TException), exceptionMessage);
+                throw ((TException)Activator.CreateInstance(typeof(TException), exceptionMessage))!;
             }
             catch
             {
@@ -537,7 +539,7 @@ namespace NavyBlue.AspNetCore.Lib
                 : GetFormattedExceptionMessage(ExceptionMessagesManager.CollectionShouldNotContainLessThanXElements, additionalMessage, objectName, numberOfElements);
             try
             {
-                throw (TException)Activator.CreateInstance(typeof(TException), exceptionMessage);
+                throw ((TException)Activator.CreateInstance(typeof(TException), exceptionMessage))!;
             }
             catch
             {
@@ -571,7 +573,7 @@ namespace NavyBlue.AspNetCore.Lib
             string exceptionMessage = GetFormattedExceptionMessage(ExceptionMessagesManager.CollectionShouldNotContainXOrMoreElements, additionalMessage, objectName, numberOfElements);
             try
             {
-                throw (TException)Activator.CreateInstance(typeof(TException), exceptionMessage);
+                throw ((TException)Activator.CreateInstance(typeof(TException), exceptionMessage))!;
             }
             catch
             {
@@ -609,7 +611,7 @@ namespace NavyBlue.AspNetCore.Lib
                 : GetFormattedExceptionMessage(ExceptionMessagesManager.CollectionShouldNotContainMoreThanXElements, additionalMessage, objectName, numberOfElements);
             try
             {
-                throw (TException)Activator.CreateInstance(typeof(TException), exceptionMessage);
+                throw ((TException)Activator.CreateInstance(typeof(TException), exceptionMessage))!;
             }
             catch
             {
@@ -647,7 +649,7 @@ namespace NavyBlue.AspNetCore.Lib
                 : GetFormattedExceptionMessage(ExceptionMessagesManager.CollectionShouldNotContainXElements, additionalMessage, objectName, numberOfElements);
             try
             {
-                throw (TException)Activator.CreateInstance(typeof(TException), exceptionMessage);
+                throw ((TException)Activator.CreateInstance(typeof(TException), exceptionMessage))!;
             }
             catch
             {
@@ -681,7 +683,7 @@ namespace NavyBlue.AspNetCore.Lib
             string exceptionMessage = minLength == 1 ? GetFormattedExceptionMessage(ExceptionMessagesManager.StringShouldBeLongerOrEqualTo1Character, additionalMessage, objectName) : GetFormattedExceptionMessage(ExceptionMessagesManager.StringShouldBeLongerOrEqualToXCharacters, additionalMessage, objectName, minLength);
             try
             {
-                throw (TException)Activator.CreateInstance(typeof(TException), exceptionMessage);
+                throw ((TException)Activator.CreateInstance(typeof(TException), exceptionMessage))!;
             }
             catch
             {
@@ -719,7 +721,7 @@ namespace NavyBlue.AspNetCore.Lib
                 : GetFormattedExceptionMessage(ExceptionMessagesManager.StringShouldBeLongerThanXCharacters, additionalMessage, objectName, minLength);
             try
             {
-                throw (TException)Activator.CreateInstance(typeof(TException), exceptionMessage);
+                throw ((TException)Activator.CreateInstance(typeof(TException), exceptionMessage))!;
             }
             catch
             {
@@ -751,7 +753,7 @@ namespace NavyBlue.AspNetCore.Lib
             string exceptionMessage = GetFormattedExceptionMessage(ExceptionMessagesManager.StringShouldBeNullOrWhiteSpace, additionalMessage, objectName);
             try
             {
-                throw (TException)Activator.CreateInstance(typeof(TException), exceptionMessage);
+                throw ((TException)Activator.CreateInstance(typeof(TException), exceptionMessage))!;
             }
             catch
             {
@@ -789,7 +791,7 @@ namespace NavyBlue.AspNetCore.Lib
                 : GetFormattedExceptionMessage(ExceptionMessagesManager.StringShouldBeShorterOrEqualToXCharacters, additionalMessage, objectName, maxLength);
             try
             {
-                throw (TException)Activator.CreateInstance(typeof(TException), exceptionMessage);
+                throw ((TException)Activator.CreateInstance(typeof(TException), exceptionMessage))!;
             }
             catch
             {
@@ -827,7 +829,7 @@ namespace NavyBlue.AspNetCore.Lib
                 : GetFormattedExceptionMessage(ExceptionMessagesManager.StringShouldBeShorterThanXCharacters, additionalMessage, objectName, maxLength);
             try
             {
-                throw (TException)Activator.CreateInstance(typeof(TException), exceptionMessage);
+                throw ((TException)Activator.CreateInstance(typeof(TException), exceptionMessage))!;
             }
             catch
             {
@@ -861,7 +863,7 @@ namespace NavyBlue.AspNetCore.Lib
             string exceptionMessage = GetFormattedExceptionMessage(ExceptionMessagesManager.StringShouldContainX, additionalMessage, objectName, value.Stringify());
             try
             {
-                throw (TException)Activator.CreateInstance(typeof(TException), exceptionMessage);
+                throw ((TException)Activator.CreateInstance(typeof(TException), exceptionMessage))!;
             }
             catch
             {
@@ -895,7 +897,7 @@ namespace NavyBlue.AspNetCore.Lib
             string exceptionMessage = GetFormattedExceptionMessage(ExceptionMessagesManager.StringShouldEndWithX, additionalMessage, objectName, value.Stringify());
             try
             {
-                throw (TException)Activator.CreateInstance(typeof(TException), exceptionMessage);
+                throw ((TException)Activator.CreateInstance(typeof(TException), exceptionMessage))!;
             }
             catch
             {
@@ -933,7 +935,7 @@ namespace NavyBlue.AspNetCore.Lib
                 : GetFormattedExceptionMessage(ExceptionMessagesManager.StringShouldBeXCharactersLong, additionalMessage, objectName, length);
             try
             {
-                throw (TException)Activator.CreateInstance(typeof(TException), exceptionMessage);
+                throw ((TException)Activator.CreateInstance(typeof(TException), exceptionMessage))!;
             }
             catch
             {
@@ -965,7 +967,7 @@ namespace NavyBlue.AspNetCore.Lib
             string exceptionMessage = GetFormattedExceptionMessage(ExceptionMessagesManager.StringShouldNotBeNullOrWhiteSpace, additionalMessage, objectName);
             try
             {
-                throw (TException)Activator.CreateInstance(typeof(TException), exceptionMessage);
+                throw ((TException)Activator.CreateInstance(typeof(TException), exceptionMessage))!;
             }
             catch
             {
@@ -999,7 +1001,7 @@ namespace NavyBlue.AspNetCore.Lib
             string exceptionMessage = GetFormattedExceptionMessage(ExceptionMessagesManager.StringShouldNotContainX, additionalMessage, objectName, value.Stringify());
             try
             {
-                throw (TException)Activator.CreateInstance(typeof(TException), exceptionMessage);
+                throw ((TException)Activator.CreateInstance(typeof(TException), exceptionMessage))!;
             }
             catch
             {
@@ -1033,7 +1035,7 @@ namespace NavyBlue.AspNetCore.Lib
             string exceptionMessage = GetFormattedExceptionMessage(ExceptionMessagesManager.StringShouldNotEndWithX, additionalMessage, objectName, value.Stringify());
             try
             {
-                throw (TException)Activator.CreateInstance(typeof(TException), exceptionMessage);
+                throw ((TException)Activator.CreateInstance(typeof(TException), exceptionMessage))!;
             }
             catch
             {
@@ -1071,7 +1073,7 @@ namespace NavyBlue.AspNetCore.Lib
                 : GetFormattedExceptionMessage(ExceptionMessagesManager.StringShouldNotBeXCharactersLong, additionalMessage, objectName, length);
             try
             {
-                throw (TException)Activator.CreateInstance(typeof(TException), exceptionMessage);
+                throw ((TException)Activator.CreateInstance(typeof(TException), exceptionMessage))!;
             }
             catch
             {
@@ -1105,7 +1107,7 @@ namespace NavyBlue.AspNetCore.Lib
             string exceptionMessage = GetFormattedExceptionMessage(ExceptionMessagesManager.StringShouldNotStartWithX, additionalMessage, objectName, value.Stringify());
             try
             {
-                throw (TException)Activator.CreateInstance(typeof(TException), exceptionMessage);
+                throw ((TException)Activator.CreateInstance(typeof(TException), exceptionMessage))!;
             }
             catch
             {
@@ -1139,7 +1141,7 @@ namespace NavyBlue.AspNetCore.Lib
             string exceptionMessage = GetFormattedExceptionMessage(ExceptionMessagesManager.StringShouldStartWithX, additionalMessage, objectName, value.Stringify());
             try
             {
-                throw (TException)Activator.CreateInstance(typeof(TException), exceptionMessage);
+                throw ((TException)Activator.CreateInstance(typeof(TException), exceptionMessage))!;
             }
             catch
             {
@@ -1171,7 +1173,7 @@ namespace NavyBlue.AspNetCore.Lib
             string exceptionMessage = GetFormattedExceptionMessage(ExceptionMessagesManager.StringShouldBeEmpty, additionalMessage, objectName);
             try
             {
-                throw (TException)Activator.CreateInstance(typeof(TException), exceptionMessage);
+                throw ((TException)Activator.CreateInstance(typeof(TException), exceptionMessage))!;
             }
             catch
             {
@@ -1203,7 +1205,7 @@ namespace NavyBlue.AspNetCore.Lib
             string exceptionMessage = GetFormattedExceptionMessage(ExceptionMessagesManager.ValueShouldBeANumber, additionalMessage, objectName);
             try
             {
-                throw (TException)Activator.CreateInstance(typeof(TException), exceptionMessage);
+                throw ((TException)Activator.CreateInstance(typeof(TException), exceptionMessage))!;
             }
             catch
             {
@@ -1241,7 +1243,7 @@ namespace NavyBlue.AspNetCore.Lib
             string exceptionMessage = GetFormattedExceptionMessage(ExceptionMessagesManager.ValueShouldBeBetweenXAndY, additionalMessage, objectName, minValue.Stringify(), maxValue.Stringify());
             try
             {
-                throw (TException)Activator.CreateInstance(typeof(TException), exceptionMessage);
+                throw ((TException)Activator.CreateInstance(typeof(TException), exceptionMessage))!;
             }
             catch
             {
@@ -1277,7 +1279,7 @@ namespace NavyBlue.AspNetCore.Lib
             string exceptionMessage = GetFormattedExceptionMessage(ExceptionMessagesManager.ValueShouldBeEqualToX, additionalMessage, objectName, value.Stringify());
             try
             {
-                throw (TException)Activator.CreateInstance(typeof(TException), exceptionMessage);
+                throw ((TException)Activator.CreateInstance(typeof(TException), exceptionMessage))!;
             }
             catch
             {
@@ -1309,7 +1311,7 @@ namespace NavyBlue.AspNetCore.Lib
             string exceptionMessage = GetFormattedExceptionMessage(ExceptionMessagesManager.ValueShouldBeFalse, additionalMessage, objectName);
             try
             {
-                throw (TException)Activator.CreateInstance(typeof(TException), exceptionMessage);
+                throw ((TException)Activator.CreateInstance(typeof(TException), exceptionMessage))!;
             }
             catch
             {
@@ -1345,7 +1347,7 @@ namespace NavyBlue.AspNetCore.Lib
             string exceptionMessage = GetFormattedExceptionMessage(ExceptionMessagesManager.ValueShouldBeGreaterThanX, additionalMessage, objectName, minValue.Stringify());
             try
             {
-                throw (TException)Activator.CreateInstance(typeof(TException), exceptionMessage);
+                throw ((TException)Activator.CreateInstance(typeof(TException), exceptionMessage))!;
             }
             catch
             {
@@ -1381,7 +1383,7 @@ namespace NavyBlue.AspNetCore.Lib
             string exceptionMessage = GetFormattedExceptionMessage(ExceptionMessagesManager.ValueShouldBeGreaterThanOrEqualToX, additionalMessage, objectName, minValue.Stringify());
             try
             {
-                throw (TException)Activator.CreateInstance(typeof(TException), exceptionMessage);
+                throw ((TException)Activator.CreateInstance(typeof(TException), exceptionMessage))!;
             }
             catch
             {
@@ -1413,7 +1415,7 @@ namespace NavyBlue.AspNetCore.Lib
             string exceptionMessage = GetFormattedExceptionMessage(ExceptionMessagesManager.ValueShouldBeInfinity, additionalMessage, objectName);
             try
             {
-                throw (TException)Activator.CreateInstance(typeof(TException), exceptionMessage);
+                throw ((TException)Activator.CreateInstance(typeof(TException), exceptionMessage))!;
             }
             catch
             {
@@ -1445,7 +1447,7 @@ namespace NavyBlue.AspNetCore.Lib
             string exceptionMessage = GetFormattedExceptionMessage(ExceptionMessagesManager.ValueShouldBeNegativeInfinity, additionalMessage, objectName);
             try
             {
-                throw (TException)Activator.CreateInstance(typeof(TException), exceptionMessage);
+                throw ((TException)Activator.CreateInstance(typeof(TException), exceptionMessage))!;
             }
             catch
             {
@@ -1477,7 +1479,7 @@ namespace NavyBlue.AspNetCore.Lib
             string exceptionMessage = GetFormattedExceptionMessage(ExceptionMessagesManager.ValueShouldBeNull, additionalMessage, objectName);
             try
             {
-                throw (TException)Activator.CreateInstance(typeof(TException), exceptionMessage);
+                throw ((TException)Activator.CreateInstance(typeof(TException), exceptionMessage))!;
             }
             catch
             {
@@ -1509,7 +1511,7 @@ namespace NavyBlue.AspNetCore.Lib
             string exceptionMessage = GetFormattedExceptionMessage(ExceptionMessagesManager.StringShouldBeNullOrEmpty, additionalMessage, objectName);
             try
             {
-                throw (TException)Activator.CreateInstance(typeof(TException), exceptionMessage);
+                throw ((TException)Activator.CreateInstance(typeof(TException), exceptionMessage))!;
             }
             catch
             {
@@ -1543,7 +1545,7 @@ namespace NavyBlue.AspNetCore.Lib
             string exceptionMessage = GetFormattedExceptionMessage(ExceptionMessagesManager.ValueShouldBeOfTypeX, additionalMessage, objectName, type.Name);
             try
             {
-                throw (TException)Activator.CreateInstance(typeof(TException), exceptionMessage);
+                throw ((TException)Activator.CreateInstance(typeof(TException), exceptionMessage))!;
             }
             catch
             {
@@ -1575,7 +1577,7 @@ namespace NavyBlue.AspNetCore.Lib
             string exceptionMessage = GetFormattedExceptionMessage(ExceptionMessagesManager.ValueShouldBePositiveInfinity, additionalMessage, objectName);
             try
             {
-                throw (TException)Activator.CreateInstance(typeof(TException), exceptionMessage);
+                throw ((TException)Activator.CreateInstance(typeof(TException), exceptionMessage))!;
             }
             catch
             {
@@ -1611,7 +1613,7 @@ namespace NavyBlue.AspNetCore.Lib
             string exceptionMessage = GetFormattedExceptionMessage(ExceptionMessagesManager.ValueShouldBeSmallerThanX, additionalMessage, objectName, maxValue.Stringify());
             try
             {
-                throw (TException)Activator.CreateInstance(typeof(TException), exceptionMessage);
+                throw ((TException)Activator.CreateInstance(typeof(TException), exceptionMessage))!;
             }
             catch
             {
@@ -1647,7 +1649,7 @@ namespace NavyBlue.AspNetCore.Lib
             string exceptionMessage = GetFormattedExceptionMessage(ExceptionMessagesManager.ValueShouldBeSmallerThanOrEqualToX, additionalMessage, objectName, maxValue.Stringify());
             try
             {
-                throw (TException)Activator.CreateInstance(typeof(TException), exceptionMessage);
+                throw ((TException)Activator.CreateInstance(typeof(TException), exceptionMessage))!;
             }
             catch
             {
@@ -1679,7 +1681,7 @@ namespace NavyBlue.AspNetCore.Lib
             string exceptionMessage = GetFormattedExceptionMessage(ExceptionMessagesManager.ValueShouldBeTrue, additionalMessage, objectName);
             try
             {
-                throw (TException)Activator.CreateInstance(typeof(TException), exceptionMessage);
+                throw ((TException)Activator.CreateInstance(typeof(TException), exceptionMessage))!;
             }
             catch
             {
@@ -1715,7 +1717,7 @@ namespace NavyBlue.AspNetCore.Lib
             string exceptionMessage = GetFormattedExceptionMessage(ExceptionMessagesManager.ValueShouldBeUnequalToX, additionalMessage, objectName, value.Stringify());
             try
             {
-                throw (TException)Activator.CreateInstance(typeof(TException), exceptionMessage);
+                throw ((TException)Activator.CreateInstance(typeof(TException), exceptionMessage))!;
             }
             catch
             {
@@ -1747,7 +1749,7 @@ namespace NavyBlue.AspNetCore.Lib
             string exceptionMessage = GetFormattedExceptionMessage(ExceptionMessagesManager.StringShouldNotBeEmpty, additionalMessage, objectName);
             try
             {
-                throw (TException)Activator.CreateInstance(typeof(TException), exceptionMessage);
+                throw ((TException)Activator.CreateInstance(typeof(TException), exceptionMessage))!;
             }
             catch
             {
@@ -1779,7 +1781,7 @@ namespace NavyBlue.AspNetCore.Lib
             string exceptionMessage = GetFormattedExceptionMessage(ExceptionMessagesManager.ValueShouldNotBeANumber, additionalMessage, objectName);
             try
             {
-                throw (TException)Activator.CreateInstance(typeof(TException), exceptionMessage);
+                throw ((TException)Activator.CreateInstance(typeof(TException), exceptionMessage))!;
             }
             catch
             {
@@ -1817,7 +1819,7 @@ namespace NavyBlue.AspNetCore.Lib
             string exceptionMessage = GetFormattedExceptionMessage(ExceptionMessagesManager.ValueShouldNotBeBetweenXAndY, additionalMessage, objectName, minValue.Stringify(), maxValue.Stringify());
             try
             {
-                throw (TException)Activator.CreateInstance(typeof(TException), exceptionMessage);
+                throw ((TException)Activator.CreateInstance(typeof(TException), exceptionMessage))!;
             }
             catch
             {
@@ -1853,7 +1855,7 @@ namespace NavyBlue.AspNetCore.Lib
             string exceptionMessage = GetFormattedExceptionMessage(ExceptionMessagesManager.ValueShouldNotBeGreaterThanX, additionalMessage, objectName, minValue.Stringify());
             try
             {
-                throw (TException)Activator.CreateInstance(typeof(TException), exceptionMessage);
+                throw ((TException)Activator.CreateInstance(typeof(TException), exceptionMessage))!;
             }
             catch
             {
@@ -1889,7 +1891,7 @@ namespace NavyBlue.AspNetCore.Lib
             string exceptionMessage = GetFormattedExceptionMessage(ExceptionMessagesManager.ValueShouldNotBeGreaterThanOrEqualToX, additionalMessage, objectName, maxValue.Stringify());
             try
             {
-                throw (TException)Activator.CreateInstance(typeof(TException), exceptionMessage);
+                throw ((TException)Activator.CreateInstance(typeof(TException), exceptionMessage))!;
             }
             catch
             {
@@ -1921,7 +1923,7 @@ namespace NavyBlue.AspNetCore.Lib
             string exceptionMessage = GetFormattedExceptionMessage(ExceptionMessagesManager.ValueShouldNotBeInfinity, additionalMessage, objectName);
             try
             {
-                throw (TException)Activator.CreateInstance(typeof(TException), exceptionMessage);
+                throw ((TException)Activator.CreateInstance(typeof(TException), exceptionMessage))!;
             }
             catch
             {
@@ -1953,7 +1955,7 @@ namespace NavyBlue.AspNetCore.Lib
             string exceptionMessage = GetFormattedExceptionMessage(ExceptionMessagesManager.ValueShouldNotBeNegativeInfinity, additionalMessage, objectName);
             try
             {
-                throw (TException)Activator.CreateInstance(typeof(TException), exceptionMessage);
+                throw ((TException)Activator.CreateInstance(typeof(TException), exceptionMessage))!;
             }
             catch
             {
@@ -1985,7 +1987,7 @@ namespace NavyBlue.AspNetCore.Lib
             string exceptionMessage = GetFormattedExceptionMessage(ExceptionMessagesManager.ValueShouldNotBeNull, additionalMessage, objectName);
             try
             {
-                throw (TException)Activator.CreateInstance(typeof(TException), exceptionMessage);
+                throw ((TException)Activator.CreateInstance(typeof(TException), exceptionMessage))!;
             }
             catch
             {
@@ -2017,7 +2019,7 @@ namespace NavyBlue.AspNetCore.Lib
             string exceptionMessage = GetFormattedExceptionMessage(ExceptionMessagesManager.StringShouldNotBeNullOrEmpty, additionalMessage, objectName);
             try
             {
-                throw (TException)Activator.CreateInstance(typeof(TException), exceptionMessage);
+                throw ((TException)Activator.CreateInstance(typeof(TException), exceptionMessage))!;
             }
             catch
             {
@@ -2051,7 +2053,7 @@ namespace NavyBlue.AspNetCore.Lib
             string exceptionMessage = GetFormattedExceptionMessage(ExceptionMessagesManager.ValueShouldNotBeOfTypeX, additionalMessage, objectName, type.Name);
             try
             {
-                throw (TException)Activator.CreateInstance(typeof(TException), exceptionMessage);
+                throw ((TException)Activator.CreateInstance(typeof(TException), exceptionMessage))!;
             }
             catch
             {
@@ -2083,7 +2085,7 @@ namespace NavyBlue.AspNetCore.Lib
             string exceptionMessage = GetFormattedExceptionMessage(ExceptionMessagesManager.ValueShouldNotBePositiveInfinity, additionalMessage, objectName);
             try
             {
-                throw (TException)Activator.CreateInstance(typeof(TException), exceptionMessage);
+                throw ((TException)Activator.CreateInstance(typeof(TException), exceptionMessage))!;
             }
             catch
             {
@@ -2119,7 +2121,7 @@ namespace NavyBlue.AspNetCore.Lib
             string exceptionMessage = GetFormattedExceptionMessage(ExceptionMessagesManager.ValueShouldNotBeSmallerThanX, additionalMessage, objectName, minValue.Stringify());
             try
             {
-                throw (TException)Activator.CreateInstance(typeof(TException), exceptionMessage);
+                throw ((TException)Activator.CreateInstance(typeof(TException), exceptionMessage))!;
             }
             catch
             {
@@ -2155,7 +2157,7 @@ namespace NavyBlue.AspNetCore.Lib
             string exceptionMessage = GetFormattedExceptionMessage(ExceptionMessagesManager.ValueShouldNotBeSmallerThanOrEqualToX, additionalMessage, objectName, minValue.Stringify());
             try
             {
-                throw (TException)Activator.CreateInstance(typeof(TException), exceptionMessage);
+                throw ((TException)Activator.CreateInstance(typeof(TException), exceptionMessage))!;
             }
             catch
             {

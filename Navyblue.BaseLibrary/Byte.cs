@@ -12,6 +12,7 @@
 // *****************************************************************************************************************
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
 
 namespace Navyblue.BaseLibrary
@@ -19,6 +20,7 @@ namespace Navyblue.BaseLibrary
     /// <summary>
     ///     Extensions of <see cref="System.Byte" /> types.
     /// </summary>
+    [SuppressMessage("ReSharper", "InconsistentNaming")]
     public static class ByteExtensions
     {
         /// <summary>
@@ -115,6 +117,7 @@ namespace Navyblue.BaseLibrary
     /// <summary>
     ///     Utilities for working with <see cref="System.Byte" /> type.
     /// </summary>
+    [SuppressMessage("ReSharper", "InconsistentNaming")]
     public static class ByteUtility
     {
         /// <summary>

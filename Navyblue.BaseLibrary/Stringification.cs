@@ -11,10 +11,10 @@
 // </copyright>
 // *****************************************************************************************************************
 
-using Newtonsoft.Json;
 using System;
 using System.Collections;
 using System.Linq;
+using System.Text.Json;
 
 namespace Navyblue.BaseLibrary
 {
@@ -61,7 +61,7 @@ namespace Navyblue.BaseLibrary
 
             try
             {
-                return JsonConvert.SerializeObject(value);
+                return JsonSerializer.Serialize(value);
             }
             catch
             {

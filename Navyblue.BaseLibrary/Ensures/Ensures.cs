@@ -108,7 +108,7 @@ namespace NavyBlue.AspNetCore.Lib
                 return this.Result;
             }
 
-            throw (TException)Activator.CreateInstance(typeof(TException));
+            throw ((TException)Activator.CreateInstance(typeof(TException)))!;
         }
 
         /// <summary>
@@ -142,7 +142,7 @@ namespace NavyBlue.AspNetCore.Lib
                 return this.Result;
             }
 
-            throw (TException)Activator.CreateInstance(typeof(TException), message.FormatWith(args));
+            throw ((TException)Activator.CreateInstance(typeof(TException), message.FormatWith(args)))!;
         }
     }
 }

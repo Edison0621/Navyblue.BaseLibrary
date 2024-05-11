@@ -11,7 +11,6 @@
 // </copyright>
 // *****************************************************************************************************************
 
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -19,6 +18,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Web;
 
@@ -1111,7 +1111,7 @@ namespace Navyblue.BaseLibrary
         /// <returns>The deserialized instance of <typeparamref name="T" />. If the <paramref name="value" /> is null or empty, <c>null</c> will be returned.</returns>
         public static T FromJson<T>(string value)
         {
-            return value.IsNullOrEmpty() ? default(T) : JsonConvert.DeserializeObject<T>(value);
+            return value.IsNullOrEmpty() ? default(T) : JsonSerializer.Deserialize<T>(value);
         }
 
         /// <summary>

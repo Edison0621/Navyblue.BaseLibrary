@@ -19,6 +19,7 @@ namespace Navyblue.BaseLibrary
     /// <summary>
     ///     Extensions of <see cref="System.DateTime" /> type.
     /// </summary>
+    [SuppressMessage("ReSharper", "InconsistentNaming")]
     public static class DateTimeExtensions
     {
         /// <summary>
@@ -157,6 +158,7 @@ namespace Navyblue.BaseLibrary
     /// <summary>
     ///     Utilities for working with <see cref="System.DateTime" /> types.
     /// </summary>
+    [SuppressMessage("ReSharper", "InconsistentNaming")]
     public static class DateTimeUtility
     {
         /// <summary>
@@ -239,7 +241,6 @@ namespace Navyblue.BaseLibrary
         /// </summary>
         /// <param name="dateMillisecondsAfter1970">The date milliseconds after1970.</param>
         /// <returns>UTC DateTime.</returns>
-        [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
         public static DateTime FromJSDate(long dateMillisecondsAfter1970)
         {
             DateTime dateTime = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);

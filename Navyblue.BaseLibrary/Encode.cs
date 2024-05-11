@@ -433,45 +433,49 @@ namespace Navyblue.BaseLibrary
             {
                 char ch = value[pos];
 
-                if (ch == '+')
+                switch (ch)
                 {
-                    ch = ' ';
-                }
-                else if (ch == '%' && pos < count - 2)
-                {
-                    if (value[pos + 1] == 'u' && pos < count - 5)
+                    case '+':
+                        ch = ' ';
+                        break;
+                    case '%' when pos < count - 2:
                     {
-                        int h1 = HttpEncoderUtility.HexToInt(value[pos + 2]);
-                        int h2 = HttpEncoderUtility.HexToInt(value[pos + 3]);
-                        int h3 = HttpEncoderUtility.HexToInt(value[pos + 4]);
-                        int h4 = HttpEncoderUtility.HexToInt(value[pos + 5]);
-
-                        if (h1 >= 0 && h2 >= 0 && h3 >= 0 && h4 >= 0)
+                        if (value[pos + 1] == 'u' && pos < count - 5)
                         {
-                            // valid 4 hex chars
-                            ch = (char)((h1 << 12) | (h2 << 8) | (h3 << 4) | h4);
-                            pos += 5;
+                            int h1 = HttpEncoderUtility.HexToInt(value[pos + 2]);
+                            int h2 = HttpEncoderUtility.HexToInt(value[pos + 3]);
+                            int h3 = HttpEncoderUtility.HexToInt(value[pos + 4]);
+                            int h4 = HttpEncoderUtility.HexToInt(value[pos + 5]);
 
-                            // only add as char
-                            helper.AddChar(ch);
-                            continue;
+                            if (h1 >= 0 && h2 >= 0 && h3 >= 0 && h4 >= 0)
+                            {
+                                // valid 4 hex chars
+                                ch = (char)((h1 << 12) | (h2 << 8) | (h3 << 4) | h4);
+                                pos += 5;
+
+                                // only add as char
+                                helper.AddChar(ch);
+                                continue;
+                            }
                         }
-                    }
-                    else
-                    {
-                        int h1 = HttpEncoderUtility.HexToInt(value[pos + 1]);
-                        int h2 = HttpEncoderUtility.HexToInt(value[pos + 2]);
-
-                        if (h1 >= 0 && h2 >= 0)
+                        else
                         {
-                            // valid 2 hex chars
-                            byte b = (byte)((h1 << 4) | h2);
-                            pos += 2;
+                            int h1 = HttpEncoderUtility.HexToInt(value[pos + 1]);
+                            int h2 = HttpEncoderUtility.HexToInt(value[pos + 2]);
 
-                            // don't add as char
-                            helper.AddByte(b);
-                            continue;
+                            if (h1 >= 0 && h2 >= 0)
+                            {
+                                // valid 2 hex chars
+                                byte b = (byte)((h1 << 4) | h2);
+                                pos += 2;
+
+                                // don't add as char
+                                helper.AddByte(b);
+                                continue;
+                            }
                         }
+
+                        break;
                     }
                 }
 
@@ -690,35 +694,35 @@ namespace Navyblue.BaseLibrary
         /// <summary>
         ///     The buffer size
         /// </summary>
-        private readonly int bufferSize;
+        private readonly int _bufferSize;
 
         /// <summary>
         ///     The character buffer
         /// </summary>
-        private readonly char[] charBuffer;
+        private readonly char[] _charBuffer;
 
         // Encoding to convert chars to bytes
         /// <summary>
         ///     The encoding
         /// </summary>
-        private readonly Encoding encoding;
+        private readonly Encoding _encoding;
 
         /// <summary>
         ///     The byte buffer
         /// </summary>
-        private byte[] byteBuffer;
+        private byte[] _byteBuffer;
 
         // Accumulate bytes for decoding into characters in a special array
         /// <summary>
         ///     The number bytes
         /// </summary>
-        private int numBytes;
+        private int _numBytes;
 
         // Accumulate characters in a special array
         /// <summary>
         ///     The number chars
         /// </summary>
-        private int numChars;
+        private int _numChars;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="UrlDecoder" /> class.
@@ -727,10 +731,10 @@ namespace Navyblue.BaseLibrary
         /// <param name="encoding">The encoding.</param>
         internal UrlDecoder(int bufferSize, Encoding encoding)
         {
-            this.bufferSize = bufferSize;
-            this.encoding = encoding;
+            this._bufferSize = bufferSize;
+            this._encoding = encoding;
 
-            this.charBuffer = new char[bufferSize];
+            this._charBuffer = new char[bufferSize];
             // byte buffer created on demand
         }
 
@@ -749,10 +753,10 @@ namespace Navyblue.BaseLibrary
                             else
             */
             {
-                if (this.byteBuffer == null)
-                    this.byteBuffer = new byte[this.bufferSize];
+                if (this._byteBuffer == null)
+                    this._byteBuffer = new byte[this._bufferSize];
 
-                this.byteBuffer[this.numBytes++] = byteValue;
+                this._byteBuffer[this._numBytes++] = byteValue;
             }
         }
 
@@ -762,10 +766,10 @@ namespace Navyblue.BaseLibrary
         /// <param name="charValue">The charValue.</param>
         internal void AddChar(char charValue)
         {
-            if (this.numBytes > 0)
+            if (this._numBytes > 0)
                 this.FlushBytes();
 
-            this.charBuffer[this.numChars++] = charValue;
+            this._charBuffer[this._numChars++] = charValue;
         }
 
         /// <summary>
@@ -774,10 +778,10 @@ namespace Navyblue.BaseLibrary
         /// <returns>String.</returns>
         internal string GetString()
         {
-            if (this.numBytes > 0)
+            if (this._numBytes > 0)
                 this.FlushBytes();
 
-            return this.numChars > 0 ? new string(this.charBuffer, 0, this.numChars) : string.Empty;
+            return this._numChars > 0 ? new string(this._charBuffer, 0, this._numChars) : string.Empty;
         }
 
         /// <summary>
@@ -785,10 +789,10 @@ namespace Navyblue.BaseLibrary
         /// </summary>
         private void FlushBytes()
         {
-            if (this.numBytes > 0)
+            if (this._numBytes > 0)
             {
-                this.numChars += this.encoding.GetChars(this.byteBuffer, 0, this.numBytes, this.charBuffer, this.numChars);
-                this.numBytes = 0;
+                this._numChars += this._encoding.GetChars(this._byteBuffer, 0, this._numBytes, this._charBuffer, this._numChars);
+                this._numBytes = 0;
             }
         }
     }

@@ -105,10 +105,7 @@ namespace Navyblue.BaseLibrary
         ///     Gets a value indicating whether this instance has next page.
         /// </summary>
         /// <value><c>true</c> if this instance has next page; otherwise, <c>false</c>.</value>
-        public bool HasNextPage
-        {
-            get { return this.PageIndex < this.TotalPageCount - 1; }
-        }
+        public bool HasNextPage => this.PageIndex < this.TotalPageCount - 1;
 
         /// <summary>
         ///     Gets the items.

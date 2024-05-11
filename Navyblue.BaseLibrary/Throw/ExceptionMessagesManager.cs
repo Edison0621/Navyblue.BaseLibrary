@@ -11,6 +11,7 @@
 // </copyright>
 // *****************************************************************************************************************
 
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Resources;
 
@@ -19,6 +20,7 @@ namespace NavyBlue.AspNetCore.Lib
     /// <summary>
     ///     Exception Message String Resource helper class
     /// </summary>
+    [SuppressMessage("ReSharper", "InconsistentNaming")]
     public static class ExceptionMessagesManager
     {
         /// <summary>

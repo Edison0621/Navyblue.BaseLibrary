@@ -18,6 +18,7 @@ namespace Navyblue.BaseLibrary
     /// <summary>
     ///     Class Crypto.
     /// </summary>
+    [SuppressMessage("ReSharper", "InconsistentNaming")]
     public static class Crypto
     {
         /// <summary>
@@ -26,7 +27,6 @@ namespace Navyblue.BaseLibrary
         /// <param name="payload">The payload.</param>
         /// <param name="salt">The salt.</param>
         /// <returns>System.String.</returns>
-        [SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "PBKDF")]
         public static string PBKDF2(string payload, string salt)
         {
             return PBKDF2Utility.Hash(payload, salt);
@@ -38,7 +38,6 @@ namespace Navyblue.BaseLibrary
         /// <param name="payload">The payload.</param>
         /// <param name="salt">The salt.</param>
         /// <returns>System.String.</returns>
-        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Sha")]
         public static string Sha256(string payload, string salt)
         {
             return Sha256Utility.Hash(payload, salt);
