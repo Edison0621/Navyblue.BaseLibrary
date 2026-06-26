@@ -13,34 +13,33 @@
 
 using System.Diagnostics.CodeAnalysis;
 
-namespace Navyblue.BaseLibrary
+namespace Navyblue.BaseLibrary;
+
+/// <summary>
+///     Class Crypto.
+/// </summary>
+[SuppressMessage("ReSharper", "InconsistentNaming")]
+public static class Crypto
 {
     /// <summary>
-    ///     Class Crypto.
+    ///     Gets the encrypted string.
     /// </summary>
-    [SuppressMessage("ReSharper", "InconsistentNaming")]
-    public static class Crypto
+    /// <param name="payload">The payload.</param>
+    /// <param name="salt">The salt.</param>
+    /// <returns>System.String.</returns>
+    public static string PBKDF2(string payload, string salt)
     {
-        /// <summary>
-        ///     Gets the encrypted string.
-        /// </summary>
-        /// <param name="payload">The payload.</param>
-        /// <param name="salt">The salt.</param>
-        /// <returns>System.String.</returns>
-        public static string PBKDF2(string payload, string salt)
-        {
-            return PBKDF2Utility.Hash(payload, salt);
-        }
+        return PBKDF2Utility.Hash(payload, salt);
+    }
 
-        /// <summary>
-        ///     Gets the encrypted string.
-        /// </summary>
-        /// <param name="payload">The payload.</param>
-        /// <param name="salt">The salt.</param>
-        /// <returns>System.String.</returns>
-        public static string Sha256(string payload, string salt)
-        {
-            return Sha256Utility.Hash(payload, salt);
-        }
+    /// <summary>
+    ///     Gets the encrypted string.
+    /// </summary>
+    /// <param name="payload">The payload.</param>
+    /// <param name="salt">The salt.</param>
+    /// <returns>System.String.</returns>
+    public static string Sha256(string payload, string salt)
+    {
+        return Sha256Utility.Hash(payload, salt);
     }
 }

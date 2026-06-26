@@ -13,30 +13,29 @@
 
 using System;
 
-namespace Navyblue.BaseLibrary
+namespace Navyblue.BaseLibrary;
+
+/// <summary>
+///     Utilities methods for working with resource paths
+/// </summary>
+public static class UrlPathUtility
 {
     /// <summary>
-    ///     Utilities methods for working with resource paths
+    ///     Combines two URL paths
     /// </summary>
-    public static class UrlPathUtility
+    public static Uri CombineUrlPaths(string path1, string path2)
     {
-        /// <summary>
-        ///     Combines two URL paths
-        /// </summary>
-        public static Uri CombineUrlPaths(string path1, string path2)
-        {
-            if (string.IsNullOrEmpty(path2))
-                return new Uri(path1);
+        if (string.IsNullOrEmpty(path2))
+            return new Uri(path1);
 
-            if (string.IsNullOrEmpty(path1))
-                return new Uri(path2);
+        if (string.IsNullOrEmpty(path1))
+            return new Uri(path2);
 
-            if (path2.StartsWith("http://", StringComparison.Ordinal) || path2.StartsWith("https://", StringComparison.Ordinal))
-                return new Uri(path2);
+        if (path2.StartsWith("http://", StringComparison.Ordinal) || path2.StartsWith("https://", StringComparison.Ordinal))
+            return new Uri(path2);
 
-            char ch = path1[path1.Length - 1];
+        char ch = path1[path1.Length - 1];
 
-            return ch != '/' ? new Uri(path1.TrimEnd('/') + '/' + path2.TrimStart('/')) : new Uri(path1 + path2);
-        }
+        return ch != '/' ? new Uri(path1.TrimEnd('/') + '/' + path2.TrimStart('/')) : new Uri(path1 + path2);
     }
 }

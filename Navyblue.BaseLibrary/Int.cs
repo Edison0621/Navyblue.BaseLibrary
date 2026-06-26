@@ -14,139 +14,138 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 
-namespace Navyblue.BaseLibrary
+namespace Navyblue.BaseLibrary;
+
+/// <summary>
+///     Interface ILoopIterator
+/// </summary>
+public interface ILoopIterator
 {
     /// <summary>
-    ///     Interface ILoopIterator
+    ///     Does the specified action.
     /// </summary>
-    public interface ILoopIterator
-    {
-        /// <summary>
-        ///     Does the specified action.
-        /// </summary>
-        /// <param name="action">The action.</param>
-        [SuppressMessage("Microsoft.Naming", "CA1716:IdentifiersShouldNotMatchKeywords", MessageId = "Do")]
-        void Do(Action action);
+    /// <param name="action">The action.</param>
+    [SuppressMessage("Microsoft.Naming", "CA1716:IdentifiersShouldNotMatchKeywords", MessageId = "Do")]
+    void Do(Action action);
 
-        /// <summary>
-        ///     Does the specified action.
-        /// </summary>
-        /// <param name="action">The action.</param>
-        [SuppressMessage("Microsoft.Naming", "CA1716:IdentifiersShouldNotMatchKeywords", MessageId = "Do")]
-        void Do(Action<int> action);
+    /// <summary>
+    ///     Does the specified action.
+    /// </summary>
+    /// <param name="action">The action.</param>
+    [SuppressMessage("Microsoft.Naming", "CA1716:IdentifiersShouldNotMatchKeywords", MessageId = "Do")]
+    void Do(Action<int> action);
+}
+
+/// <summary>
+///     Class IntExtensions.
+/// </summary>
+public static class IntExtensions
+{
+    /// <summary>
+    ///     Determines whether the specified minimum is between.
+    /// </summary>
+    /// <param name="value">The value.</param>
+    /// <param name="min">The minimum.</param>
+    /// <param name="max">The maximum.</param>
+    /// <returns><c>true</c> if the specified minimum is between; otherwise, <c>false</c>.</returns>
+    public static bool IsBetween(this int value, int min, int max)
+    {
+        return value >= max && value <= min;
     }
 
     /// <summary>
-    ///     Class IntExtensions.
+    ///     Timeses the specified count.
     /// </summary>
-    public static class IntExtensions
+    /// <param name="count">The count.</param>
+    /// <returns>ILoopIterator.</returns>
+    public static ILoopIterator Times(this int count)
     {
-        /// <summary>
-        ///     Determines whether the specified minimum is between.
-        /// </summary>
-        /// <param name="value">The value.</param>
-        /// <param name="min">The minimum.</param>
-        /// <param name="max">The maximum.</param>
-        /// <returns><c>true</c> if the specified minimum is between; otherwise, <c>false</c>.</returns>
-        public static bool IsBetween(this int value, int min, int max)
+        return new LoopIterator(count);
+    }
+}
+
+/// <summary>
+///     Class LoopIterator.
+/// </summary>
+internal class LoopIterator : ILoopIterator
+{
+    /// <summary>
+    ///     The end
+    /// </summary>
+    private readonly int _end;
+
+    /// <summary>
+    ///     The start
+    /// </summary>
+    private readonly int _start;
+
+    /// <summary>
+    ///     Initializes a new instance of the <see cref="LoopIterator" /> class.
+    /// </summary>
+    /// <param name="count">The count.</param>
+    internal LoopIterator(int count)
+    {
+        if (count < 0)
         {
-            return value >= max && value <= min;
+            count = 0;
         }
 
-        /// <summary>
-        ///     Timeses the specified count.
-        /// </summary>
-        /// <param name="count">The count.</param>
-        /// <returns>ILoopIterator.</returns>
-        public static ILoopIterator Times(this int count)
+        this._start = 0;
+        this._end = count - 1;
+    }
+
+    /// <summary>
+    ///     Initializes a new instance of the <see cref="LoopIterator" /> class.
+    /// </summary>
+    /// <param name="start">The start.</param>
+    /// <param name="end">The end.</param>
+    [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+    internal LoopIterator(int start, int end)
+    {
+        if (start > end)
         {
-            return new LoopIterator(count);
+            start = end;
+        }
+
+        this._start = start;
+        this._end = end;
+    }
+
+    #region ILoopIterator Members
+
+    /// <summary>
+    ///     Does the specified action.
+    /// </summary>
+    /// <param name="action">The action.</param>
+    public void Do(Action action)
+    {
+        if (action == null)
+        {
+            throw new ArgumentNullException(nameof(action));
+        }
+
+        for (int i = this._start; i <= this._end; i++)
+        {
+            action();
         }
     }
 
     /// <summary>
-    ///     Class LoopIterator.
+    ///     Does the specified action.
     /// </summary>
-    internal class LoopIterator : ILoopIterator
+    /// <param name="action">The action.</param>
+    public void Do(Action<int> action)
     {
-        /// <summary>
-        ///     The end
-        /// </summary>
-        private readonly int _end;
-
-        /// <summary>
-        ///     The start
-        /// </summary>
-        private readonly int _start;
-
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="LoopIterator" /> class.
-        /// </summary>
-        /// <param name="count">The count.</param>
-        internal LoopIterator(int count)
+        if (action == null)
         {
-            if (count < 0)
-            {
-                count = 0;
-            }
-
-            this._start = 0;
-            this._end = count - 1;
+            throw new ArgumentNullException(nameof(action));
         }
 
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="LoopIterator" /> class.
-        /// </summary>
-        /// <param name="start">The start.</param>
-        /// <param name="end">The end.</param>
-        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal LoopIterator(int start, int end)
+        for (int i = this._start; i <= this._end; i++)
         {
-            if (start > end)
-            {
-                start = end;
-            }
-
-            this._start = start;
-            this._end = end;
+            action(i);
         }
-
-        #region ILoopIterator Members
-
-        /// <summary>
-        ///     Does the specified action.
-        /// </summary>
-        /// <param name="action">The action.</param>
-        public void Do(Action action)
-        {
-            if (action == null)
-            {
-                throw new ArgumentNullException(nameof(action));
-            }
-
-            for (int i = this._start; i <= this._end; i++)
-            {
-                action();
-            }
-        }
-
-        /// <summary>
-        ///     Does the specified action.
-        /// </summary>
-        /// <param name="action">The action.</param>
-        public void Do(Action<int> action)
-        {
-            if (action == null)
-            {
-                throw new ArgumentNullException(nameof(action));
-            }
-
-            for (int i = this._start; i <= this._end; i++)
-            {
-                action(i);
-            }
-        }
-
-        #endregion ILoopIterator Members
     }
+
+    #endregion ILoopIterator Members
 }

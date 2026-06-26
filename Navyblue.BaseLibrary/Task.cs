@@ -14,28 +14,27 @@
 using System;
 using System.Threading.Tasks;
 
-namespace Navyblue.BaseLibrary
+namespace Navyblue.BaseLibrary;
+
+/// <summary>
+///     TaskEx.
+/// </summary>
+public static class TaskEx
 {
     /// <summary>
-    ///     TaskEx.
+    ///     Forgets the specified task.
     /// </summary>
-    public static class TaskEx
+    /// <param name="task">The task.</param>
+    /// <param name="exceptionHandler">The exception handler.</param>
+    public static async Task Forget(this Task task, Action<Exception> exceptionHandler = null)
     {
-        /// <summary>
-        ///     Forgets the specified task.
-        /// </summary>
-        /// <param name="task">The task.</param>
-        /// <param name="exceptionHandler">The exception handler.</param>
-        public static async Task Forget(this Task task, Action<Exception> exceptionHandler = null)
+        try
         {
-            try
-            {
-                await task.ConfigureAwait(false);
-            }
-            catch (Exception e)
-            {
-                exceptionHandler?.Invoke(e);
-            }
+            await task.ConfigureAwait(false);
+        }
+        catch (Exception e)
+        {
+            exceptionHandler?.Invoke(e);
         }
     }
 }

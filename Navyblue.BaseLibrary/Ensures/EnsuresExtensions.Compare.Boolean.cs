@@ -14,73 +14,72 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 
-namespace NavyBlue.AspNetCore.Lib
+namespace NavyBlue.AspNetCore.Lib;
+
+/// <summary>
+///     Extensions of Ensures utility for the <see cref="System.Boolean" />.
+/// </summary>
+public static partial class EnsuresExtensions
 {
     /// <summary>
-    ///     Extensions of Ensures utility for the <see cref="System.Boolean" />.
+    ///     Checks whether the given value is <b>false</b>.
     /// </summary>
-    public static partial class EnsuresExtensions
+    /// <param name="ensures">The <see cref="Ensures{T}" /> that holds the value that has to be test/ensure.</param>
+    /// <returns>The specified <paramref name="ensures" /> instance.</returns>
+    public static Ensures<bool> IsFalse(this Ensures<bool> ensures)
     {
-        /// <summary>
-        ///     Checks whether the given value is <b>false</b>.
-        /// </summary>
-        /// <param name="ensures">The <see cref="Ensures{T}" /> that holds the value that has to be test/ensure.</param>
-        /// <returns>The specified <paramref name="ensures" /> instance.</returns>
-        public static Ensures<bool> IsFalse(this Ensures<bool> ensures)
+        if (ensures == null)
         {
-            if (ensures == null)
-            {
-                throw new ArgumentNullException(nameof(ensures));
-            }
-
-            return ensures.That(v => v == false);
+            throw new ArgumentNullException(nameof(ensures));
         }
 
-        /// <summary>
-        ///     Checks whether the given value is <b>false</b>.
-        /// </summary>
-        /// <param name="ensures">The <see cref="Ensures{T}" /> that holds the value that has to be test/ensure.</param>
-        /// <returns>The specified <paramref name="ensures" /> instance.</returns>
-        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        public static Ensures<bool?> IsFalse(this Ensures<bool?> ensures)
-        {
-            if (ensures == null)
-            {
-                throw new ArgumentNullException(nameof(ensures));
-            }
+        return ensures.That(v => v == false);
+    }
 
-            return ensures.That(v => v.HasValue && v.Value == false);
+    /// <summary>
+    ///     Checks whether the given value is <b>false</b>.
+    /// </summary>
+    /// <param name="ensures">The <see cref="Ensures{T}" /> that holds the value that has to be test/ensure.</param>
+    /// <returns>The specified <paramref name="ensures" /> instance.</returns>
+    [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+    public static Ensures<bool?> IsFalse(this Ensures<bool?> ensures)
+    {
+        if (ensures == null)
+        {
+            throw new ArgumentNullException(nameof(ensures));
         }
 
-        /// <summary>
-        ///     Checks whether the given value is <b>true</b>.
-        /// </summary>
-        /// <param name="ensures">The <see cref="Ensures{T}" /> that holds the value that has to be test/ensure.</param>
-        /// <returns>The specified <paramref name="ensures" /> instance.</returns>
-        public static Ensures<bool> IsTrue(this Ensures<bool> ensures)
-        {
-            if (ensures == null)
-            {
-                throw new ArgumentNullException(nameof(ensures));
-            }
+        return ensures.That(v => v.HasValue && v.Value == false);
+    }
 
-            return ensures.That(v => v);
+    /// <summary>
+    ///     Checks whether the given value is <b>true</b>.
+    /// </summary>
+    /// <param name="ensures">The <see cref="Ensures{T}" /> that holds the value that has to be test/ensure.</param>
+    /// <returns>The specified <paramref name="ensures" /> instance.</returns>
+    public static Ensures<bool> IsTrue(this Ensures<bool> ensures)
+    {
+        if (ensures == null)
+        {
+            throw new ArgumentNullException(nameof(ensures));
         }
 
-        /// <summary>
-        ///     Checks whether the given value is <b>true</b>.
-        /// </summary>
-        /// <param name="ensures">The <see cref="Ensures{T}" /> that holds the value that has to be test/ensure.</param>
-        /// <returns>The specified <paramref name="ensures" /> instance.</returns>
-        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        public static Ensures<bool?> IsTrue(this Ensures<bool?> ensures)
-        {
-            if (ensures == null)
-            {
-                throw new ArgumentNullException(nameof(ensures));
-            }
+        return ensures.That(v => v);
+    }
 
-            return ensures.That(v => v.HasValue && v.Value);
+    /// <summary>
+    ///     Checks whether the given value is <b>true</b>.
+    /// </summary>
+    /// <param name="ensures">The <see cref="Ensures{T}" /> that holds the value that has to be test/ensure.</param>
+    /// <returns>The specified <paramref name="ensures" /> instance.</returns>
+    [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+    public static Ensures<bool?> IsTrue(this Ensures<bool?> ensures)
+    {
+        if (ensures == null)
+        {
+            throw new ArgumentNullException(nameof(ensures));
         }
+
+        return ensures.That(v => v.HasValue && v.Value);
     }
 }

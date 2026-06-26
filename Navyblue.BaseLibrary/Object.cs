@@ -13,16 +13,15 @@
 
 using System;
 
-namespace Navyblue.BaseLibrary
+namespace Navyblue.BaseLibrary;
+
+/// <summary>
+///     Extensions of <see cref="object" />.
+/// </summary>
+public static class ObjectExtensions
 {
-    /// <summary>
-    ///     Extensions of <see cref="object" />.
-    /// </summary>
-    public static class ObjectExtensions
+    public static TResult To<TObject, TResult>(this TObject value, Func<TObject, TResult> converter)
     {
-        public static TResult To<TObject, TResult>(this TObject value, Func<TObject, TResult> converter)
-        {
-            return converter.Invoke(value);
-        }
+        return converter.Invoke(value);
     }
 }
