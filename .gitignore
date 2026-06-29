@@ -14,3 +14,5 @@
 /.vs
 /Navyblue.BaseLibrary/obj
 /Navyblue.BaseLibrary/bin
+/src/**/bin
+/src/**/obj
