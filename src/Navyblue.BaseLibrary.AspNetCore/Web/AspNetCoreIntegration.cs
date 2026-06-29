@@ -1,4 +1,17 @@
-﻿using System.Diagnostics;
+﻿// ****************************************************************************************************************************************
+// Project          : Navyblue.BaseLibrary
+// File             : AspNetCoreIntegration.cs
+// Created          : 2026-06-29  11:06
+// 
+// Last Modified By : kitt-nostalgic(jstsmaxx@gmail.com)
+// Last Modified On : 2026-06-29  13:02
+// ****************************************************************************************************************************************
+// <copyright file="AspNetCoreIntegration.cs" company="">
+//     Copyright ©  2011-2026. All rights reserved.
+// </copyright>
+// ****************************************************************************************************************************************
+
+using System.Diagnostics;
 using System.Net;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Builder;
@@ -12,59 +25,184 @@ using Navyblue.BaseLibrary.Domain;
 
 namespace Navyblue.BaseLibrary.AspNetCore;
 
-public sealed class NavyblueAspNetCoreOptions { public bool EnableExceptionHandling { get; set; } = true; public bool EnableTraceId { get; set; } = true; public bool EnableRequestLogging { get; set; } = true; public string TraceHeaderName { get; set; } = "X-Trace-Id"; public string TenantHeaderName { get; set; } = "X-Tenant-Id"; }
+/// <summary>
+///     The navyblue asp net core options.
+/// </summary>
+public sealed class NavyblueAspNetCoreOptions
+{
+    /// <summary>
+    ///     Gets or sets  a value indicating whether to enable exception handling.
+    /// </summary>
+    public bool EnableExceptionHandling { get; set; } = true;
 
+    /// <summary>
+    ///     Gets or sets  a value indicating whether to enable trace id.
+    /// </summary>
+    public bool EnableTraceId { get; set; } = true;
+
+    /// <summary>
+    ///     Gets or sets  a value indicating whether to enable request logging.
+    /// </summary>
+    public bool EnableRequestLogging { get; set; } = true;
+
+    /// <summary>
+    ///     Gets or sets the trace header name.
+    /// </summary>
+    public string TraceHeaderName { get; set; } = "X-Trace-Id";
+
+    /// <summary>
+    ///     Gets or sets the tenant header name.
+    /// </summary>
+    public string TenantHeaderName { get; set; } = "X-Tenant-Id";
+}
+
+/// <summary>
+///     The http current user.
+/// </summary>
+/// <param name="accessor">The accessor.</param>
 public sealed class HttpCurrentUser(IHttpContextAccessor accessor) : ICurrentUser
 {
     private ClaimsPrincipal Principal => accessor.HttpContext?.User ?? new ClaimsPrincipal(new ClaimsIdentity());
-    public string? UserId => FindClaimValue(ClaimTypes.NameIdentifier) ?? FindClaimValue("sub") ?? FindClaimValue("user_id");
-    public string? UserName => Principal.Identity?.Name ?? FindClaimValue(ClaimTypes.Name);
-    public bool IsAuthenticated => Principal.Identity?.IsAuthenticated == true;
-    public IReadOnlyCollection<string> Roles => Principal.FindAll(ClaimTypes.Role).Select(x => x.Value).ToArray();
-    public IReadOnlyCollection<Claim> Claims => Principal.Claims.ToArray();
-    public bool IsInRole(string role) => Principal.IsInRole(role);
-    public string? FindClaimValue(string claimType) => Principal.FindFirst(claimType)?.Value;
+
+    #region ICurrentUser Members
+
+    /// <summary>
+    ///     Gets the user id.
+    /// </summary>
+    public string? UserId => this.FindClaimValue(ClaimTypes.NameIdentifier) ?? this.FindClaimValue("sub") ?? this.FindClaimValue("user_id");
+
+    /// <summary>
+    ///     Gets the user name.
+    /// </summary>
+    public string? UserName => this.Principal.Identity?.Name ?? this.FindClaimValue(ClaimTypes.Name);
+
+    /// <summary>
+    ///     Gets a value indicating whether authenticated.
+    /// </summary>
+    public bool IsAuthenticated => this.Principal.Identity?.IsAuthenticated == true;
+
+    /// <summary>
+    ///     Gets the roles.
+    /// </summary>
+    public IReadOnlyCollection<string> Roles => this.Principal.FindAll(ClaimTypes.Role).Select(x => x.Value).ToArray();
+
+    /// <summary>
+    ///     Gets the claims.
+    /// </summary>
+    public IReadOnlyCollection<Claim> Claims => this.Principal.Claims.ToArray();
+
+    /// <summary>
+    ///     Checks if is in role.
+    /// </summary>
+    /// <param name="role">The role.</param>
+    /// <returns>A bool</returns>
+    public bool IsInRole(string role) => this.Principal.IsInRole(role);
+
+    /// <summary>
+    ///     Find claim value.
+    /// </summary>
+    /// <param name="claimType">The claim type.</param>
+    /// <returns>A string</returns>
+    public string? FindClaimValue(string claimType) => this.Principal.FindFirst(claimType)?.Value;
+
+    #endregion
 }
 
+/// <summary>
+///     The http current tenant.
+/// </summary>
+/// <param name="accessor">The accessor.</param>
 public sealed class HttpCurrentTenant(IHttpContextAccessor accessor) : ICurrentTenant
 {
+    #region ICurrentTenant Members
+
+    /// <summary>
+    ///     Gets the tenant id.
+    /// </summary>
     public string? TenantId => accessor.HttpContext?.Request.Headers["X-Tenant-Id"].FirstOrDefault() ?? accessor.HttpContext?.User.FindFirst("tenant_id")?.Value;
+
+    /// <summary>
+    ///     Gets the tenant name.
+    /// </summary>
     public string? TenantName => accessor.HttpContext?.User.FindFirst("tenant_name")?.Value;
-    public bool IsAvailable => !string.IsNullOrWhiteSpace(TenantId);
+
+    /// <summary>
+    ///     Gets a value indicating whether available.
+    /// </summary>
+    public bool IsAvailable => !string.IsNullOrWhiteSpace(this.TenantId);
+
+    #endregion
 }
 
+/// <summary>
+///     The trace id middleware.
+/// </summary>
+/// <param name="next">The next.</param>
+/// <param name="options">The options.</param>
 public sealed class TraceIdMiddleware(RequestDelegate next, NavyblueAspNetCoreOptions options)
 {
+    /// <summary>
+    /// </summary>
+    /// <param name="context">The context.</param>
+    /// <returns>A Task</returns>
     public async Task InvokeAsync(HttpContext context)
     {
-        var traceId = context.Request.Headers[options.TraceHeaderName].FirstOrDefault();
+        string? traceId = context.Request.Headers[options.TraceHeaderName].FirstOrDefault();
         if (string.IsNullOrWhiteSpace(traceId)) traceId = Activity.Current?.TraceId.ToString() ?? context.TraceIdentifier;
         context.Response.Headers[options.TraceHeaderName] = traceId;
         using (CorrelationContext.BeginScope(traceId)) await next(context).ConfigureAwait(false);
     }
 }
 
+/// <summary>
+///     The request logging middleware.
+/// </summary>
+/// <param name="next">The next.</param>
+/// <param name="logger">The logger.</param>
 public sealed class RequestLoggingMiddleware(RequestDelegate next, ILogger<RequestLoggingMiddleware> logger)
 {
+    /// <summary>
+    /// </summary>
+    /// <param name="context">The context.</param>
+    /// <returns>A Task</returns>
     public async Task InvokeAsync(HttpContext context)
     {
-        var timer = OperationTimer.StartNew();
+        OperationTimer timer = OperationTimer.StartNew();
         await next(context).ConfigureAwait(false);
         logger.LogInformation("HTTP {Method} {Path} responded {StatusCode} in {ElapsedMs} ms TraceId={TraceId}", context.Request.Method, context.Request.Path, context.Response.StatusCode, timer.Elapsed.TotalMilliseconds, CorrelationContext.Current ?? context.TraceIdentifier);
     }
 }
 
+/// <summary>
+///     The navyblue asp net core extensions.
+/// </summary>
 public static class NavyblueAspNetCoreExtensions
 {
+    /// <summary>
+    ///     Add navyblue framework.
+    /// </summary>
+    /// <param name="services">The services.</param>
+    /// <param name="configure">The configure.</param>
+    /// <returns>An IServiceCollection</returns>
     public static IServiceCollection AddNavyblueFramework(this IServiceCollection services, Action<NavyblueAspNetCoreOptions>? configure = null)
     {
-        var options = new NavyblueAspNetCoreOptions(); configure?.Invoke(options);
-        services.AddSingleton(options); services.AddHttpContextAccessor(); services.AddScoped<ICurrentUser, HttpCurrentUser>(); services.AddScoped<ICurrentTenant, HttpCurrentTenant>(); return services;
+        NavyblueAspNetCoreOptions options = new NavyblueAspNetCoreOptions();
+        configure?.Invoke(options);
+        services.AddSingleton(options);
+        services.AddHttpContextAccessor();
+        services.AddScoped<ICurrentUser, HttpCurrentUser>();
+        services.AddScoped<ICurrentTenant, HttpCurrentTenant>();
+        return services;
     }
 
+    /// <summary>
+    ///     Use navyblue framework.
+    /// </summary>
+    /// <param name="app">The app.</param>
+    /// <returns>An IApplicationBuilder</returns>
     public static IApplicationBuilder UseNavyblueFramework(this IApplicationBuilder app)
     {
-        var options = app.ApplicationServices.GetRequiredService<NavyblueAspNetCoreOptions>();
+        NavyblueAspNetCoreOptions options = app.ApplicationServices.GetRequiredService<NavyblueAspNetCoreOptions>();
         if (options.EnableExceptionHandling) app.UseExceptionHandler(errorApp => errorApp.Run(WriteErrorAsync));
         if (options.EnableTraceId) app.UseMiddleware<TraceIdMiddleware>();
         if (options.EnableRequestLogging) app.UseMiddleware<RequestLoggingMiddleware>();
@@ -73,9 +211,9 @@ public static class NavyblueAspNetCoreExtensions
 
     private static async Task WriteErrorAsync(HttpContext context)
     {
-        var exception = context.Features.Get<IExceptionHandlerFeature>()?.Error;
-        var traceId = CorrelationContext.Current ?? context.TraceIdentifier;
-        var (statusCode, code, message) = MapException(exception);
+        Exception? exception = context.Features.Get<IExceptionHandlerFeature>()?.Error;
+        string traceId = CorrelationContext.Current ?? context.TraceIdentifier;
+        (HttpStatusCode statusCode, BusinessCode code, string message) = MapException(exception);
         context.Response.StatusCode = (int)statusCode;
         context.Response.ContentType = "application/json; charset=utf-8";
         await context.Response.WriteAsJsonAsync(ApiResult.Fail(code, message, traceId, new ErrorInfo(code.ToString(), message))).ConfigureAwait(false);
@@ -84,7 +222,7 @@ public static class NavyblueAspNetCoreExtensions
     private static (HttpStatusCode StatusCode, BusinessCode Code, string Message) MapException(Exception? exception) => exception switch
     {
         null => (HttpStatusCode.InternalServerError, BusinessCode.UnexpectedError, "Unexpected error."),
-        Navyblue.BaseLibrary.Domain.ValidationException ex => (HttpStatusCode.BadRequest, BusinessCode.ValidationError, ex.Message),
+        ValidationException ex => (HttpStatusCode.BadRequest, BusinessCode.ValidationError, ex.Message),
         BusinessException ex => (HttpStatusCode.BadRequest, BusinessCode.BusinessError, ex.Message),
         UnauthorizedException ex => (HttpStatusCode.Unauthorized, BusinessCode.Unauthorized, ex.Message),
         ForbiddenException ex => (HttpStatusCode.Forbidden, BusinessCode.Forbidden, ex.Message),

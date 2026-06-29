@@ -1,68 +1,182 @@
-﻿namespace Navyblue.BaseLibrary.Primitives;
+﻿// ****************************************************************************************************************************************
+// Project          : Navyblue.BaseLibrary
+// File             : SnowflakeIdGenerator.cs
+// Created          : 2026-06-29  11:06
+//
+// Last Modified By : kitt-nostalgic(jstsmaxx@gmail.com)
+// Last Modified On : 2026-06-29  13:02
+// ****************************************************************************************************************************************
+// <copyright file="SnowflakeIdGenerator.cs" company="">
+//     Copyright ©  2011-2026. All rights reserved.
+// </copyright>
+// ****************************************************************************************************************************************
 
+namespace Navyblue.BaseLibrary.Primitives;
+
+/// <summary>
+/// The id generator interface.
+/// </summary>
+/// <typeparam name="T"></typeparam>
 public interface IIdGenerator<out T>
 {
+    /// <summary>
+    /// Nexts the id.
+    /// </summary>
+    /// <returns>
+    /// A T
+    /// </returns>
     T NextId();
 }
 
+/// <summary>
+/// The snowflake id generator.
+/// </summary>
 public sealed class SnowflakeIdGenerator : IIdGenerator<long>
 {
-    private const long Twepoch = 1704067200000L;
-    private const int WorkerIdBits = 5;
-    private const int DataCenterIdBits = 5;
-    private const int SequenceBits = 12;
-    private const long MaxWorkerId = -1L ^ (-1L << WorkerIdBits);
-    private const long MaxDataCenterId = -1L ^ (-1L << DataCenterIdBits);
-    private const int WorkerIdShift = SequenceBits;
-    private const int DataCenterIdShift = SequenceBits + WorkerIdBits;
-    private const int TimestampLeftShift = SequenceBits + WorkerIdBits + DataCenterIdBits;
-    private const long SequenceMask = -1L ^ (-1L << SequenceBits);
+    /// <summary>
+    /// The data center identifier bits
+    /// </summary>
+    private const int DATA_CENTER_ID_BITS = 5;
 
-    private readonly object _lock = new();
-    private readonly long _workerId;
+    /// <summary>
+    /// The data center identifier shift
+    /// </summary>
+    private const int DATA_CENTER_ID_SHIFT = SEQUENCE_BITS + WORKER_ID_BITS;
+
+    /// <summary>
+    /// The maximum data center identifier
+    /// </summary>
+    private const long MAX_DATA_CENTER_ID = -1L ^ (-1L << DATA_CENTER_ID_BITS);
+
+    /// <summary>
+    /// The maximum worker identifier
+    /// </summary>
+    private const long MAX_WORKER_ID = -1L ^ (-1L << WORKER_ID_BITS);
+
+    /// <summary>
+    /// The sequence bits
+    /// </summary>
+    private const int SEQUENCE_BITS = 12;
+
+    /// <summary>
+    /// The sequence mask
+    /// </summary>
+    private const long SEQUENCE_MASK = -1L ^ (-1L << SEQUENCE_BITS);
+
+    /// <summary>
+    /// The timestamp left shift
+    /// </summary>
+    private const int TIMESTAMP_LEFT_SHIFT = SEQUENCE_BITS + WORKER_ID_BITS + DATA_CENTER_ID_BITS;
+
+    /// <summary>
+    /// The twepoch
+    /// </summary>
+    private const long TWEPOCH = 1704067200000L;
+
+    /// <summary>
+    /// The worker identifier bits
+    /// </summary>
+    private const int WORKER_ID_BITS = 5;
+
+    /// <summary>
+    /// The worker identifier shift
+    /// </summary>
+    private const int WORKER_ID_SHIFT = SEQUENCE_BITS;
+
+    /// <summary>
+    /// The data center identifier
+    /// </summary>
     private readonly long _dataCenterId;
-    private long _sequence;
+
+    /// <summary>
+    /// The lock
+    /// </summary>
+    private readonly object _lock = new();
+
+    /// <summary>
+    /// The worker identifier
+    /// </summary>
+    private readonly long _workerId;
+
+    /// <summary>
+    /// The last timestamp
+    /// </summary>
     private long _lastTimestamp = -1L;
 
+    /// <summary>
+    /// The sequence
+    /// </summary>
+    private long _sequence;
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="SnowflakeIdGenerator" /> class.
+    /// </summary>
+    /// <param name="workerId">The worker id.</param>
+    /// <param name="dataCenterId">The data center id.</param>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// workerId
+    /// or
+    /// dataCenterId
+    /// </exception>
     public SnowflakeIdGenerator(long workerId = 0, long dataCenterId = 0)
     {
-        if (workerId is < 0 or > MaxWorkerId) throw new ArgumentOutOfRangeException(nameof(workerId));
-        if (dataCenterId is < 0 or > MaxDataCenterId) throw new ArgumentOutOfRangeException(nameof(dataCenterId));
-        _workerId = workerId;
-        _dataCenterId = dataCenterId;
+        if (workerId is < 0 or > MAX_WORKER_ID) throw new ArgumentOutOfRangeException(nameof(workerId));
+        if (dataCenterId is < 0 or > MAX_DATA_CENTER_ID) throw new ArgumentOutOfRangeException(nameof(dataCenterId));
+        this._workerId = workerId;
+        this._dataCenterId = dataCenterId;
     }
 
+    #region IIdGenerator<long> Members
+
+    /// <summary>
+    /// Nexts the id.
+    /// </summary>
+    /// <returns>
+    /// A long
+    /// </returns>
+    /// <exception cref="InvalidOperationException">System clock moved backwards.</exception>
     public long NextId()
     {
-        lock (_lock)
+        lock (this._lock)
         {
-            var timestamp = CurrentTimeMillis();
-            if (timestamp < _lastTimestamp)
+            long timestamp = CurrentTimeMillis();
+            if (timestamp < this._lastTimestamp)
             {
                 throw new InvalidOperationException("System clock moved backwards.");
             }
 
-            if (_lastTimestamp == timestamp)
+            if (this._lastTimestamp == timestamp)
             {
-                _sequence = (_sequence + 1) & SequenceMask;
-                if (_sequence == 0) timestamp = WaitNextMillis(_lastTimestamp);
+                this._sequence = (this._sequence + 1) & SEQUENCE_MASK;
+                if (this._sequence == 0) timestamp = WaitNextMillis(this._lastTimestamp);
             }
             else
             {
-                _sequence = 0;
+                this._sequence = 0;
             }
 
-            _lastTimestamp = timestamp;
-            return ((timestamp - Twepoch) << TimestampLeftShift) | (_dataCenterId << DataCenterIdShift) | (_workerId << WorkerIdShift) | _sequence;
+            this._lastTimestamp = timestamp;
+            return ((timestamp - TWEPOCH) << TIMESTAMP_LEFT_SHIFT) | (this._dataCenterId << DATA_CENTER_ID_SHIFT) | (this._workerId << WORKER_ID_SHIFT) | this._sequence;
         }
     }
 
+    #endregion IIdGenerator<long> Members
+
+    /// <summary>
+    /// Currents the time millis.
+    /// </summary>
+    /// <returns></returns>
+    private static long CurrentTimeMillis() => DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+
+    /// <summary>
+    /// Waits the next millis.
+    /// </summary>
+    /// <param name="lastTimestamp">The last timestamp.</param>
+    /// <returns></returns>
     private static long WaitNextMillis(long lastTimestamp)
     {
-        var timestamp = CurrentTimeMillis();
+        long timestamp = CurrentTimeMillis();
         while (timestamp <= lastTimestamp) timestamp = CurrentTimeMillis();
         return timestamp;
     }
-
-    private static long CurrentTimeMillis() => DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
 }

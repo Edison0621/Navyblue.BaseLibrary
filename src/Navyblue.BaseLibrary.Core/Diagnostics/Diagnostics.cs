@@ -1,19 +1,87 @@
-﻿using System.Diagnostics;
+﻿// ****************************************************************************************************************************************
+// Project          : Navyblue.BaseLibrary
+// File             : Diagnostics.cs
+// Created          : 2026-06-29  11:06
+// 
+// Last Modified By : kitt-nostalgic(jstsmaxx@gmail.com)
+// Last Modified On : 2026-06-29  13:02
+// ****************************************************************************************************************************************
+// <copyright file="Diagnostics.cs" company="">
+//     Copyright ©  2011-2026. All rights reserved.
+// </copyright>
+// ****************************************************************************************************************************************
+
+using System.Diagnostics;
 
 namespace Navyblue.BaseLibrary.Diagnostics;
 
+/// <summary>
+///     The correlation context.
+/// </summary>
 public static class CorrelationContext
 {
-    private static readonly AsyncLocal<string?> CurrentValue = new();
-    public static string? Current { get => CurrentValue.Value; set => CurrentValue.Value = value; }
-    public static IDisposable BeginScope(string correlationId) { ArgumentException.ThrowIfNullOrWhiteSpace(correlationId); var previous = CurrentValue.Value; CurrentValue.Value = correlationId; return new Scope(previous); }
-    private sealed class Scope(string? previous) : IDisposable { private bool _disposed; public void Dispose() { if (_disposed) return; CurrentValue.Value = previous; _disposed = true; } }
+    private static readonly AsyncLocal<string?> _currentValue = new();
+
+    /// <summary>
+    ///     Gets or sets the current.
+    /// </summary>
+    public static string? Current
+    {
+        get => _currentValue.Value;
+        set => _currentValue.Value = value;
+    }
+
+    /// <summary>
+    ///     Begins the scope.
+    /// </summary>
+    /// <param name="correlationId">The correlation id.</param>
+    /// <exception cref="ArgumentException"></exception>
+    /// <returns>An IDisposable</returns>
+    public static IDisposable BeginScope(string correlationId)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(correlationId);
+        string? previous = _currentValue.Value;
+        _currentValue.Value = correlationId;
+        return new Scope(previous);
+    }
+
+    #region Nested type: Scope
+
+    private sealed class Scope(string? previous) : IDisposable
+    {
+        private bool _disposed;
+
+        #region IDisposable Members
+
+        public void Dispose()
+        {
+            if (this._disposed) return;
+            _currentValue.Value = previous;
+            this._disposed = true;
+        }
+
+        #endregion
+    }
+
+    #endregion
 }
 
+/// <summary>
+///     The operation timer.
+/// </summary>
 public readonly struct OperationTimer
 {
     private readonly long _startTimestamp;
-    private OperationTimer(long startTimestamp) => _startTimestamp = startTimestamp;
+    private OperationTimer(long startTimestamp) => this._startTimestamp = startTimestamp;
+
+    /// <summary>
+    ///     Start the new.
+    /// </summary>
+    /// <returns>An OperationTimer</returns>
     public static OperationTimer StartNew() => new(Stopwatch.GetTimestamp());
-    public TimeSpan Elapsed => Stopwatch.GetElapsedTime(_startTimestamp);
+
+    /// <summary>
+    ///     Gets the elapsed.
+    /// </summary>
+    public TimeSpan Elapsed => Stopwatch.GetElapsedTime(this._startTimestamp);
 }
