@@ -4,7 +4,7 @@
 // Created          : 2026-06-29  11:06
 // 
 // Last Modified By : kitt-nostalgic(jstsmaxx@gmail.com)
-// Last Modified On : 2026-06-29  13:02
+// Last Modified On : 2026-06-30  14:50
 // ****************************************************************************************************************************************
 // <copyright file="AspNetCoreIntegration.cs" company="">
 //     Copyright ©  2011-2026. All rights reserved.
@@ -54,6 +54,31 @@ public sealed class NavyblueAspNetCoreOptions
     ///     Gets or sets the tenant header name.
     /// </summary>
     public string TenantHeaderName { get; set; } = "X-Tenant-Id";
+
+    /// <summary>
+    ///     Gets or sets the client ip header name.
+    /// </summary>
+    public string ClientIpHeaderName { get; set; } = "X-Forwarded-For";
+
+    /// <summary>
+    ///     Gets or sets a value indicating whether security headers are enabled.
+    /// </summary>
+    public bool EnableSecurityHeaders { get; set; } = true;
+
+    /// <summary>
+    ///     Gets or sets a value indicating whether request context should be populated.
+    /// </summary>
+    public bool EnableRequestContext { get; set; } = true;
+
+    /// <summary>
+    ///     Gets or sets a value indicating whether tenant resolution is enabled.
+    /// </summary>
+    public bool EnableTenantResolution { get; set; } = true;
+
+    /// <summary>
+    ///     Gets or sets a value indicating whether audit logging is enabled.
+    /// </summary>
+    public bool EnableAuditLogging { get; set; } = false;
 }
 
 /// <summary>
@@ -190,6 +215,11 @@ public static class NavyblueAspNetCoreExtensions
         configure?.Invoke(options);
         services.AddSingleton(options);
         services.AddHttpContextAccessor();
+        services.AddScoped<IHttpRequestContext, HttpRequestContext>();
+        services.AddScoped<IExceptionResponseMapper, DefaultExceptionResponseMapper>();
+        services.AddScoped<ITenantIdAccessor, TenantIdAccessor>();
+        services.AddScoped<IAuditLogSink, LoggingAuditLogSink>();
+        services.AddScoped<IPageMetadataAccessor, PageMetadataAccessor>();
         services.AddScoped<ICurrentUser, HttpCurrentUser>();
         services.AddScoped<ICurrentTenant, HttpCurrentTenant>();
         return services;
@@ -205,18 +235,22 @@ public static class NavyblueAspNetCoreExtensions
         NavyblueAspNetCoreOptions options = app.ApplicationServices.GetRequiredService<NavyblueAspNetCoreOptions>();
         if (options.EnableExceptionHandling) app.UseExceptionHandler(errorApp => errorApp.Run(WriteErrorAsync));
         if (options.EnableTraceId) app.UseMiddleware<TraceIdMiddleware>();
+        if (options.EnableTenantResolution) app.UseMiddleware<TenantResolutionMiddleware>();
+        if (options.EnableRequestContext) app.UseMiddleware<RequestContextMiddleware>();
+        if (options.EnableSecurityHeaders) app.UseMiddleware<SecurityHeadersMiddleware>();
         if (options.EnableRequestLogging) app.UseMiddleware<RequestLoggingMiddleware>();
+        if (options.EnableAuditLogging) app.UseMiddleware<AuditLoggingMiddleware>();
         return app;
     }
 
     private static async Task WriteErrorAsync(HttpContext context)
     {
         Exception? exception = context.Features.Get<IExceptionHandlerFeature>()?.Error;
-        string traceId = CorrelationContext.Current ?? context.TraceIdentifier;
-        (HttpStatusCode statusCode, BusinessCode code, string message) = MapException(exception);
-        context.Response.StatusCode = (int)statusCode;
+        IExceptionResponseMapper mapper = context.RequestServices.GetRequiredService<IExceptionResponseMapper>();
+        ExceptionResponse response = mapper.Map(exception, context);
+        context.Response.StatusCode = response.StatusCode;
         context.Response.ContentType = "application/json; charset=utf-8";
-        await context.Response.WriteAsJsonAsync(ApiResult.Fail(code, message, traceId, new ErrorInfo(code.ToString(), message))).ConfigureAwait(false);
+        await context.Response.WriteAsJsonAsync(response.Result).ConfigureAwait(false);
     }
 
     private static (HttpStatusCode StatusCode, BusinessCode Code, string Message) MapException(Exception? exception) => exception switch

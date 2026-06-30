@@ -4,7 +4,7 @@
 // Created          : 2026-06-29  11:06
 // 
 // Last Modified By : kitt-nostalgic(jstsmaxx@gmail.com)
-// Last Modified On : 2026-06-29  13:02
+// Last Modified On : 2026-06-30  14:51
 // ****************************************************************************************************************************************
 // <copyright file="BusinessRules.cs" company="">
 //     Copyright ©  2011-2026. All rights reserved.
@@ -14,37 +14,37 @@
 namespace Navyblue.BaseLibrary.Domain;
 
 /// <summary>
-/// The business rule interface.
+///     The business rule interface.
 /// </summary>
 public interface IBusinessRule
 {
     /// <summary>
-    /// Gets the code.
+    ///     Gets the code.
     /// </summary>
     /// <value>
-    /// The code.
+    ///     The code.
     /// </value>
     string Code { get; }
 
     /// <summary>
-    /// Gets the message.
+    ///     Gets the message.
     /// </summary>
     /// <value>
-    /// The message.
+    ///     The message.
     /// </value>
     string Message { get; }
 
     /// <summary>
-    /// Checks if is broken.
+    ///     Checks if is broken.
     /// </summary>
     /// <returns>
-    /// A bool
+    ///     A bool
     /// </returns>
     bool IsBroken();
 }
 
 /// <summary>
-/// The business rule.
+///     The business rule.
 /// </summary>
 /// <seealso cref="Navyblue.BaseLibrary.Domain.IBusinessRule" />
 public abstract class BusinessRule : IBusinessRule
@@ -52,26 +52,26 @@ public abstract class BusinessRule : IBusinessRule
     #region IBusinessRule Members
 
     /// <summary>
-    /// Gets the code.
+    ///     Gets the code.
     /// </summary>
     /// <value>
-    /// The code.
+    ///     The code.
     /// </value>
     public virtual string Code => this.GetType().Name;
 
     /// <summary>
-    /// Gets the message.
+    ///     Gets the message.
     /// </summary>
     /// <value>
-    /// The message.
+    ///     The message.
     /// </value>
     public abstract string Message { get; }
 
     /// <summary>
-    /// Checks if is broken.
+    ///     Checks if is broken.
     /// </summary>
     /// <returns>
-    /// A bool
+    ///     A bool
     /// </returns>
     public abstract bool IsBroken();
 
@@ -79,12 +79,12 @@ public abstract class BusinessRule : IBusinessRule
 }
 
 /// <summary>
-/// The check rule.
+///     The check rule.
 /// </summary>
 public static class CheckRule
 {
     /// <summary>
-    /// Againsts the specified rule.
+    ///     Againsts the specified rule.
     /// </summary>
     /// <param name="rule">The rule.</param>
     /// <exception cref="ArgumentNullException"></exception>
@@ -99,7 +99,7 @@ public static class CheckRule
     }
 
     /// <summary>
-    /// Againsts the specified broken.
+    ///     Againsts the specified broken.
     /// </summary>
     /// <param name="broken">If true, broken.</param>
     /// <param name="message">The message.</param>
@@ -115,7 +115,7 @@ public static class CheckRule
 }
 
 /// <summary>
-/// The delegate business rule.
+///     The delegate business rule.
 /// </summary>
 /// <seealso cref="Navyblue.BaseLibrary.Domain.IBusinessRule" />
 /// <param name="message">The message.</param>
@@ -126,26 +126,26 @@ public sealed class DelegateBusinessRule(string message, Func<bool> isBroken, st
     #region IBusinessRule Members
 
     /// <summary>
-    /// Gets the code.
+    ///     Gets the code.
     /// </summary>
     /// <value>
-    /// The code.
+    ///     The code.
     /// </value>
     public string Code { get; } = code;
 
     /// <summary>
-    /// Gets the message.
+    ///     Gets the message.
     /// </summary>
     /// <value>
-    /// The message.
+    ///     The message.
     /// </value>
     public string Message { get; } = message;
 
     /// <summary>
-    /// Checks if is broken.
+    ///     Checks if is broken.
     /// </summary>
     /// <returns>
-    /// A bool
+    ///     A bool
     /// </returns>
     public bool IsBroken() => isBroken();
 

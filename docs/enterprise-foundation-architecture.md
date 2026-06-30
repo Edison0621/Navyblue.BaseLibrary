@@ -185,3 +185,163 @@ app.Run();
 - `ClaimsPrincipal.GetUserId()` / `GetUserName()` / `GetTenantId()` / `GetRoles()` / `HasClaimValue()`
 
 这些扩展方法都保持零第三方依赖，优先使用 .NET 8/10 BCL 能力，并避免把 ASP.NET Core 专属 API 下沉到 Core。
+
+## 9. AspNetCore 能力增强
+
+`Navyblue.BaseLibrary.AspNetCore` 已从基础中间件扩展为更完整的 Web 接入包：
+
+### 请求上下文
+
+- `IHttpRequestContext`：统一暴露 TraceId、CorrelationId、TenantId、UserId、UserName、ClientIp、UserAgent、Method、Path、IsAuthenticated。
+- `HttpRequestContext`：基于 `IHttpContextAccessor` 解析请求上下文。
+- `RequestContextMiddleware`：把 TraceId、TenantId、UserId、ClientIp 写入 `HttpContext.Items`，并写入日志 Scope。
+- `RequestContextItems`：统一上下文 Item Key。
+
+### 异常映射
+
+- `IExceptionResponseMapper`
+- `DefaultExceptionResponseMapper`
+- `ExceptionResponse`
+
+异常映射器统一把领域异常、业务异常、认证授权异常、基础设施异常、超时异常映射为 `ApiResult`，后续业务项目可以替换自定义实现。
+
+### 安全与请求处理中间件
+
+- `SecurityHeadersMiddleware`：自动追加 `X-Content-Type-Options`、`X-Frame-Options`、`Referrer-Policy` 等安全响应头。
+- `NavyblueAspNetCoreOptions.EnableSecurityHeaders`
+- `NavyblueAspNetCoreOptions.EnableRequestContext`
+- `NavyblueAspNetCoreOptions.ClientIpHeaderName`
+
+### HTTP 扩展
+
+- `HttpRequest.IsAjaxRequest()`
+- `HttpRequest.GetDisplayUrlWithoutQueryString()`
+- `HttpRequest.AcceptsJson()`
+- `HttpRequest.GetHeaderValue()`
+- `HttpContext.GetClientIp()`
+- `HttpContext.IsLocalRequest()`
+- `HttpContext.GetRequestItem()`
+- `HttpResponse.WriteApiResultAsync()`
+
+### Minimal API / Endpoint 辅助
+
+- `NavyblueResults.Ok()`
+- `NavyblueResults.Ok<T>()`
+- `NavyblueResults.Fail()`
+- `NavyblueResults.Page<T>()`
+
+### 注册扩展
+
+- `AddNavyblueCors()`
+- `UseNavyblueCors()`
+- `AddNavyblueHealthChecks()`
+
+这些能力仍然不引入第三方依赖，只依赖 ASP.NET Core 官方共享框架。
+
+## 10. 参考成熟框架后的 AspNetCore 继续增强
+
+参考 ABP、OrchardCore、FastEndpoints、ASP.NET Core 官方基础设施的常见能力边界后，`Navyblue.BaseLibrary.AspNetCore` 继续补充了以下能力。实现策略是吸收通用思路，不引入重框架依赖。
+
+### 审计日志
+
+- `AuditLogEntry`
+- `IAuditLogSink`
+- `LoggingAuditLogSink`
+- `AuditLoggingMiddleware`
+- `NavyblueAspNetCoreOptions.EnableAuditLogging`
+
+默认只记录请求摘要，不读取请求/响应 Body，避免性能和隐私风险。业务项目可以替换 `IAuditLogSink` 写入数据库、消息队列或日志平台。
+
+### 租户解析
+
+- `ITenantIdAccessor`
+- `TenantIdAccessor`
+- `TenantResolutionMiddleware`
+- `NavyblueAspNetCoreOptions.EnableTenantResolution`
+
+租户来源顺序：Header、Claim、Query。后续可以扩展为 Host/Subdomain/Cookie 策略。
+
+### API Key
+
+- `ApiKeyOptions`
+- `ApiKeyMiddleware`
+- `AddNavyblueApiKey()`
+- `UseNavyblueApiKey()`
+
+API Key 不默认启用，避免业务项目接入后无感变成 401。适合内部服务、管理端回调、Webhook 等轻量认证场景。
+
+### MVC 响应包装
+
+- `ApiResultWrappingFilter`
+- `DisableApiResultWrappingAttribute`
+- `AddNavyblueApiResultWrapping()`
+
+可把普通 `ObjectResult` 包装为 `ApiResult<T>`，文件结果、已包装结果和禁用包装的 Action 不处理。
+
+### ProblemDetails 与状态码页
+
+- `AddNavyblueProblemDetails()`
+- `UseNavyblueStatusCodePages()`
+
+统一给 ProblemDetails 附加 TraceId/TenantId，并把 401/403/404/500 等状态码页转换为 `ApiResult`。
+
+### Rate Limiting
+
+- `NavyblueRateLimitOptions`
+- `AddNavyblueRateLimiting()`
+- `UseNavyblueRateLimiting()`
+
+使用 ASP.NET Core 内置 RateLimiter，默认 Fixed Window，不引入第三方限流库。
+
+这些增强让 AspNetCore 包从“基础中间件集合”进一步接近企业 Web 基础设施包，但仍保持轻量和可替换。
+
+## 11. 面向页面/API开发的便利能力
+
+为了让开发者把更多精力放在页面交互和业务流程上，本轮继续补充了页面/API开发常用的基础契约和 Web 辅助能力。
+
+### Core 应用层契约
+
+- `PageRequest`：统一分页请求，支持默认值和最大分页保护。
+- `SortDescriptor` / `SortDirection`：统一排序描述。
+- `FilterDescriptor` / `FilterOperator`：统一过滤描述。
+- `QueryRequest`：组合分页、排序、过滤、关键词。
+- `PageResultFactory.ToPageResult()`：列表转分页结果。
+- `IApplicationService`：应用服务标记接口。
+- `IReadOnlyAppService<TDto, TKey, TQuery>`：查询应用服务契约。
+- `ICrudAppService<TDto, TKey, TQuery, TCreateInput, TUpdateInput>`：CRUD 应用服务契约。
+- `IObjectMapper`：对象映射抽象，避免直接绑定 AutoMapper 等第三方包。
+- `IPermissionChecker` / `IDataPermissionContext`：权限和数据权限抽象。
+- `ITransientDependency` / `IScopedDependency` / `ISingletonDependency`：约定式 DI 标记。
+- `AddNavyblueConventionalServicesFrom()`：按标记接口扫描注册服务。
+
+### AspNetCore 控制器和 Minimal API 辅助
+
+- `ControllerBase.OkApi()`
+- `ControllerBase.PageApi()`
+- `ControllerBase.FailApi()`
+- `ControllerBase.CreatedApi()`
+- `HttpRequest.GetPageRequest()`
+- `HttpRequest.GetQueryRequest()`
+- `IQueryCollection.GetInt32()` / `GetBoolean()` / `GetGuid()`
+- `EndpointRouteBuilder.MapNavyblueInfo()`
+- `EndpointRouteBuilder.MapNavybluePing()`
+- `EndpointRouteBuilder.MapNavyblueGetPage<T>()`
+
+### 文件与下载
+
+- `UploadedFileInfo`
+- `IFormFile.ToUploadedFileInfo()`
+- `IFormFile.SaveToAsync()`
+- `byte[].ToFileContentResult()`
+
+### 页面元数据和响应头
+
+- `PageMetadata`
+- `IPageMetadataAccessor`
+- `PageMetadataAccessor`
+- `HttpResponse.SetNoStore()`
+- `HttpResponse.SetCacheControl()`
+- `HttpResponse.SetETag()`
+- `ResponseHeaderExtensions.ComputeWeakETag()`
+
+这些能力的目标不是替代业务代码，而是减少每个页面/API重复写的分页、响应、上传、元数据、注册和返回包装样板。

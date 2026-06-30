@@ -16,6 +16,7 @@
 	</PropertyGroup>
 	<ItemGroup>
 		<FrameworkReference Include="Microsoft.AspNetCore.App" />
+		<ProjectReference Include="..\..\Navyblue.BaseLibrary\Navyblue.BaseLibrary.csproj" />
 		<ProjectReference Include="..\Navyblue.BaseLibrary.Core\Navyblue.BaseLibrary.Core.csproj" />
 	</ItemGroup>
 </Project>

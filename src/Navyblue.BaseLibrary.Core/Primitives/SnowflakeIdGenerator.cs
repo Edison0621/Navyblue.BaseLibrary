@@ -2,9 +2,9 @@
 // Project          : Navyblue.BaseLibrary
 // File             : SnowflakeIdGenerator.cs
 // Created          : 2026-06-29  11:06
-//
+// 
 // Last Modified By : kitt-nostalgic(jstsmaxx@gmail.com)
-// Last Modified On : 2026-06-29  13:02
+// Last Modified On : 2026-06-30  14:51
 // ****************************************************************************************************************************************
 // <copyright file="SnowflakeIdGenerator.cs" company="">
 //     Copyright ©  2011-2026. All rights reserved.
@@ -14,109 +14,109 @@
 namespace Navyblue.BaseLibrary.Primitives;
 
 /// <summary>
-/// The id generator interface.
+///     The id generator interface.
 /// </summary>
 /// <typeparam name="T"></typeparam>
 public interface IIdGenerator<out T>
 {
     /// <summary>
-    /// Nexts the id.
+    ///     Nexts the id.
     /// </summary>
     /// <returns>
-    /// A T
+    ///     A T
     /// </returns>
     T NextId();
 }
 
 /// <summary>
-/// The snowflake id generator.
+///     The snowflake id generator.
 /// </summary>
 public sealed class SnowflakeIdGenerator : IIdGenerator<long>
 {
     /// <summary>
-    /// The data center identifier bits
+    ///     The data center identifier bits
     /// </summary>
     private const int DATA_CENTER_ID_BITS = 5;
 
     /// <summary>
-    /// The data center identifier shift
+    ///     The data center identifier shift
     /// </summary>
     private const int DATA_CENTER_ID_SHIFT = SEQUENCE_BITS + WORKER_ID_BITS;
 
     /// <summary>
-    /// The maximum data center identifier
+    ///     The maximum data center identifier
     /// </summary>
     private const long MAX_DATA_CENTER_ID = -1L ^ (-1L << DATA_CENTER_ID_BITS);
 
     /// <summary>
-    /// The maximum worker identifier
+    ///     The maximum worker identifier
     /// </summary>
     private const long MAX_WORKER_ID = -1L ^ (-1L << WORKER_ID_BITS);
 
     /// <summary>
-    /// The sequence bits
+    ///     The sequence bits
     /// </summary>
     private const int SEQUENCE_BITS = 12;
 
     /// <summary>
-    /// The sequence mask
+    ///     The sequence mask
     /// </summary>
     private const long SEQUENCE_MASK = -1L ^ (-1L << SEQUENCE_BITS);
 
     /// <summary>
-    /// The timestamp left shift
+    ///     The timestamp left shift
     /// </summary>
     private const int TIMESTAMP_LEFT_SHIFT = SEQUENCE_BITS + WORKER_ID_BITS + DATA_CENTER_ID_BITS;
 
     /// <summary>
-    /// The twepoch
+    ///     The twepoch
     /// </summary>
     private const long TWEPOCH = 1704067200000L;
 
     /// <summary>
-    /// The worker identifier bits
+    ///     The worker identifier bits
     /// </summary>
     private const int WORKER_ID_BITS = 5;
 
     /// <summary>
-    /// The worker identifier shift
+    ///     The worker identifier shift
     /// </summary>
     private const int WORKER_ID_SHIFT = SEQUENCE_BITS;
 
     /// <summary>
-    /// The data center identifier
+    ///     The data center identifier
     /// </summary>
     private readonly long _dataCenterId;
 
     /// <summary>
-    /// The lock
+    ///     The lock
     /// </summary>
     private readonly object _lock = new();
 
     /// <summary>
-    /// The worker identifier
+    ///     The worker identifier
     /// </summary>
     private readonly long _workerId;
 
     /// <summary>
-    /// The last timestamp
+    ///     The last timestamp
     /// </summary>
     private long _lastTimestamp = -1L;
 
     /// <summary>
-    /// The sequence
+    ///     The sequence
     /// </summary>
     private long _sequence;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="SnowflakeIdGenerator" /> class.
+    ///     Initializes a new instance of the <see cref="SnowflakeIdGenerator" /> class.
     /// </summary>
     /// <param name="workerId">The worker id.</param>
     /// <param name="dataCenterId">The data center id.</param>
     /// <exception cref="ArgumentOutOfRangeException">
-    /// workerId
-    /// or
-    /// dataCenterId
+    ///     workerId
+    ///     or
+    ///     dataCenterId
     /// </exception>
     public SnowflakeIdGenerator(long workerId = 0, long dataCenterId = 0)
     {
@@ -129,10 +129,10 @@ public sealed class SnowflakeIdGenerator : IIdGenerator<long>
     #region IIdGenerator<long> Members
 
     /// <summary>
-    /// Nexts the id.
+    ///     Nexts the id.
     /// </summary>
     /// <returns>
-    /// A long
+    ///     A long
     /// </returns>
     /// <exception cref="InvalidOperationException">System clock moved backwards.</exception>
     public long NextId()
@@ -160,16 +160,16 @@ public sealed class SnowflakeIdGenerator : IIdGenerator<long>
         }
     }
 
-    #endregion IIdGenerator<long> Members
+    #endregion
 
     /// <summary>
-    /// Currents the time millis.
+    ///     Currents the time millis.
     /// </summary>
     /// <returns></returns>
     private static long CurrentTimeMillis() => DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
 
     /// <summary>
-    /// Waits the next millis.
+    ///     Waits the next millis.
     /// </summary>
     /// <param name="lastTimestamp">The last timestamp.</param>
     /// <returns></returns>

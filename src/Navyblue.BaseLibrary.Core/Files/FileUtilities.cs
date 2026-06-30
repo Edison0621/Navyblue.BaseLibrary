@@ -4,7 +4,7 @@
 // Created          : 2026-06-29  11:06
 // 
 // Last Modified By : kitt-nostalgic(jstsmaxx@gmail.com)
-// Last Modified On : 2026-06-29  13:02
+// Last Modified On : 2026-06-30  14:51
 // ****************************************************************************************************************************************
 // <copyright file="FileUtilities.cs" company="">
 //     Copyright ©  2011-2026. All rights reserved.
@@ -16,22 +16,22 @@ using System.Security.Cryptography;
 namespace Navyblue.BaseLibrary.Files;
 
 /// <summary>
-/// The file name sanitizer.
+///     The file name sanitizer.
 /// </summary>
 public static class FileNameSanitizer
 {
     /// <summary>
-    /// The invalid file name chars
+    ///     The invalid file name chars
     /// </summary>
     private static readonly char[] _invalidFileNameChars = Path.GetInvalidFileNameChars();
 
     /// <summary>
-    /// Sanitizes the specified file name.
+    ///     Sanitizes the specified file name.
     /// </summary>
     /// <param name="fileName">The file name.</param>
     /// <param name="replacement">The replacement.</param>
     /// <returns>
-    /// A string
+    ///     A string
     /// </returns>
     /// <exception cref="ArgumentException"></exception>
     public static string Sanitize(string fileName, string replacement = "_")
@@ -43,21 +43,21 @@ public static class FileNameSanitizer
 }
 
 /// <summary>
-/// The file size formatter.
+///     The file size formatter.
 /// </summary>
 public static class FileSizeFormatter
 {
     /// <summary>
-    /// The units
+    ///     The units
     /// </summary>
     private static readonly string[] _units = ["B", "KB", "MB", "GB", "TB"];
 
     /// <summary>
-    /// Formats the specified bytes.
+    ///     Formats the specified bytes.
     /// </summary>
     /// <param name="bytes">The bytes.</param>
     /// <returns>
-    /// A string
+    ///     A string
     /// </returns>
     /// <exception cref="ArgumentOutOfRangeException">bytes</exception>
     public static string Format(long bytes)
@@ -76,17 +76,17 @@ public static class FileSizeFormatter
 }
 
 /// <summary>
-/// The stream utilities.
+///     The stream utilities.
 /// </summary>
 public static class StreamUtilities
 {
     /// <summary>
-    /// Compute sha256 hex asynchronously.
+    ///     Compute sha256 hex asynchronously.
     /// </summary>
     /// <param name="stream">The stream.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>
-    ///   <![CDATA[Task<string>]]>
+    ///     <![CDATA[Task<string>]]>
     /// </returns>
     /// <exception cref="ArgumentNullException"></exception>
     public static async Task<string> ComputeSha256HexAsync(Stream stream, CancellationToken cancellationToken = default)
@@ -97,12 +97,12 @@ public static class StreamUtilities
     }
 
     /// <summary>
-    /// Reads all bytes asynchronously.
+    ///     Reads all bytes asynchronously.
     /// </summary>
     /// <param name="stream">The stream.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>
-    ///   <![CDATA[Task<byte[]>]]>
+    ///     <![CDATA[Task<byte[]>]]>
     /// </returns>
     /// <exception cref="ArgumentNullException"></exception>
     public static async Task<byte[]> ReadAllBytesAsync(Stream stream, CancellationToken cancellationToken = default)
@@ -115,12 +115,12 @@ public static class StreamUtilities
 }
 
 /// <summary>
-/// The mime type map.
+///     The mime type map.
 /// </summary>
 public static class MimeTypeMap
 {
     /// <summary>
-    /// The types
+    ///     The types
     /// </summary>
     private static readonly IReadOnlyDictionary<string, string> _types = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
     {
@@ -139,11 +139,11 @@ public static class MimeTypeMap
     };
 
     /// <summary>
-    /// Get mime type.
+    ///     Get mime type.
     /// </summary>
     /// <param name="fileName">The file name.</param>
     /// <returns>
-    /// A string
+    ///     A string
     /// </returns>
     public static string GetMimeType(string fileName)
     {

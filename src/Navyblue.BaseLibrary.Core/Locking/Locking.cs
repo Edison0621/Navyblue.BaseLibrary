@@ -4,7 +4,7 @@
 // Created          : 2026-06-29  11:06
 // 
 // Last Modified By : kitt-nostalgic(jstsmaxx@gmail.com)
-// Last Modified On : 2026-06-29  13:02
+// Last Modified On : 2026-06-30  14:51
 // ****************************************************************************************************************************************
 // <copyright file="Locking.cs" company="">
 //     Copyright ©  2011-2026. All rights reserved.
@@ -14,56 +14,56 @@
 namespace Navyblue.BaseLibrary.Locking;
 
 /// <summary>
-/// The distributed lock interface.
+///     The distributed lock interface.
 /// </summary>
 /// <seealso cref="System.IAsyncDisposable" />
 public interface IDistributedLock : IAsyncDisposable
 {
     /// <summary>
-    /// Gets the name.
+    ///     Gets the name.
     /// </summary>
     /// <value>
-    /// The name.
+    ///     The name.
     /// </value>
     string Name { get; }
 
     /// <summary>
-    /// Gets the token.
+    ///     Gets the token.
     /// </summary>
     /// <value>
-    /// The token.
+    ///     The token.
     /// </value>
     string Token { get; }
 
     /// <summary>
-    /// Gets a value indicating whether this instance is acquired.
+    ///     Gets a value indicating whether this instance is acquired.
     /// </summary>
     /// <value>
-    ///   <c>true</c> if this instance is acquired; otherwise, <c>false</c>.
+    ///     <c>true</c> if this instance is acquired; otherwise, <c>false</c>.
     /// </value>
     bool IsAcquired { get; }
 }
 
 /// <summary>
-/// The distributed lock provider interface.
+///     The distributed lock provider interface.
 /// </summary>
 public interface IDistributedLockProvider
 {
     /// <summary>
-    /// Try the acquire asynchronously.
+    ///     Try the acquire asynchronously.
     /// </summary>
     /// <param name="name">The name.</param>
     /// <param name="expiry">The expiry.</param>
     /// <param name="waitTime">The wait time.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>
-    ///   <![CDATA[ValueTask<IDistributedLock?>]]>
+    ///     <![CDATA[ValueTask<IDistributedLock?>]]>
     /// </returns>
     ValueTask<IDistributedLock?> TryAcquireAsync(string name, TimeSpan expiry, TimeSpan waitTime, CancellationToken cancellationToken = default);
 }
 
 /// <summary>
-/// The distributed lock handle.
+///     The distributed lock handle.
 /// </summary>
 /// <seealso cref="Navyblue.BaseLibrary.Locking.IDistributedLock" />
 /// <param name="name">The name.</param>
@@ -74,34 +74,34 @@ public sealed class DistributedLockHandle(string name, string token, Func<ValueT
     #region IDistributedLock Members
 
     /// <summary>
-    /// Gets the name.
+    ///     Gets the name.
     /// </summary>
     /// <value>
-    /// The name.
+    ///     The name.
     /// </value>
     public string Name { get; } = name;
 
     /// <summary>
-    /// Gets the token.
+    ///     Gets the token.
     /// </summary>
     /// <value>
-    /// The token.
+    ///     The token.
     /// </value>
     public string Token { get; } = token;
 
     /// <summary>
-    /// Gets a value indicating whether acquired.
+    ///     Gets a value indicating whether acquired.
     /// </summary>
     /// <value>
-    ///   <c>true</c> if this instance is acquired; otherwise, <c>false</c>.
+    ///     <c>true</c> if this instance is acquired; otherwise, <c>false</c>.
     /// </value>
     public bool IsAcquired { get; private set; } = true;
 
     /// <summary>
-    /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources asynchronously.
+    ///     Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources asynchronously.
     /// </summary>
     /// <returns>
-    /// A ValueTask
+    ///     A ValueTask
     /// </returns>
     public async ValueTask DisposeAsync()
     {

@@ -4,7 +4,7 @@
 // Created          : 2026-06-29  11:06
 // 
 // Last Modified By : kitt-nostalgic(jstsmaxx@gmail.com)
-// Last Modified On : 2026-06-29  13:02
+// Last Modified On : 2026-06-30  14:51
 // ****************************************************************************************************************************************
 // <copyright file="Primitives.cs" company="">
 //     Copyright ©  2011-2026. All rights reserved.
@@ -14,30 +14,30 @@
 namespace Navyblue.BaseLibrary.Primitives;
 
 /// <summary>
-/// The error.
+///     The error.
 /// </summary>
 public sealed record Error(string Code, string Message)
 {
     /// <summary>
-    /// The none.
+    ///     The none.
     /// </summary>
     public static readonly Error None = new(string.Empty, string.Empty);
 }
 
 /// <summary>
-/// The result.
+///     The result.
 /// </summary>
 public class Result
 {
     /// <summary>
-    /// Initializes a new instance of the <see cref="Result"/> class.
+    ///     Initializes a new instance of the <see cref="Result" /> class.
     /// </summary>
     /// <param name="succeeded">if set to <c>true</c> [succeeded].</param>
     /// <param name="error">The error.</param>
     /// <exception cref="InvalidOperationException">
-    /// Successful result cannot contain an error.
-    /// or
-    /// Failed result must contain an error.
+    ///     Successful result cannot contain an error.
+    ///     or
+    ///     Failed result must contain an error.
     /// </exception>
     protected Result(bool succeeded, Error error)
     {
@@ -55,75 +55,75 @@ public class Result
     }
 
     /// <summary>
-    /// Gets a value indicating whether succeeded.
+    ///     Gets a value indicating whether succeeded.
     /// </summary>
     /// <value>
-    ///   <c>true</c> if succeeded; otherwise, <c>false</c>.
+    ///     <c>true</c> if succeeded; otherwise, <c>false</c>.
     /// </value>
     public bool Succeeded { get; }
 
     /// <summary>
-    /// Gets a value indicating whether failed.
+    ///     Gets a value indicating whether failed.
     /// </summary>
     /// <value>
-    ///   <c>true</c> if failed; otherwise, <c>false</c>.
+    ///     <c>true</c> if failed; otherwise, <c>false</c>.
     /// </value>
     public bool Failed => !this.Succeeded;
 
     /// <summary>
-    /// Gets the error.
+    ///     Gets the error.
     /// </summary>
     /// <value>
-    /// The error.
+    ///     The error.
     /// </value>
     public Error Error { get; }
 
     /// <summary>
-    /// Successes this instance.
+    ///     Successes this instance.
     /// </summary>
     /// <returns>
-    /// A Result
+    ///     A Result
     /// </returns>
     public static Result Success() => new(true, Error.None);
 
     /// <summary>
-    /// Failures the specified error.
+    ///     Failures the specified error.
     /// </summary>
     /// <param name="error">The error.</param>
     /// <returns>
-    /// A Result
+    ///     A Result
     /// </returns>
     public static Result Failure(Error error) => new(false, error);
 
     /// <summary>
-    /// Successes and return a result.
+    ///     Successes and return a result.
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <param name="value">The value.</param>
     /// <returns>
-    ///   <![CDATA[Result<T>]]>
+    ///     <![CDATA[Result<T>]]>
     /// </returns>
     public static Result<T> Success<T>(T value) => new(value, true, Error.None);
 
     /// <summary>
-    /// Failures and return a result.
+    ///     Failures and return a result.
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <param name="error">The error.</param>
     /// <returns>
-    ///   <![CDATA[Result<T>]]>
+    ///     <![CDATA[Result<T>]]>
     /// </returns>
     public static Result<T> Failure<T>(Error error) => new(default, false, error);
 }
 
 /// <summary>
-/// The result.
+///     The result.
 /// </summary>
 /// <typeparam name="T"></typeparam>
 public sealed class Result<T> : Result
 {
     /// <summary>
-    /// Initializes a new instance of the <see cref="Result{T}"/> class.
+    ///     Initializes a new instance of the <see cref="Result{T}" /> class.
     /// </summary>
     /// <param name="value">The value.</param>
     /// <param name="succeeded">if set to <c>true</c> [succeeded].</param>
@@ -131,79 +131,79 @@ public sealed class Result<T> : Result
     internal Result(T? value, bool succeeded, Error error) : base(succeeded, error) => this.Value = value;
 
     /// <summary>
-    /// Gets the value.
+    ///     Gets the value.
     /// </summary>
     /// <value>
-    /// The value.
+    ///     The value.
     /// </value>
     public T? Value { get; }
 }
 
 /// <summary>
-/// The paged result.
+///     The paged result.
 /// </summary>
 /// <typeparam name="T"></typeparam>
 public sealed record PagedResult<T>(IReadOnlyList<T> Items, long Total, int PageIndex, int PageSize)
 {
     /// <summary>
-    /// Gets the total pages.
+    ///     Gets the total pages.
     /// </summary>
     /// <value>
-    /// The total pages.
+    ///     The total pages.
     /// </value>
     public long TotalPages => this.PageSize <= 0 ? 0 : (long)Math.Ceiling(this.Total / (double)this.PageSize);
 }
 
 /// <summary>
-/// The guard.
+///     The guard.
 /// </summary>
 public static class Guard
 {
     /// <summary>
-    /// Nots the null.
+    ///     Nots the null.
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <param name="value">The value.</param>
     /// <param name="paramName">The param name.</param>
     /// <returns>
-    /// A <typeparamref name="T" />
+    ///     A <typeparamref name="T" />
     /// </returns>
     /// <exception cref="ArgumentNullException"></exception>
     public static T NotNull<T>(T? value, string paramName) where T : class => value ?? throw new ArgumentNullException(paramName);
 
     /// <summary>
-    /// Nots null or white space.
+    ///     Nots null or white space.
     /// </summary>
     /// <param name="value">The value.</param>
     /// <param name="paramName">The param name.</param>
     /// <returns>
-    /// A string
+    ///     A string
     /// </returns>
     /// <exception cref="ArgumentException">Value cannot be empty.</exception>
     public static string NotNullOrWhiteSpace(string? value, string paramName) => string.IsNullOrWhiteSpace(value) ? throw new ArgumentException("Value cannot be empty.", paramName) : value;
 
     /// <summary>
-    /// Greaters than zero.
+    ///     Greaters than zero.
     /// </summary>
     /// <param name="value">The value.</param>
     /// <param name="paramName">The param name.</param>
     /// <returns>
-    /// An int
+    ///     An int
     /// </returns>
     /// <exception cref="ArgumentOutOfRangeException"></exception>
     public static int GreaterThanZero(int value, string paramName) => value <= 0 ? throw new ArgumentOutOfRangeException(paramName) : value;
 }
 
 /// <summary>
-/// The sequential guid.
+///     The sequential guid.
 /// </summary>
 public static class SequentialGuid
 {
     /// <summary>
-    /// Creates this instance.
+    ///     Creates this instance.
     /// </summary>
     /// <returns>
-    /// A Guid
+    ///     A Guid
     /// </returns>
     public static Guid Create()
     {

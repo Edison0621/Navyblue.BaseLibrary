@@ -1,18 +1,15 @@
-// *****************************************************************************************************************
-// Project          : NavyBlue
+// ****************************************************************************************************************************************
+// Project          : Navyblue.BaseLibrary
 // File             : Guid.cs
-// Created          : 2019-01-09  20:11
-//
-// Last Modified By : (jstsmaxx@163.com)
-// Last Modified On : 2019-01-15  10:51
-// *****************************************************************************************************************
-// <copyright file="Guid.cs" company="Shanghai Future Mdt InfoTech Ltd.">
-//     Copyright ©  2012-2019 Mdt InfoTech Ltd. All rights reserved.
+// Created          : 2026-06-26  17:06
+// 
+// Last Modified By : kitt-nostalgic(jstsmaxx@gmail.com)
+// Last Modified On : 2026-06-30  14:50
+// ****************************************************************************************************************************************
+// <copyright file="Guid.cs" company="">
+//     Copyright ©  2011-2026. All rights reserved.
 // </copyright>
-// *****************************************************************************************************************
-
-using System;
-using System.Linq;
+// ****************************************************************************************************************************************
 
 namespace Navyblue.BaseLibrary;
 
@@ -31,7 +28,7 @@ public static class GuidUtility
     /// <remarks>Author Mads Kristensen http://madskristensen.net/post/Generate-unique-strings-and-numbers-in-C.aspx</remarks>
     public static string GuidShortCode()
     {
-        long i = Guid.NewGuid().ToByteArray().Aggregate<byte, long>(1, (current, b) => current * ((int)b + 1));
+        long i = Guid.NewGuid().ToByteArray().Aggregate<byte, long>(1, (current, b) => current * (b + 1));
         return $"{i - DateTime.Now.Ticks:x}";
     }
 

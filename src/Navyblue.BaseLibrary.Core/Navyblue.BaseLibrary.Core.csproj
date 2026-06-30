@@ -20,4 +20,7 @@
     <PackageReference Include="Microsoft.Extensions.Http" Version="10.0.0" />
     <PackageReference Include="Microsoft.Extensions.Options" Version="10.0.0" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Navyblue.BaseLibrary\Navyblue.BaseLibrary.csproj" />
+  </ItemGroup>
 </Project>

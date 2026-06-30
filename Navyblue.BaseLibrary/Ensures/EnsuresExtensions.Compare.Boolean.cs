@@ -1,17 +1,16 @@
-﻿// *****************************************************************************************************************
-// Project          : NavyBlue
+﻿// ****************************************************************************************************************************************
+// Project          : Navyblue.BaseLibrary
 // File             : EnsuresExtensions.Compare.Boolean.cs
-// Created          : 2019-01-09  20:11
-//
-// Last Modified By : (jstsmaxx@163.com)
-// Last Modified On : 2019-01-15  10:49
-// *****************************************************************************************************************
-// <copyright file="EnsuresExtensions.Compare.Boolean.cs" company="Shanghai Future Mdt InfoTech Ltd.">
-//     Copyright ©  2012-2019 Mdt InfoTech Ltd. All rights reserved.
+// Created          : 2026-06-26  17:06
+// 
+// Last Modified By : kitt-nostalgic(jstsmaxx@gmail.com)
+// Last Modified On : 2026-06-30  14:49
+// ****************************************************************************************************************************************
+// <copyright file="EnsuresExtensions.Compare.Boolean.cs" company="">
+//     Copyright ©  2011-2026. All rights reserved.
 // </copyright>
-// *****************************************************************************************************************
+// ****************************************************************************************************************************************
 
-using System;
 using System.Diagnostics.CodeAnalysis;
 
 namespace NavyBlue.AspNetCore.Lib;
@@ -33,7 +32,7 @@ public static partial class EnsuresExtensions
             throw new ArgumentNullException(nameof(ensures));
         }
 
-        return ensures.That(v => v == false);
+        return ensures.That(v => !v);
     }
 
     /// <summary>
@@ -49,7 +48,7 @@ public static partial class EnsuresExtensions
             throw new ArgumentNullException(nameof(ensures));
         }
 
-        return ensures.That(v => v.HasValue && v.Value == false);
+        return ensures.That(v => v.HasValue && !v.Value);
     }
 
     /// <summary>

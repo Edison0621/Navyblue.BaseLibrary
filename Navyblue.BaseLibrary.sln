@@ -1,17 +1,28 @@
-﻿
+
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30204.135
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Navyblue.BaseLibrary", "Navyblue.BaseLibrary\Navyblue.BaseLibrary.csproj", "{F7BF1C99-E22B-4CC1-934E-34EE44B952EE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Navyblue.BaseLibrary", "Navyblue.BaseLibrary\Navyblue.BaseLibrary.csproj", "{F7BF1C99-E22B-4CC1-934E-34EE44B952EE}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{827E0CD3-B72D-47B6-A68D-7590B98EB39B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Navyblue.BaseLibrary.AspNetCore", "src\Navyblue.BaseLibrary.AspNetCore\Navyblue.BaseLibrary.AspNetCore.csproj", "{A447E0FA-933C-4A66-B529-AE1E84F465D4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Navyblue.BaseLibrary.AspNetCore", "src\Navyblue.BaseLibrary.AspNetCore\Navyblue.BaseLibrary.AspNetCore.csproj", "{A447E0FA-933C-4A66-B529-AE1E84F465D4}"
+	ProjectSection(ProjectDependencies) = postProject
+		{F7BF1C99-E22B-4CC1-934E-34EE44B952EE} = {F7BF1C99-E22B-4CC1-934E-34EE44B952EE}
+		{D5833C4B-E68D-4CE3-84C7-B62048622F0F} = {D5833C4B-E68D-4CE3-84C7-B62048622F0F}
+	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Navyblue.BaseLibrary.Testing", "src\Navyblue.BaseLibrary.Testing\Navyblue.BaseLibrary.Testing.csproj", "{D3989C4D-1F4F-4DDA-94F0-606EF3932D79}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Navyblue.BaseLibrary.Testing", "src\Navyblue.BaseLibrary.Testing\Navyblue.BaseLibrary.Testing.csproj", "{D3989C4D-1F4F-4DDA-94F0-606EF3932D79}"
+	ProjectSection(ProjectDependencies) = postProject
+		{F7BF1C99-E22B-4CC1-934E-34EE44B952EE} = {F7BF1C99-E22B-4CC1-934E-34EE44B952EE}
+		{D5833C4B-E68D-4CE3-84C7-B62048622F0F} = {D5833C4B-E68D-4CE3-84C7-B62048622F0F}
+	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Navyblue.BaseLibrary.Core", "src\Navyblue.BaseLibrary.Core\Navyblue.BaseLibrary.Core.csproj", "{D5833C4B-E68D-4CE3-84C7-B62048622F0F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Navyblue.BaseLibrary.Core", "src\Navyblue.BaseLibrary.Core\Navyblue.BaseLibrary.Core.csproj", "{D5833C4B-E68D-4CE3-84C7-B62048622F0F}"
+	ProjectSection(ProjectDependencies) = postProject
+		{F7BF1C99-E22B-4CC1-934E-34EE44B952EE} = {F7BF1C99-E22B-4CC1-934E-34EE44B952EE}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -4,7 +4,7 @@
 // Created          : 2026-06-29  11:06
 // 
 // Last Modified By : kitt-nostalgic(jstsmaxx@gmail.com)
-// Last Modified On : 2026-06-29  13:00
+// Last Modified On : 2026-06-30  14:51
 // ****************************************************************************************************************************************
 // <copyright file="TestingPrimitives.cs" company="">
 //     Copyright ©  2011-2026. All rights reserved.
@@ -16,23 +16,22 @@ using System.Security.Claims;
 namespace Navyblue.BaseLibrary.Testing;
 
 /// <summary>
-/// The test clock.
+///     The test clock.
 /// </summary>
 public sealed class TestClock
 {
     /// <summary>
-    /// Gets or sets the utc now.
+    ///     Gets or sets the utc now.
     /// </summary>
     public DateTimeOffset UtcNow { get; set; } = DateTimeOffset.UtcNow;
 }
 
 /// <summary>
-/// The test claims principal.
+///     The test claims principal.
 /// </summary>
 public static class TestClaimsPrincipal
 {
     /// <summary>
-    /// 
     /// </summary>
     /// <param name="userId">The user id.</param>
     /// <param name="userName">The user name.</param>

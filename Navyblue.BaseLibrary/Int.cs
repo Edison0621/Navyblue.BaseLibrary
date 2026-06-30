@@ -1,17 +1,16 @@
-﻿// *****************************************************************************************************************
-// Project          : NavyBlue
+﻿// ****************************************************************************************************************************************
+// Project          : Navyblue.BaseLibrary
 // File             : Int.cs
-// Created          : 2019-01-09  20:11
-//
-// Last Modified By : (jstsmaxx@163.com)
-// Last Modified On : 2019-01-15  10:52
-// *****************************************************************************************************************
-// <copyright file="Int.cs" company="Shanghai Future Mdt InfoTech Ltd.">
-//     Copyright ©  2012-2019 Mdt InfoTech Ltd. All rights reserved.
+// Created          : 2026-06-26  17:06
+// 
+// Last Modified By : kitt-nostalgic(jstsmaxx@gmail.com)
+// Last Modified On : 2026-06-30  14:50
+// ****************************************************************************************************************************************
+// <copyright file="Int.cs" company="">
+//     Copyright ©  2011-2026. All rights reserved.
 // </copyright>
-// *****************************************************************************************************************
+// ****************************************************************************************************************************************
 
-using System;
 using System.Diagnostics.CodeAnalysis;
 
 namespace Navyblue.BaseLibrary;
@@ -147,5 +146,5 @@ internal class LoopIterator : ILoopIterator
         }
     }
 
-    #endregion ILoopIterator Members
+    #endregion
 }

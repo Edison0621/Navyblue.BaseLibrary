@@ -4,7 +4,7 @@
 // Created          : 2026-06-29  11:06
 // 
 // Last Modified By : kitt-nostalgic(jstsmaxx@gmail.com)
-// Last Modified On : 2026-06-29  13:02
+// Last Modified On : 2026-06-30  14:51
 // ****************************************************************************************************************************************
 // <copyright file="ValueObject.cs" company="">
 //     Copyright ©  2011-2026. All rights reserved.
@@ -14,22 +14,22 @@
 namespace Navyblue.BaseLibrary.Domain;
 
 /// <summary>
-/// The value object.
+///     The value object.
 /// </summary>
 public abstract class ValueObject
 {
     /// <summary>
-    /// Gets the equality components.
+    ///     Gets the equality components.
     /// </summary>
     /// <returns></returns>
     protected abstract IEnumerable<object?> GetEqualityComponents();
 
     /// <summary>
-    /// Determines whether the specified object is equal to the current object.
+    ///     Determines whether the specified object is equal to the current object.
     /// </summary>
     /// <param name="obj">The obj.</param>
     /// <returns>
-    /// A bool
+    ///     A bool
     /// </returns>
     public override bool Equals(object? obj)
     {
@@ -39,10 +39,10 @@ public abstract class ValueObject
     }
 
     /// <summary>
-    /// Get hash code.
+    ///     Get hash code.
     /// </summary>
     /// <returns>
-    /// An int
+    ///     An int
     /// </returns>
     public override int GetHashCode()
     {
@@ -51,34 +51,34 @@ public abstract class ValueObject
     }
 
     /// <summary>
-    /// Implements the == operator.
+    ///     Implements the == operator.
     /// </summary>
     /// <param name="left">The left.</param>
     /// <param name="right">The right.</param>
     /// <returns>
-    /// A bool
+    ///     A bool
     /// </returns>
     public static bool operator ==(ValueObject? left, ValueObject? right) => Equals(left, right);
 
     /// <summary>
-    /// Implements the != operator.
+    ///     Implements the != operator.
     /// </summary>
     /// <param name="left">The left.</param>
     /// <param name="right">The right.</param>
     /// <returns>
-    /// A bool
+    ///     A bool
     /// </returns>
     public static bool operator !=(ValueObject? left, ValueObject? right) => !Equals(left, right);
 }
 
 /// <summary>
-/// The date range.
+///     The date range.
 /// </summary>
 /// <seealso cref="Navyblue.BaseLibrary.Domain.ValueObject" />
 public sealed class DateRange : ValueObject
 {
     /// <summary>
-    /// Initializes a new instance of the <see cref="DateRange" /> class.
+    ///     Initializes a new instance of the <see cref="DateRange" /> class.
     /// </summary>
     /// <param name="start">The start.</param>
     /// <param name="end">The end.</param>
@@ -91,40 +91,40 @@ public sealed class DateRange : ValueObject
     }
 
     /// <summary>
-    /// Gets the start.
+    ///     Gets the start.
     /// </summary>
     /// <value>
-    /// The start.
+    ///     The start.
     /// </value>
     public DateTimeOffset Start { get; }
 
     /// <summary>
-    /// Gets the end.
+    ///     Gets the end.
     /// </summary>
     /// <value>
-    /// The end.
+    ///     The end.
     /// </value>
     public DateTimeOffset End { get; }
 
     /// <summary>
-    /// Gets the duration.
+    ///     Gets the duration.
     /// </summary>
     /// <value>
-    /// The duration.
+    ///     The duration.
     /// </value>
     public TimeSpan Duration => this.End - this.Start;
 
     /// <summary>
-    /// Determines whether this instance contains the object.
+    ///     Determines whether this instance contains the object.
     /// </summary>
     /// <param name="value">The value.</param>
     /// <returns>
-    /// A bool
+    ///     A bool
     /// </returns>
     public bool Contains(DateTimeOffset value) => value >= this.Start && value <= this.End;
 
     /// <summary>
-    /// Gets the equality components.
+    ///     Gets the equality components.
     /// </summary>
     /// <returns></returns>
     protected override IEnumerable<object?> GetEqualityComponents()
@@ -135,13 +135,13 @@ public sealed class DateRange : ValueObject
 }
 
 /// <summary>
-/// The money.
+///     The money.
 /// </summary>
 /// <seealso cref="Navyblue.BaseLibrary.Domain.ValueObject" />
 public sealed class Money : ValueObject
 {
     /// <summary>
-    /// Initializes a new instance of the <see cref="Money" /> class.
+    ///     Initializes a new instance of the <see cref="Money" /> class.
     /// </summary>
     /// <param name="amount">The amount.</param>
     /// <param name="currency">The currency.</param>
@@ -154,23 +154,23 @@ public sealed class Money : ValueObject
     }
 
     /// <summary>
-    /// Gets the amount.
+    ///     Gets the amount.
     /// </summary>
     /// <value>
-    /// The amount.
+    ///     The amount.
     /// </value>
     public decimal Amount { get; }
 
     /// <summary>
-    /// Gets the currency.
+    ///     Gets the currency.
     /// </summary>
     /// <value>
-    /// The currency.
+    ///     The currency.
     /// </value>
     public string Currency { get; }
 
     /// <summary>
-    /// Gets the equality components.
+    ///     Gets the equality components.
     /// </summary>
     /// <returns></returns>
     protected override IEnumerable<object?> GetEqualityComponents()
@@ -180,10 +180,10 @@ public sealed class Money : ValueObject
     }
 
     /// <summary>
-    /// Converts to the string.
+    ///     Converts to the string.
     /// </summary>
     /// <returns>
-    /// A string
+    ///     A string
     /// </returns>
     public override string ToString() => $"{this.Amount:0.00} {this.Currency}";
 }

@@ -1,20 +1,17 @@
-// *****************************************************************************************************************
-// Project          : NavyBlue
+// ****************************************************************************************************************************************
+// Project          : Navyblue.BaseLibrary
 // File             : Type.cs
-// Created          : 2019-01-09  20:11
-//
-// Last Modified By : (jstsmaxx@163.com)
-// Last Modified On : 2019-01-15  10:53
-// *****************************************************************************************************************
-// <copyright file="Type.cs" company="Shanghai Future Mdt InfoTech Ltd.">
-//     Copyright ©  2012-2019 Mdt InfoTech Ltd. All rights reserved.
+// Created          : 2026-06-26  17:06
+// 
+// Last Modified By : kitt-nostalgic(jstsmaxx@gmail.com)
+// Last Modified On : 2026-06-30  14:50
+// ****************************************************************************************************************************************
+// <copyright file="Type.cs" company="">
+//     Copyright ©  2011-2026. All rights reserved.
 // </copyright>
-// *****************************************************************************************************************
+// ****************************************************************************************************************************************
 
-using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Navyblue.BaseLibrary;
 
@@ -82,7 +79,7 @@ public static class TypeExtensions
     /// <returns><c>true</c> if [is list or dictionary type] [the specified type]; otherwise, <c>false</c>.</returns>
     public static bool IsListOrDictionaryType(this Type type)
     {
-        return IsListType(type) || IsDictionaryType(type);
+        return type.IsListType() || type.IsDictionaryType();
     }
 
     /// <summary>

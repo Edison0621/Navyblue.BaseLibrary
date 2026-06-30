@@ -1,22 +1,19 @@
-// *****************************************************************************************************************
-// Project          : NavyBlue
+// ****************************************************************************************************************************************
+// Project          : Navyblue.BaseLibrary
 // File             : String.cs
-// Created          : 2019-01-09  20:11
-//
-// Last Modified By : (jstsmaxx@163.com)
-// Last Modified On : 2019-01-15  10:52
-// *****************************************************************************************************************
-// <copyright file="String.cs" company="Shanghai Future Mdt InfoTech Ltd.">
-//     Copyright ©  2012-2019 Mdt InfoTech Ltd. All rights reserved.
+// Created          : 2026-06-26  17:06
+// 
+// Last Modified By : kitt-nostalgic(jstsmaxx@gmail.com)
+// Last Modified On : 2026-06-30  14:50
+// ****************************************************************************************************************************************
+// <copyright file="String.cs" company="">
+//     Copyright ©  2011-2026. All rights reserved.
 // </copyright>
-// *****************************************************************************************************************
+// ****************************************************************************************************************************************
 
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
-using System.Linq;
 using System.Text;
 using System.Text.Json;
 using System.Text.RegularExpressions;
