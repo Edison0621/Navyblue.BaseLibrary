@@ -9,7 +9,7 @@
 | Navyblue.BaseLibrary | 原有兼容包，保留历史 API | 已有项目 |
 | Navyblue.Foundation | 企业基础能力核心包：DDD 实体、审计、软删、多租户、Result、ApiResult、异常、仓储抽象、缓存抽象、分布式锁抽象、幂等、事件、Outbox、Options、诊断、扩展方法、安全、JSON、校验、HTTP、模块化注册 | 绝大多数业务项目 |
 | Navyblue.Foundation.AspNetCore | ASP.NET Core 接入层：全局异常、TraceId、请求日志、当前用户/租户解析、`AddNavyblueFramework()`、`UseNavyblueFramework()` | Web API 项目 |
-| Navyblue.Foundation.Testing | 测试辅助：测试用户、ClaimsPrincipal、TestClock | 单元测试/集成测试项目 |
+| Navyblue.Foundation.Testing | 测试辅助：Fake 用户/租户/审计、TestClock、内存仓储/缓存/幂等/锁、事件 Spy、AspNetCore/JWT 辅助 | 单元测试/集成测试项目 |
 
 这个结构比“每个能力一个项目”更适合企业内部基础库的第一阶段：开发者心智负担更低，业务项目引用更简单，同时仍然通过命名空间和接口保持模块边界。
 
@@ -109,8 +109,13 @@ app.Run();
 
 ### Testing 新增
 
-- `FakeCurrentUser`
-- `FakeCurrentTenant`
+- `TestClock`（实现 `IClock`）、`TestClaimsPrincipal`、`CorrelationTestScope`
+- `FakeCurrentUser` / `FakeCurrentTenant` / `FakeAuditor` / `FakeTenantResolver` / `FakeAuditPropertySetter`
+- `FakePermissionChecker` / `FakeDataPermissionContext` / `FakeObjectMapper` / `SequentialIdGenerator`
+- `InMemoryDomainEventCollector` / `SpyEventBus`
+- `InMemoryRepository` / `InMemoryUnitOfWork` / `InMemoryCacheProvider` / `InMemoryIdempotencyStore` / `InMemoryDistributedLockProvider`
+- `InMemoryAuditLogSink` / `FakeHttpRequestContext` / `FakeTenantIdAccessor` / `HttpContextTestHelper` / `JwtTestHelper`
+- `AddNavyblueTestingFoundation()` / `AddNavyblueTestingAspNetCore()`
 
 这些新增能力仍然遵循低耦合原则：核心包不绑定 EF Core、Redis、RabbitMQ、Kafka 等重依赖，后续需要时再做适配包。
 

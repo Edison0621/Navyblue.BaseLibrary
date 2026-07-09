@@ -4,7 +4,7 @@
 // Created          : 2026-06-29  11:06
 // 
 // Last Modified By : kitt-nostalgic(jstsmaxx@gmail.com)
-// Last Modified On : 2026-07-09  14:01
+// Last Modified On : 2026-07-09  16:06
 // ****************************************************************************************************************************************
 // <copyright file="FakeApplicationContext.cs" company="">
 //     Copyright ©  2011-2026. All rights reserved.
@@ -17,85 +17,70 @@ using Navyblue.Foundation.Application;
 namespace Navyblue.Foundation.Testing;
 
 /// <summary>
-///     The fake current user.
+///     Fake <see cref="ICurrentUser" /> for unit tests.
 /// </summary>
 public sealed class FakeCurrentUser : ICurrentUser
 {
     /// <summary>
-    ///     Gets the claim list.
+    ///     Gets the mutable claim list.
     /// </summary>
     public List<Claim> ClaimList { get; } = [];
 
     /// <summary>
-    ///     Gets the role list.
+    ///     Gets the mutable role list.
     /// </summary>
     public List<string> RoleList { get; } = [];
 
-    #region ICurrentUser Members
-
-    /// <summary>
-    ///     Gets the claims.
-    /// </summary>
+    /// <inheritdoc />
     public IReadOnlyCollection<Claim> Claims => this.ClaimList;
 
-    /// <summary>
-    ///     Gets or sets a value indicating whether authenticated.
-    /// </summary>
+    /// <inheritdoc />
     public bool IsAuthenticated { get; set; } = true;
 
-    /// <summary>
-    ///     Gets the roles.
-    /// </summary>
+    /// <inheritdoc />
     public IReadOnlyCollection<string> Roles => this.RoleList;
 
-    /// <summary>
-    ///     Gets or sets the user id.
-    /// </summary>
+    /// <inheritdoc />
     public string? UserId { get; set; } = "test-user";
 
-    /// <summary>
-    ///     Gets or sets the user name.
-    /// </summary>
+    /// <inheritdoc />
     public string? UserName { get; set; } = "Test User";
 
-    /// <summary>
-    ///     Find claim value.
-    /// </summary>
-    /// <param name="claimType">The claim type.</param>
-    /// <returns>A string</returns>
+    /// <inheritdoc />
     public string? FindClaimValue(string claimType) => this.ClaimList.FirstOrDefault(x => x.Type == claimType)?.Value;
 
-    /// <summary>
-    ///     Checks if is in role.
-    /// </summary>
-    /// <param name="role">The role.</param>
-    /// <returns>A bool</returns>
+    /// <inheritdoc />
     public bool IsInRole(string role) => this.RoleList.Contains(role, StringComparer.OrdinalIgnoreCase);
 
-    #endregion
+    /// <summary>
+    ///     Creates a fake user from a claims principal.
+    /// </summary>
+    public static FakeCurrentUser FromPrincipal(ClaimsPrincipal principal)
+    {
+        ArgumentNullException.ThrowIfNull(principal);
+        FakeCurrentUser user = new()
+        {
+            UserId = principal.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? principal.FindFirst("sub")?.Value,
+            UserName = principal.Identity?.Name ?? principal.FindFirst(ClaimTypes.Name)?.Value,
+            IsAuthenticated = principal.Identity?.IsAuthenticated == true
+        };
+        user.RoleList.AddRange(principal.FindAll(ClaimTypes.Role).Select(x => x.Value));
+        user.ClaimList.AddRange(principal.Claims);
+        return user;
+    }
 }
 
 /// <summary>
-///     The fake current tenant.
+///     Fake <see cref="ICurrentTenant" /> for unit tests.
 /// </summary>
 public sealed class FakeCurrentTenant : ICurrentTenant
 {
-    #region ICurrentTenant Members
-
-    /// <summary>
-    ///     Gets a value indicating whether available.
-    /// </summary>
+    /// <inheritdoc />
     public bool IsAvailable => !string.IsNullOrWhiteSpace(this.TenantId);
 
-    /// <summary>
-    ///     Gets or sets the tenant id.
-    /// </summary>
+    /// <inheritdoc />
     public string? TenantId { get; set; } = "test-tenant";
 
-    /// <summary>
-    ///     Gets or sets the tenant name.
-    /// </summary>
+    /// <inheritdoc />
     public string? TenantName { get; set; } = "Test Tenant";
-
-    #endregion
 }

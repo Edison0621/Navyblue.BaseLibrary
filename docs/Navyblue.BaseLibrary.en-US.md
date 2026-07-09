@@ -17,7 +17,7 @@ Navyblue.BaseLibrary is a modern foundation library for .NET enterprise applicat
 | `Navyblue.BaseLibrary` | `net6.0;net7.0;net8.0;net9.0;net10.0` | Common extensions, JSON, Guid, hash, date, collections, Span, Memory, Stream, URI, HTTP, modern BCL helpers |
 | `Navyblue.Foundation` | `net6.0;net7.0;net8.0;net9.0;net10.0` | DDD, application models, Result, paging, events, caching, idempotency, DI, diagnostics, files, HTTP, locks |
 | `Navyblue.Foundation.AspNetCore` | `net6.0;net7.0;net8.0;net9.0;net10.0` | Standard Web API responses, JWT issuance/JwtBearer, exception mapping, TraceId, tenant context, audit, security headers, Minimal API helpers |
-| `Navyblue.Foundation.Testing` | `net6.0;net7.0;net8.0;net9.0;net10.0` | Test clock, fake current user, fake tenant, claims principal, in-memory domain event collector |
+| `Navyblue.Foundation.Testing` | `net6.0;net7.0;net8.0;net9.0;net10.0` | Test clock, fake user/tenant/auditor, in-memory repo/cache/idempotency/lock, event spies, AspNetCore/JWT helpers, DI |
 
 ## Installation
 
@@ -470,42 +470,47 @@ Recommended claims for out-of-the-box current-user support:
 ```csharp
 using Microsoft.Extensions.DependencyInjection;
 using Navyblue.Foundation.Application;
+using Navyblue.Foundation.Domain;
 using Navyblue.Foundation.Testing;
 
 var services = new ServiceCollection();
+services.AddNavyblueTestingFoundation(); // TestClock, fake user/tenant, event collector, in-memory infra
 
-var currentUser = new FakeCurrentUser
-{
-    UserId = "u-001",
-    UserName = "Alice",
-    IsAuthenticated = true
-};
-currentUser.RoleList.Add("admin");
-
-var currentTenant = new FakeCurrentTenant
-{
-    TenantId = "tenant-001",
-    TenantName = "Demo Tenant"
-};
-
-var clock = new TestClock { UtcNow = new DateTimeOffset(2026, 7, 9, 6, 0, 0, TimeSpan.Zero) };
-
-services.AddSingleton<ICurrentUser>(currentUser);
-services.AddSingleton<ICurrentTenant>(currentTenant);
-services.AddSingleton(clock);
+// Or for Web/integration tests:
+// services.AddNavyblueTestingAspNetCore();
 
 using ServiceProvider provider = services.BuildServiceProvider();
+var clock = provider.GetRequiredService<TestClock>();
+clock.SetUtcNow(new DateTimeOffset(2026, 7, 9, 6, 0, 0, TimeSpan.Zero));
+
 ICurrentUser user = provider.GetRequiredService<ICurrentUser>();
 ICurrentTenant tenant = provider.GetRequiredService<ICurrentTenant>();
+var events = provider.GetRequiredService<InMemoryDomainEventCollector>();
 
 var principal = TestClaimsPrincipal.Create(
     userId: "u-001",
     userName: "Alice",
     roles: ["admin"],
-    tenantId: "tenant-001");
+    tenantId: "tenant-001",
+    merchantId: "m-001");
+
+FakeCurrentUser fromPrincipal = FakeCurrentUser.FromPrincipal(principal);
 ```
 
-In integration tests, replace `HttpCurrentUser` / `HttpCurrentTenant` with `FakeCurrentUser` / `FakeCurrentTenant`, freeze time with `TestClock`, and build role/tenant claims with `TestClaimsPrincipal`.
+Common types:
+
+| Type | Purpose |
+| --- | --- |
+| `TestClock` / `IClock` | Controllable time via `Advance` / `SetUtcNow` |
+| `FakeCurrentUser` / `FakeCurrentTenant` | Replace HTTP current user/tenant |
+| `InMemoryDomainEventCollector` | Assert domain events |
+| `SpyEventBus` | Assert integration events |
+| `InMemoryRepository<T>` / `InMemoryUnitOfWork` | Repository and UoW without a database |
+| `InMemoryCacheProvider` / `InMemoryIdempotencyStore` / `InMemoryDistributedLockProvider` | Infrastructure fakes |
+| `FakeAuditor` / `FakePermissionChecker` / `SequentialIdGenerator` | Domain/application fakes |
+| `HttpContextTestHelper` / `JwtTestHelper` / `InMemoryAuditLogSink` | AspNetCore and JWT testing |
+
+Use `AddNavyblueTestingFoundation()` or `AddNavyblueTestingAspNetCore()` to swap production implementations in integration tests; build claims with `TestClaimsPrincipal` and issue tokens with `JwtTestHelper.CreateTokenService()`.
 
 ## Recommended Layering
 

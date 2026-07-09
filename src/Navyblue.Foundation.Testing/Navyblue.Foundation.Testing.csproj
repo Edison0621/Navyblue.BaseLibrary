@@ -17,8 +17,8 @@
     <Authors>Edison.Ma;Navyblue</Authors>
     <Company>Navyblue</Company>
     <Copyright>Copyright (c) 2020-2026 Edison.Ma</Copyright>
-    <Description>Testing helpers for Navyblue applications, including fake current user and tenant implementations, test claims principal factory, and lightweight test primitives for application and domain tests.</Description>
-    <PackageTags>navyblue;testing;unit-testing;fake-user;fake-tenant;claims-principal;test-helpers</PackageTags>
+    <Description>Testing helpers for Navyblue Foundation: fake user/tenant/auditor, TestClock, in-memory repository/cache/idempotency/lock, domain event collector, spy event bus, AspNetCore request/audit/JWT test helpers, and DI registration.</Description>
+    <PackageTags>navyblue;testing;unit-testing;fake-user;fake-tenant;in-memory;claims-principal;test-helpers;aspnetcore</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/Edison0621/Navyblue.BaseLibrary</PackageProjectUrl>
     <RepositoryUrl>https://github.com/Edison0621/Navyblue.BaseLibrary.git</RepositoryUrl>
@@ -26,10 +26,11 @@
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <NeutralLanguage>en-US</NeutralLanguage>
-    <IsAotCompatible Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net8.0'))">true</IsAotCompatible>
-    <IsTrimmable Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net8.0'))">true</IsTrimmable>
+    <IsAotCompatible Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net8.0'))">false</IsAotCompatible>
+    <IsTrimmable Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net8.0'))">false</IsTrimmable>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\Navyblue.Foundation\Navyblue.Foundation.csproj" />
+    <ProjectReference Include="..\Navyblue.Foundation.AspNetCore\Navyblue.Foundation.AspNetCore.csproj" />
   </ItemGroup>
 </Project>
