@@ -1,10 +1,10 @@
 ﻿// ****************************************************************************************************************************************
 // Project          : Navyblue.BaseLibrary
 // File             : QueryBindingExtensions.cs
-// Created          : 2026-06-30  13:06
+// Created          : 2026-07-09  13:07
 // 
 // Last Modified By : kitt-nostalgic(jstsmaxx@gmail.com)
-// Last Modified On : 2026-06-30  14:51
+// Last Modified On : 2026-07-09  14:01
 // ****************************************************************************************************************************************
 // <copyright file="QueryBindingExtensions.cs" company="">
 //     Copyright ©  2011-2026. All rights reserved.

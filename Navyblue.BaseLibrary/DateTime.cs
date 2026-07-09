@@ -4,7 +4,7 @@
 // Created          : 2026-06-26  17:06
 // 
 // Last Modified By : kitt-nostalgic(jstsmaxx@gmail.com)
-// Last Modified On : 2026-06-30  14:49
+// Last Modified On : 2026-07-09  14:01
 // ****************************************************************************************************************************************
 // <copyright file="DateTime.cs" company="">
 //     Copyright ©  2011-2026. All rights reserved.
@@ -25,7 +25,9 @@ public static class DateTimeExtensions
     ///     Durations to now.
     /// </summary>
     /// <param name="startDateTime">The start date time.</param>
-    /// <returns>TimeSpan.</returns>
+    /// <returns>
+    ///     TimeSpan.
+    /// </returns>
     public static TimeSpan DurationToNow(this DateTime startDateTime)
     {
         return (DateTime.Now - startDateTime);
@@ -36,7 +38,9 @@ public static class DateTimeExtensions
     /// </summary>
     /// <param name="source">The source.</param>
     /// <param name="destination">The destination.</param>
-    /// <returns><c>true</c> if the specified destination is after; otherwise, <c>false</c>.</returns>
+    /// <returns>
+    ///     <c>true</c> if the specified destination is after; otherwise, <c>false</c>.
+    /// </returns>
     public static bool IsAfter(this DateTime source, DateTime destination)
     {
         return DateTimeUtility.IsAfter(source, destination);
@@ -48,7 +52,9 @@ public static class DateTimeExtensions
     /// <param name="source">The source.</param>
     /// <param name="destination">The destination.</param>
     /// <param name="redundancy">The redundancy.</param>
-    /// <returns><c>true</c> if the specified destination is after; otherwise, <c>false</c>.</returns>
+    /// <returns>
+    ///     <c>true</c> if the specified destination is after; otherwise, <c>false</c>.
+    /// </returns>
     public static bool IsAfter(this DateTime source, DateTime destination, TimeSpan redundancy)
     {
         return DateTimeUtility.IsAfter(source, destination, redundancy);
@@ -59,7 +65,9 @@ public static class DateTimeExtensions
     /// </summary>
     /// <param name="source">The source.</param>
     /// <param name="destination">The destination.</param>
-    /// <returns><c>true</c> if [is after or equal] [the specified destination]; otherwise, <c>false</c>.</returns>
+    /// <returns>
+    ///     <c>true</c> if [is after or equal] [the specified destination]; otherwise, <c>false</c>.
+    /// </returns>
     public static bool IsAfterOrEqual(this DateTime source, DateTime destination)
     {
         return DateTimeUtility.IsAfterOrEqual(source, destination);
@@ -71,7 +79,9 @@ public static class DateTimeExtensions
     /// <param name="source">The source.</param>
     /// <param name="destination">The destination.</param>
     /// <param name="redundancy">The redundancy.</param>
-    /// <returns><c>true</c> if [is after or equal] [the specified destination]; otherwise, <c>false</c>.</returns>
+    /// <returns>
+    ///     <c>true</c> if [is after or equal] [the specified destination]; otherwise, <c>false</c>.
+    /// </returns>
     public static bool IsAfterOrEqual(this DateTime source, DateTime destination, TimeSpan redundancy)
     {
         return DateTimeUtility.IsAfterOrEqual(source, destination, redundancy);
@@ -82,7 +92,9 @@ public static class DateTimeExtensions
     /// </summary>
     /// <param name="source">The source.</param>
     /// <param name="destination">The destination.</param>
-    /// <returns><c>true</c> if the specified destination is before; otherwise, <c>false</c>.</returns>
+    /// <returns>
+    ///     <c>true</c> if the specified destination is before; otherwise, <c>false</c>.
+    /// </returns>
     public static bool IsBefore(this DateTime source, DateTime destination)
     {
         return DateTimeUtility.IsBefore(source, destination);
@@ -94,7 +106,9 @@ public static class DateTimeExtensions
     /// <param name="source">The source.</param>
     /// <param name="destination">The destination.</param>
     /// <param name="redundancy">The redundancy.</param>
-    /// <returns><c>true</c> if the specified destination is before; otherwise, <c>false</c>.</returns>
+    /// <returns>
+    ///     <c>true</c> if the specified destination is before; otherwise, <c>false</c>.
+    /// </returns>
     public static bool IsBefore(this DateTime source, DateTime destination, TimeSpan redundancy)
     {
         return DateTimeUtility.IsBefore(source, destination, redundancy);
@@ -105,7 +119,9 @@ public static class DateTimeExtensions
     /// </summary>
     /// <param name="source">The source.</param>
     /// <param name="destination">The destination.</param>
-    /// <returns><c>true</c> if [is before or equal] [the specified destination]; otherwise, <c>false</c>.</returns>
+    /// <returns>
+    ///     <c>true</c> if [is before or equal] [the specified destination]; otherwise, <c>false</c>.
+    /// </returns>
     public static bool IsBeforeOrEqual(this DateTime source, DateTime destination)
     {
         return DateTimeUtility.IsBeforeOrEqual(source, destination);
@@ -117,7 +133,9 @@ public static class DateTimeExtensions
     /// <param name="source">The source.</param>
     /// <param name="destination">The destination.</param>
     /// <param name="redundancy">The redundancy.</param>
-    /// <returns><c>true</c> if [is before or equal] [the specified destination]; otherwise, <c>false</c>.</returns>
+    /// <returns>
+    ///     <c>true</c> if [is before or equal] [the specified destination]; otherwise, <c>false</c>.
+    /// </returns>
     public static bool IsBeforeOrEqual(this DateTime source, DateTime destination, TimeSpan redundancy)
     {
         return DateTimeUtility.IsBeforeOrEqual(source, destination, redundancy);
@@ -127,7 +145,9 @@ public static class DateTimeExtensions
     ///     Gets the JS datetime of the specified date time.
     /// </summary>
     /// <param name="dateTime">The date time.</param>
-    /// <returns>System.Int64.</returns>
+    /// <returns>
+    ///     System.Int64.
+    /// </returns>
     public static long JSDate(this DateTime dateTime)
     {
         return DateTimeUtility.GetJSDate(dateTime);
@@ -137,7 +157,9 @@ public static class DateTimeExtensions
     ///     Gets the unix timestamp of the specified date time.
     /// </summary>
     /// <param name="dateTime">The date time.</param>
-    /// <returns>System.Int64.</returns>
+    /// <returns>
+    ///     System.Int64.
+    /// </returns>
     public static long UnixTimestamp(this DateTime dateTime)
     {
         return DateTimeUtility.GetUnixTimestamp(dateTime);
@@ -147,7 +169,9 @@ public static class DateTimeExtensions
     ///     Gets the UTC of the specified date time.
     /// </summary>
     /// <param name="dateTime">The date time.</param>
-    /// <returns>DateTime.</returns>
+    /// <returns>
+    ///     DateTime.
+    /// </returns>
     public static DateTime Utc(this DateTime dateTime)
     {
         return dateTime.ToUniversalTime();
@@ -183,14 +207,18 @@ public static class DateTimeUtility
     /// <summary>
     ///     Gets the china standard time zone.
     /// </summary>
-    /// <value>The china standard time zone.</value>
+    /// <value>
+    ///     The china standard time zone.
+    /// </value>
     public static TimeZoneInfo ChinaStandardTimeZone { get; } = TimeZoneInfo.FindSystemTimeZoneById("China Standard Time");
 
     /// <summary>
     ///     Converts to local time.
     /// </summary>
     /// <param name="utcTime">The UTC time.</param>
-    /// <returns>DateTime.</returns>
+    /// <returns>
+    ///     DateTime.
+    /// </returns>
     public static DateTime ConvertToLocalTime(DateTime utcTime)
     {
         if (utcTime < MinValuePlusOneDay)
@@ -205,7 +233,9 @@ public static class DateTimeUtility
     ///     Converts to universal time.
     /// </summary>
     /// <param name="localTime">The local time.</param>
-    /// <returns>DateTime.</returns>
+    /// <returns>
+    ///     DateTime.
+    /// </returns>
     public static DateTime ConvertToUniversalTime(DateTime localTime)
     {
         if (localTime < MinValuePlusOneDay)
@@ -216,6 +246,11 @@ public static class DateTimeUtility
         return localTime > MaxValueMinusOneDay ? DateTime.MaxValue : localTime.ToUniversalTime();
     }
 
+    /// <summary>
+    ///     Dayses the specified value.
+    /// </summary>
+    /// <param name="value">The value.</param>
+    /// <returns></returns>
     public static TimeSpan Days(this int value)
     {
         return new TimeSpan(value);
@@ -225,7 +260,9 @@ public static class DateTimeUtility
     ///     Gets the UTC from the file time.
     /// </summary>
     /// <param name="fileTime">The file time.</param>
-    /// <returns>DateTime.</returns>
+    /// <returns>
+    ///     DateTime.
+    /// </returns>
     public static DateTime FromFileTime(long fileTime)
     {
         long universalTicks = fileTime + FILE_TIME_OFFSET;
@@ -239,7 +276,9 @@ public static class DateTimeUtility
     ///     Gets the UTC from the js date string.
     /// </summary>
     /// <param name="dateMillisecondsAfter1970">The date milliseconds after1970.</param>
-    /// <returns>UTC DateTime.</returns>
+    /// <returns>
+    ///     UTC DateTime.
+    /// </returns>
     public static DateTime FromJSDate(long dateMillisecondsAfter1970)
     {
         DateTime dateTime = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
@@ -250,7 +289,9 @@ public static class DateTimeUtility
     ///     Froms the string.
     /// </summary>
     /// <param name="value">The date string.</param>
-    /// <returns>DateTime.</returns>
+    /// <returns>
+    ///     DateTime.
+    /// </returns>
     public static DateTime FromString(string value)
     {
         return DateTime.Parse(value);
@@ -260,7 +301,9 @@ public static class DateTimeUtility
     ///     Froms the ticks.
     /// </summary>
     /// <param name="ticks">The ticks.</param>
-    /// <returns>DateTime.</returns>
+    /// <returns>
+    ///     DateTime.
+    /// </returns>
     public static DateTime FromTicks(int ticks)
     {
         return new DateTime(ticks);
@@ -270,7 +313,9 @@ public static class DateTimeUtility
     ///     Froms the ticks.
     /// </summary>
     /// <param name="ticks">The ticks.</param>
-    /// <returns>DateTime.</returns>
+    /// <returns>
+    ///     DateTime.
+    /// </returns>
     public static DateTime FromTicks(long ticks)
     {
         return new DateTime(ticks);
@@ -280,7 +325,9 @@ public static class DateTimeUtility
     ///     Froms the unix timestamp.
     /// </summary>
     /// <param name="timestamp">The time stamp.</param>
-    /// <returns>DateTime.</returns>
+    /// <returns>
+    ///     DateTime.
+    /// </returns>
     [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
     public static DateTime FromUnixTimestamp(long timestamp)
     {
@@ -292,7 +339,9 @@ public static class DateTimeUtility
     ///     Gets the js date.
     /// </summary>
     /// <param name="time">The time.</param>
-    /// <returns>System.Int64.</returns>
+    /// <returns>
+    ///     System.Int64.
+    /// </returns>
     public static long GetJSDate(DateTime time)
     {
         DateTime utc = time.ToUniversalTime();
@@ -302,7 +351,9 @@ public static class DateTimeUtility
     /// <summary>
     ///     Gets the js date of now.
     /// </summary>
-    /// <returns>System.Int64.</returns>
+    /// <returns>
+    ///     System.Int64.
+    /// </returns>
     public static long GetJSDate()
     {
         DateTime utc = DateTime.UtcNow;
@@ -313,7 +364,9 @@ public static class DateTimeUtility
     ///     Gets the unix time stamp.
     /// </summary>
     /// <param name="time">The time.</param>
-    /// <returns>System.Int64.</returns>
+    /// <returns>
+    ///     System.Int64.
+    /// </returns>
     public static long GetUnixTimestamp(DateTime time)
     {
         DateTime utc = time.ToUniversalTime();
@@ -323,53 +376,128 @@ public static class DateTimeUtility
     /// <summary>
     ///     Gets the unix time stamp of now.
     /// </summary>
-    /// <returns>System.Int64.</returns>
+    /// <returns>
+    ///     System.Int64.
+    /// </returns>
     public static long GetUnixTimestamp()
     {
         DateTime utc = DateTime.UtcNow;
         return GetUnixTimestamp(utc);
     }
 
+    /// <summary>
+    ///     Hourses the specified value.
+    /// </summary>
+    /// <param name="value">The value.</param>
+    /// <returns></returns>
     public static TimeSpan Hours(this int value)
     {
         return new TimeSpan(value, 0, 0);
     }
 
+    /// <summary>
+    ///     Determines whether the specified source is after.
+    /// </summary>
+    /// <param name="source">The source.</param>
+    /// <param name="destination">The destination.</param>
+    /// <param name="redundancy">The redundancy.</param>
+    /// <returns>
+    ///     <c>true</c> if the specified source is after; otherwise, <c>false</c>.
+    /// </returns>
     public static bool IsAfter(DateTime source, DateTime destination, TimeSpan redundancy)
     {
         return source - destination > redundancy;
     }
 
+    /// <summary>
+    ///     Determines whether the specified source is after.
+    /// </summary>
+    /// <param name="source">The source.</param>
+    /// <param name="destination">The destination.</param>
+    /// <returns>
+    ///     <c>true</c> if the specified source is after; otherwise, <c>false</c>.
+    /// </returns>
     public static bool IsAfter(DateTime source, DateTime destination)
     {
         return source > destination;
     }
 
+    /// <summary>
+    ///     Determines whether [is after or equal] [the specified source].
+    /// </summary>
+    /// <param name="source">The source.</param>
+    /// <param name="destination">The destination.</param>
+    /// <param name="redundancy">The redundancy.</param>
+    /// <returns>
+    ///     <c>true</c> if [is after or equal] [the specified source]; otherwise, <c>false</c>.
+    /// </returns>
     public static bool IsAfterOrEqual(DateTime source, DateTime destination, TimeSpan redundancy)
     {
         return source - destination >= redundancy;
     }
 
+    /// <summary>
+    ///     Determines whether [is after or equal] [the specified source].
+    /// </summary>
+    /// <param name="source">The source.</param>
+    /// <param name="destination">The destination.</param>
+    /// <returns>
+    ///     <c>true</c> if [is after or equal] [the specified source]; otherwise, <c>false</c>.
+    /// </returns>
     public static bool IsAfterOrEqual(DateTime source, DateTime destination)
     {
         return source >= destination;
     }
 
+    /// <summary>
+    ///     Determines whether the specified source is before.
+    /// </summary>
+    /// <param name="source">The source.</param>
+    /// <param name="destination">The destination.</param>
+    /// <param name="redundancy">The redundancy.</param>
+    /// <returns>
+    ///     <c>true</c> if the specified source is before; otherwise, <c>false</c>.
+    /// </returns>
     public static bool IsBefore(DateTime source, DateTime destination, TimeSpan redundancy)
     {
         return destination - source > redundancy;
     }
 
+    /// <summary>
+    ///     Determines whether the specified source is before.
+    /// </summary>
+    /// <param name="source">The source.</param>
+    /// <param name="destination">The destination.</param>
+    /// <returns>
+    ///     <c>true</c> if the specified source is before; otherwise, <c>false</c>.
+    /// </returns>
     public static bool IsBefore(DateTime source, DateTime destination)
     {
         return destination > source;
     }
 
+    /// <summary>
+    ///     Determines whether [is before or equal] [the specified source].
+    /// </summary>
+    /// <param name="source">The source.</param>
+    /// <param name="destination">The destination.</param>
+    /// <returns>
+    ///     <c>true</c> if [is before or equal] [the specified source]; otherwise, <c>false</c>.
+    /// </returns>
     public static bool IsBeforeOrEqual(DateTime source, DateTime destination)
     {
         return destination >= source;
     }
 
+    /// <summary>
+    ///     Determines whether [is before or equal] [the specified source].
+    /// </summary>
+    /// <param name="source">The source.</param>
+    /// <param name="destination">The destination.</param>
+    /// <param name="redundancy">The redundancy.</param>
+    /// <returns>
+    ///     <c>true</c> if [is before or equal] [the specified source]; otherwise, <c>false</c>.
+    /// </returns>
     public static bool IsBeforeOrEqual(DateTime source, DateTime destination, TimeSpan redundancy)
     {
         return destination - source >= redundancy;
@@ -380,22 +508,39 @@ public static class DateTimeUtility
     /// </summary>
     /// <param name="time">The time.</param>
     /// <param name="date">The date.</param>
-    /// <returns><c>true</c> if [is in the day] [the specified date]; otherwise, <c>false</c>.</returns>
+    /// <returns>
+    ///     <c>true</c> if [is in the day] [the specified date]; otherwise, <c>false</c>.
+    /// </returns>
     public static bool IsInTheDay(this DateTime time, DateTime date)
     {
         return time >= date.Date && time < date.Date.AddDays(1);
     }
 
+    /// <summary>
+    ///     Millisecondses the specified value.
+    /// </summary>
+    /// <param name="value">The value.</param>
+    /// <returns></returns>
     public static TimeSpan Milliseconds(this int value)
     {
         return new TimeSpan(0, 0, 0, 0, value);
     }
 
+    /// <summary>
+    ///     Minuteses the specified value.
+    /// </summary>
+    /// <param name="value">The value.</param>
+    /// <returns></returns>
     public static TimeSpan Minutes(this int value)
     {
         return new TimeSpan(0, 0, value, 0);
     }
 
+    /// <summary>
+    ///     Secondses the specified value.
+    /// </summary>
+    /// <param name="value">The value.</param>
+    /// <returns></returns>
     public static TimeSpan Seconds(this int value)
     {
         return new TimeSpan(0, 0, value);
@@ -405,7 +550,9 @@ public static class DateTimeUtility
     ///     To the china standard time.
     /// </summary>
     /// <param name="time">The time.</param>
-    /// <returns>DateTime.</returns>
+    /// <returns>
+    ///     DateTime.
+    /// </returns>
     public static DateTime ToChinaStandardTime(this DateTime time)
     {
         time = time.ToUniversalTime().AddHours(8);
@@ -416,7 +563,9 @@ public static class DateTimeUtility
     ///     To the datetime.
     /// </summary>
     /// <param name="ticks">The ticks.</param>
-    /// <returns>DateTime.</returns>
+    /// <returns>
+    ///     DateTime.
+    /// </returns>
     public static DateTime ToDateTime(this int ticks)
     {
         return ((long)ticks).ToDateTime();
@@ -426,7 +575,9 @@ public static class DateTimeUtility
     ///     To the datetime.
     /// </summary>
     /// <param name="ticks">The ticks.</param>
-    /// <returns>DateTime.</returns>
+    /// <returns>
+    ///     DateTime.
+    /// </returns>
     [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
     public static DateTime ToDateTime(this long ticks)
     {
@@ -437,7 +588,9 @@ public static class DateTimeUtility
     ///     To the UTC from file time.
     /// </summary>
     /// <param name="fileTime">The file time.</param>
-    /// <returns>DateTime.</returns>
+    /// <returns>
+    ///     DateTime.
+    /// </returns>
     public static DateTime ToDateTimeFromFileTime(this long fileTime)
     {
         return FromFileTime(fileTime);
@@ -447,7 +600,9 @@ public static class DateTimeUtility
     ///     To the UTC from js date.
     /// </summary>
     /// <param name="dateMillisecondsAfter1970">The date milliseconds after1970.</param>
-    /// <returns>DateTime.</returns>
+    /// <returns>
+    ///     DateTime.
+    /// </returns>
     public static DateTime ToDateTimeFromJSDate(this long dateMillisecondsAfter1970)
     {
         return FromJSDate(dateMillisecondsAfter1970);
@@ -457,7 +612,9 @@ public static class DateTimeUtility
     ///     To the UTC from unix timestamp.
     /// </summary>
     /// <param name="timestamp">The timestamp.</param>
-    /// <returns>DateTime.</returns>
+    /// <returns>
+    ///     DateTime.
+    /// </returns>
     public static DateTime ToDateTimeFromUnixTimestamp(this long timestamp)
     {
         return FromUnixTimestamp(timestamp);

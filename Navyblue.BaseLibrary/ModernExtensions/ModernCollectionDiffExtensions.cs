@@ -1,22 +1,52 @@
-// ****************************************************************************************************************************************
+﻿// ****************************************************************************************************************************************
 // Project          : Navyblue.BaseLibrary
 // File             : ModernCollectionDiffExtensions.cs
-// Created          : 2026-06-30
+// Created          : 2026-06-30  17:06
+// 
+// Last Modified By : kitt-nostalgic(jstsmaxx@gmail.com)
+// Last Modified On : 2026-07-09  14:00
+// ****************************************************************************************************************************************
+// <copyright file="ModernCollectionDiffExtensions.cs" company="">
+//     Copyright ©  2011-2026. All rights reserved.
+// </copyright>
 // ****************************************************************************************************************************************
 
 #nullable enable
 namespace Navyblue.BaseLibrary.Extensions;
 
+/// <summary>
+/// </summary>
+/// <typeparam name="T"></typeparam>
 public sealed record CollectionDiff<T>(IReadOnlyList<T> Added, IReadOnlyList<T> Removed, IReadOnlyList<T> Unchanged);
 
+/// <summary>
+/// </summary>
+/// <typeparam name="TLeft">The type of the left.</typeparam>
+/// <typeparam name="TRight">The type of the right.</typeparam>
+/// <typeparam name="TKey">The type of the key.</typeparam>
 public sealed record CollectionDiffByKey<TLeft, TRight, TKey>(
     IReadOnlyList<TRight> Added,
     IReadOnlyList<TLeft> Removed,
     IReadOnlyList<(TLeft Left, TRight Right)> Matched)
     where TKey : notnull;
 
+/// <summary>
+/// </summary>
 public static class ModernCollectionDiffExtensions
 {
+    /// <summary>
+    ///     Differences the specified next.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="current">The current.</param>
+    /// <param name="next">The next.</param>
+    /// <param name="comparer">The comparer.</param>
+    /// <returns></returns>
+    /// <exception cref="System.ArgumentNullException">
+    ///     current
+    ///     or
+    ///     next
+    /// </exception>
     public static CollectionDiff<T> Diff<T>(this IEnumerable<T> current, IEnumerable<T> next, IEqualityComparer<T>? comparer = null)
     {
         if (current == null) throw new ArgumentNullException(nameof(current));
@@ -32,6 +62,27 @@ public static class ModernCollectionDiffExtensions
         return new CollectionDiff<T>(added, removed, unchanged);
     }
 
+    /// <summary>
+    ///     Differences the by.
+    /// </summary>
+    /// <typeparam name="TLeft">The type of the left.</typeparam>
+    /// <typeparam name="TRight">The type of the right.</typeparam>
+    /// <typeparam name="TKey">The type of the key.</typeparam>
+    /// <param name="current">The current.</param>
+    /// <param name="next">The next.</param>
+    /// <param name="currentKeySelector">The current key selector.</param>
+    /// <param name="nextKeySelector">The next key selector.</param>
+    /// <param name="comparer">The comparer.</param>
+    /// <returns></returns>
+    /// <exception cref="System.ArgumentNullException">
+    ///     current
+    ///     or
+    ///     next
+    ///     or
+    ///     currentKeySelector
+    ///     or
+    ///     nextKeySelector
+    /// </exception>
     public static CollectionDiffByKey<TLeft, TRight, TKey> DiffBy<TLeft, TRight, TKey>(
         this IEnumerable<TLeft> current,
         IEnumerable<TRight> next,
@@ -59,6 +110,24 @@ public static class ModernCollectionDiffExtensions
         return new CollectionDiffByKey<TLeft, TRight, TKey>(added, removed, matched);
     }
 
+    /// <summary>
+    ///     Converts to dictionarylastwins.
+    /// </summary>
+    /// <typeparam name="TSource">The type of the source.</typeparam>
+    /// <typeparam name="TKey">The type of the key.</typeparam>
+    /// <typeparam name="TValue">The type of the value.</typeparam>
+    /// <param name="source">The source.</param>
+    /// <param name="keySelector">The key selector.</param>
+    /// <param name="valueSelector">The value selector.</param>
+    /// <param name="comparer">The comparer.</param>
+    /// <returns></returns>
+    /// <exception cref="System.ArgumentNullException">
+    ///     source
+    ///     or
+    ///     keySelector
+    ///     or
+    ///     valueSelector
+    /// </exception>
     public static Dictionary<TKey, TValue> ToDictionaryLastWins<TSource, TKey, TValue>(
         this IEnumerable<TSource> source,
         Func<TSource, TKey> keySelector,
@@ -79,6 +148,20 @@ public static class ModernCollectionDiffExtensions
         return dictionary;
     }
 
+    /// <summary>
+    ///     Groups to dictionary.
+    /// </summary>
+    /// <typeparam name="TSource">The type of the source.</typeparam>
+    /// <typeparam name="TKey">The type of the key.</typeparam>
+    /// <param name="source">The source.</param>
+    /// <param name="keySelector">The key selector.</param>
+    /// <param name="comparer">The comparer.</param>
+    /// <returns></returns>
+    /// <exception cref="System.ArgumentNullException">
+    ///     source
+    ///     or
+    ///     keySelector
+    /// </exception>
     public static Dictionary<TKey, List<TSource>> GroupToDictionary<TSource, TKey>(
         this IEnumerable<TSource> source,
         Func<TSource, TKey> keySelector,
