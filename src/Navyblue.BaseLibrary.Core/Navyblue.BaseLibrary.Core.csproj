@@ -39,4 +39,8 @@
     <ProjectReference Include="..\..\Navyblue.BaseLibrary\Navyblue.BaseLibrary.csproj" />
     <None Include="..\..\README.md" Pack="true" PackagePath="\" Link="README.md" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\docs\Navyblue.BaseLibrary.zh-CN.md" Pack="true" PackagePath="docs\" />
+    <None Include="..\..\docs\Navyblue.BaseLibrary.en-US.md" Pack="true" PackagePath="docs\" />
+  </ItemGroup>
 </Project>

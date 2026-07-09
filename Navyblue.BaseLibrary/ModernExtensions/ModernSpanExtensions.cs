@@ -155,6 +155,13 @@ public static class ModernSpanExtensions
     public static byte[] Sha256(this ReadOnlySpan<byte> value) => SHA256.HashData(value);
 
     /// <summary>
+    /// Sha256s the specified value.
+    /// </summary>
+    /// <param name="value">The value.</param>
+    /// <returns></returns>
+    public static byte[] Sha256(this Span<byte> value) => SHA256.HashData((ReadOnlySpan<byte>)value);
+
+    /// <summary>
     ///     Splits the specified separator.
     /// </summary>
     /// <param name="value">The value.</param>
@@ -171,6 +178,13 @@ public static class ModernSpanExtensions
     public static string ToBase64String(this ReadOnlySpan<byte> value) => Convert.ToBase64String(value);
 
     /// <summary>
+    /// Converts to base64string.
+    /// </summary>
+    /// <param name="value">The value.</param>
+    /// <returns></returns>
+    public static string ToBase64String(this Span<byte> value) => Convert.ToBase64String((ReadOnlySpan<byte>)value);
+
+    /// <summary>
     ///     Converts to hexstringlower.
     /// </summary>
     /// <param name="value">The value.</param>
@@ -178,11 +192,25 @@ public static class ModernSpanExtensions
     public static string ToHexStringLower(this ReadOnlySpan<byte> value) => Convert.ToHexString(value).ToLowerInvariant();
 
     /// <summary>
+    /// Converts to hexstringlower.
+    /// </summary>
+    /// <param name="value">The value.</param>
+    /// <returns></returns>
+    public static string ToHexStringLower(this Span<byte> value) => Convert.ToHexString((ReadOnlySpan<byte>)value).ToLowerInvariant();
+
+    /// <summary>
     ///     Converts to hexstringupper.
     /// </summary>
     /// <param name="value">The value.</param>
     /// <returns></returns>
     public static string ToHexStringUpper(this ReadOnlySpan<byte> value) => Convert.ToHexString(value);
+
+    /// <summary>
+    /// Converts to hexstringupper.
+    /// </summary>
+    /// <param name="value">The value.</param>
+    /// <returns></returns>
+    public static string ToHexStringUpper(this Span<byte> value) => Convert.ToHexString((ReadOnlySpan<byte>)value);
 
     /// <summary>
     ///     Converts to utf8string.

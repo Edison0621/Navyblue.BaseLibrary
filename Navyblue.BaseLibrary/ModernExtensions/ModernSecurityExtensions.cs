@@ -151,6 +151,16 @@ public static class ModernBase64UrlExtensions
     }
 
     /// <summary>
+    ///     Converts to base64urlstring.
+    /// </summary>
+    /// <param name="value">The value.</param>
+    /// <returns></returns>
+    public static string ToBase64UrlString(this Span<byte> value)
+    {
+        return Convert.ToBase64String((ReadOnlySpan<byte>)value).TrimEnd('=').Replace('+', '-').Replace('/', '_');
+    }
+
+    /// <summary>
     ///     Froms the base64 URL string.
     /// </summary>
     /// <param name="value">The value.</param>
@@ -179,6 +189,18 @@ public sealed record AesGcmPayload(byte[] Nonce, byte[] Ciphertext, byte[] Tag);
 /// </summary>
 public static class ModernAuthenticatedEncryptionExtensions
 {
+    /// <summary>
+    ///     Encrypts the aes GCM.
+    /// </summary>
+    /// <param name="plaintext">The plaintext.</param>
+    /// <param name="key">The key.</param>
+    /// <param name="associatedData">The associated data.</param>
+    /// <returns></returns>
+    public static AesGcmPayload EncryptAesGcm(this Span<byte> plaintext, ReadOnlySpan<byte> key, ReadOnlySpan<byte> associatedData = default)
+    {
+        return EncryptAesGcm((ReadOnlySpan<byte>)plaintext, key, associatedData);
+    }
+
     /// <summary>
     ///     Encrypts the aes GCM.
     /// </summary>
