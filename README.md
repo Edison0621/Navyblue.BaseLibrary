@@ -195,6 +195,102 @@ var frozen = new Dictionary<string, int>
 await TimeProvider.System.DelayAsync(TimeSpan.FromMilliseconds(50));
 ```
 
+## Guid v7、Base64Url 和现代加密
+
+```csharp
+using Navyblue.BaseLibrary.Extensions;
+using System.Security.Cryptography;
+using System.Text;
+
+Guid id = ModernGuidV7.NewGuidV7();
+bool isV7 = id.IsVersion7();
+DateTimeOffset? createdAt = id.GetVersion7Timestamp();
+
+byte[] tokenBytes = RandomNumberGenerator.GetBytes(32);
+string token = tokenBytes.AsSpan().ToBase64UrlString();
+byte[] restoredToken = token.FromBase64UrlString();
+
+byte[] key = RandomNumberGenerator.GetBytes(32);
+byte[] plaintext = Encoding.UTF8.GetBytes("hello navyblue");
+AesGcmPayload encrypted = plaintext.AsSpan().EncryptAesGcm(key);
+byte[] decrypted = encrypted.DecryptAesGcm(key);
+```
+
+`net8.0+` 可以使用 SHA-3 和 HMAC-SHA3。SHA-3 是否可用取决于运行平台，调用前可以检查 `ModernSha3Extensions.Sha3IsSupported`。
+
+```csharp
+using Navyblue.BaseLibrary.Extensions;
+using System.Security.Cryptography;
+
+byte[] payload = "hello"u8.ToArray();
+byte[] key = RandomNumberGenerator.GetBytes(32);
+
+if (ModernSha3Extensions.Sha3IsSupported)
+{
+    byte[] sha3 = payload.AsSpan().Sha3_256();
+    byte[] mac = payload.AsSpan().HmacSha3_256(key);
+}
+```
+## IO、URI、JSON、异步枚举扩展
+
+```csharp
+using Navyblue.BaseLibrary.Extensions;
+using System.Text.Json;
+
+await using Stream stream = File.OpenRead("appsettings.json");
+string text = await stream.ReadAllTextAsync();
+byte[] bytes = await new FileInfo("appsettings.json").ReadAllBytesAsync();
+
+Uri uri = new Uri("https://api.example.com/orders")
+    .AddQueryParameter("page", "1")
+    .AddQueryParameter("pageSize", "20");
+
+IReadOnlyDictionary<string, string?> query = uri.GetQueryParameters();
+
+using JsonDocument document = JsonDocument.Parse("""{""name"":""Navyblue"",""enabled"":true}""");
+string? name = document.RootElement.GetStringOrDefault("name");
+bool enabled = document.RootElement.GetBooleanOrDefault("enabled");
+
+List<int> values = await GetNumbersAsync().WhereAsync(x => x > 10).ToListAsync();
+
+static async IAsyncEnumerable<int> GetNumbersAsync()
+{
+    for (var i = 0; i < 20; i++)
+    {
+        await Task.Yield();
+        yield return i;
+    }
+}
+```
+
+## HTTP、表达式、树形结构和集合差异
+
+```csharp
+using Navyblue.BaseLibrary.Extensions;
+using System.Linq.Expressions;
+using System.Net.Http;
+
+using var client = new HttpClient();
+var order = await client.GetJsonOrDefaultAsync<OrderDto>("https://api.example.com/orders/1");
+
+using var request = new HttpRequestMessage(HttpMethod.Get, "https://api.example.com/orders")
+    .WithJsonAccept()
+    .WithBearerToken("access-token")
+    .WithCorrelationId(Guid.NewGuid().ToString("N"));
+
+Expression<Func<OrderDto, bool>> paid = x => x.Status == "Paid";
+Expression<Func<OrderDto, bool>> recent = x => x.PaidAt > DateTimeOffset.UtcNow.AddDays(-30);
+var predicate = paid.And(recent);
+
+var diff = currentOrders.DiffBy(
+    nextOrders,
+    current => current.Id,
+    next => next.Id);
+
+var menuTree = menus.ToTree(
+    idSelector: x => x.Id,
+    parentIdSelector: x => x.ParentId);
+```
 ## DDD 建模 Demo
 
 ```csharp

@@ -1,4 +1,4 @@
-﻿// ****************************************************************************************************************************************
+// ****************************************************************************************************************************************
 // Project          : Navyblue.BaseLibrary
 // File             : PBKDF2.cs
 // Created          : 2026-06-26  17:06
@@ -100,8 +100,8 @@ public static class PBKDF2Utility
         byte[] output = new byte[cBlocks * HASH_SIZE_IN_BYTES];
         int outputOffset = 0;
 
-        SHA256Managed innerHash = new SHA256Managed();
-        SHA256Managed outerHash = new SHA256Managed();
+        using SHA256 innerHash = SHA256.Create();
+        using SHA256 outerHash = SHA256.Create();
 
         // HMAC says the key must be hashed or padded with zeros
         // so it fits into a single block of the hash in use
