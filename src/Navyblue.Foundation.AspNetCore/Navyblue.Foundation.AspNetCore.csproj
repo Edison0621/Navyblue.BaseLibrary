@@ -1,0 +1,47 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFrameworks>net6.0;net7.0;net8.0;net9.0;net10.0</TargetFrameworks>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <LangVersion>latest</LangVersion>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>$(NoWarn);CS1591</NoWarn>
+    <Deterministic>true</Deterministic>
+    <ContinuousIntegrationBuild Condition="'$(CI)' == 'true'">true</ContinuousIntegrationBuild>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <PackageId>Navyblue.Foundation.AspNetCore</PackageId>
+    <Title>Navyblue.Foundation.AspNetCore</Title>
+    <Product>Navyblue.Foundation</Product>
+    <VersionPrefix>3.0.0</VersionPrefix>
+    <Authors>Edison.Ma;Navyblue</Authors>
+    <Company>Navyblue</Company>
+    <Copyright>Copyright (c) 2020-2026 Edison.Ma</Copyright>
+    <Description>ASP.NET Core integration package with standardized API responses, exception mapping, JWT issuance and JwtBearer authentication, trace id propagation, request context, tenant resolution, audit logging, security headers, controller helpers, and Minimal API endpoint helpers.</Description>
+    <PackageTags>navyblue;aspnetcore;webapi;minimal-api;api-result;jwt;jwt-bearer;exception-handling;trace-id;multi-tenant;audit;security-headers</PackageTags>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/Edison0621/Navyblue.BaseLibrary</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/Edison0621/Navyblue.BaseLibrary.git</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <NeutralLanguage>en-US</NeutralLanguage>
+    <IsAotCompatible Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net8.0'))">false</IsAotCompatible>
+    <IsTrimmable Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net8.0'))">false</IsTrimmable>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <JwtBearerPackageVersion Condition="'$(TargetFramework)' == 'net6.0'">6.0.36</JwtBearerPackageVersion>
+    <JwtBearerPackageVersion Condition="'$(TargetFramework)' == 'net7.0'">7.0.20</JwtBearerPackageVersion>
+    <JwtBearerPackageVersion Condition="'$(TargetFramework)' == 'net8.0'">8.0.11</JwtBearerPackageVersion>
+    <JwtBearerPackageVersion Condition="'$(TargetFramework)' == 'net9.0'">9.0.0</JwtBearerPackageVersion>
+    <JwtBearerPackageVersion Condition="'$(TargetFramework)' == 'net10.0'">10.0.0</JwtBearerPackageVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="$(JwtBearerPackageVersion)" />
+    <ProjectReference Include="..\..\Navyblue.BaseLibrary\Navyblue.BaseLibrary.csproj" />
+    <ProjectReference Include="..\Navyblue.Foundation\Navyblue.Foundation.csproj" />
+  </ItemGroup>
+</Project>

@@ -1,24 +1,24 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <TargetFrameworks>net6.0;net7.0;net8.0;net9.0;net10.0</TargetFrameworks>
-    <LangVersion>latest</LangVersion>
     <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <LangVersion>latest</LangVersion>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <NoWarn>$(NoWarn);CS1591</NoWarn>
     <Deterministic>true</Deterministic>
     <ContinuousIntegrationBuild Condition="'$(CI)' == 'true'">true</ContinuousIntegrationBuild>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-    <PackageId>Navyblue.BaseLibrary</PackageId>
-    <Title>Navyblue.BaseLibrary</Title>
-    <Product>Navyblue.BaseLibrary</Product>
+    <PackageId>Navyblue.Foundation.Testing</PackageId>
+    <Title>Navyblue.Foundation.Testing</Title>
+    <Product>Navyblue.Foundation</Product>
     <VersionPrefix>3.0.0</VersionPrefix>
     <Authors>Edison.Ma;Navyblue</Authors>
     <Company>Navyblue</Company>
     <Copyright>Copyright (c) 2020-2026 Edison.Ma</Copyright>
-    <Description>Common .NET foundation library with JSON helpers, string/date/collection extensions, Span and Memory helpers, Guid/hash utilities, guard helpers, and modern BCL type extensions for .NET 6 through .NET 10.</Description>
-    <PackageTags>navyblue;base-library;extensions;utilities;json;guid;guid-v7;hash;sha3;aes-gcm;base64url;span;memory;stream;async-enumerable;httpclient;expression;tree;collection-diff;validation;uri;dateonly;timeonly;dotnet</PackageTags>
+    <Description>Testing helpers for Navyblue applications, including fake current user and tenant implementations, test claims principal factory, and lightweight test primitives for application and domain tests.</Description>
+    <PackageTags>navyblue;testing;unit-testing;fake-user;fake-tenant;claims-principal;test-helpers</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/Edison0621/Navyblue.BaseLibrary</PackageProjectUrl>
     <RepositoryUrl>https://github.com/Edison0621/Navyblue.BaseLibrary.git</RepositoryUrl>
@@ -26,5 +26,10 @@
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <NeutralLanguage>en-US</NeutralLanguage>
+    <IsAotCompatible Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net8.0'))">true</IsAotCompatible>
+    <IsTrimmable Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net8.0'))">true</IsTrimmable>
   </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Navyblue.Foundation\Navyblue.Foundation.csproj" />
+  </ItemGroup>
 </Project>

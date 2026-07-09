@@ -6,14 +6,14 @@ The vNext foundation is organized around common software development workflows w
 
 | Workflow stage | vNext package | Scope |
 | --- | --- | --- |
-| API input and domain modeling | `Navyblue.BaseLibrary.Primitives` | Guard, Result, Error, PagedResult, SequentialGuid |
+| API input and domain modeling | `Navyblue.Foundation.Primitives` | Guard, Result, Error, SequentialGuid (paging: Application.PageResult) |
 | Everyday coding | `Navyblue.BaseLibrary.Extensions` | String, enumerable, number, date/time, GUID helpers |
-| Data exchange | `Navyblue.BaseLibrary.Serialization` | System.Text.Json helpers with AOT-friendly overloads |
-| Security baseline | `Navyblue.BaseLibrary.Security` | Hashing, HMAC, PBKDF2, Hex, Base64Url |
-| Input validation | `Navyblue.BaseLibrary.Validation` | Validation helpers and DataAnnotations attributes |
-| Collection modeling | `Navyblue.BaseLibrary.Collections` | Weighted selection and collection result helpers |
-| Observability context | `Navyblue.BaseLibrary.Diagnostics` | Correlation context and operation timing |
-| Resilience | `Navyblue.BaseLibrary.Resilience` | Lightweight retry helpers |
+| Data exchange | `Navyblue.Foundation.Serialization` | System.Text.Json helpers with AOT-friendly overloads |
+| Security baseline | `Navyblue.Foundation.Security` | Hashing, HMAC, PBKDF2, Hex, Base64Url |
+| Input validation | `Navyblue.Foundation.Validation` | Validation helpers and DataAnnotations attributes |
+| Collection modeling | `Navyblue.Foundation.Collections` | Weighted selection and collection result helpers |
+| Observability context | `Navyblue.Foundation.Diagnostics` | Correlation context and operation timing |
+| Resilience | `Navyblue.Foundation.Resilience` | Lightweight retry helpers |
 
 ## Migration Strategy
 
