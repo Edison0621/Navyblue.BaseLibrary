@@ -1,4 +1,9 @@
 <Project>
+  <!-- Default NuGet pack output: repo-root artifacts/packages -->
+  <PropertyGroup>
+    <PackageOutputPath>$(MSBuildThisFileDirectory)artifacts\packages\</PackageOutputPath>
+  </PropertyGroup>
+
   <!-- Pack the repo-root README into every NuGet package (fixes NU5039). -->
   <ItemGroup Condition="Exists('$(MSBuildThisFileDirectory)README.md')">
     <None Include="$(MSBuildThisFileDirectory)README.md" Pack="true" PackagePath="\" Link="README.md" />
