@@ -86,6 +86,17 @@ public sealed class NavyblueAspNetCoreOptions
     ///     or call <c>AddNavyblueApiResultWrapping()</c> explicitly.
     /// </summary>
     public bool WrapApiResult { get; set; }
+
+    /// <summary>
+    ///     When true (default with <see cref="EnableTraceId"/>), uses CorrelationId middleware
+    ///     (header read/write, logging scope, CorrelationContext) instead of the simple TraceId middleware.
+    /// </summary>
+    public bool EnableCorrelationId { get; set; } = true;
+
+    /// <summary>
+    ///     When true, missing correlation/trace header returns 400.
+    /// </summary>
+    public bool EnforceCorrelationHeader { get; set; }
 }
 
 /// <summary>
@@ -245,6 +256,21 @@ public static class NavyblueAspNetCoreExtensions
         services.AddScoped<ICurrentUser, HttpCurrentUser>();
         services.AddScoped<ICurrentTenant, HttpCurrentTenant>();
 
+        if (options.EnableTraceId || options.EnableCorrelationId)
+        {
+            services.AddNavyblueCorrelationId(cid =>
+            {
+                cid.RequestHeader = options.TraceHeaderName;
+                cid.ResponseHeader = options.TraceHeaderName;
+                cid.EnforceHeader = options.EnforceCorrelationHeader;
+                cid.AdditionalRequestHeaders =
+                [
+                    "X-Correlation-ID", "X-Request-ID", "X-CorrelationId", "Correlation-Id", "Request-Id", "X-Trace-Id"
+                ];
+            });
+            services.AddNavyblueCorrelationIdForwarding();
+        }
+
         if (options.WrapApiResult)
         {
             services.Configure<MvcOptions>(mvc => mvc.Filters.Add<ApiResultWrappingFilter>());
@@ -262,7 +288,8 @@ public static class NavyblueAspNetCoreExtensions
     {
         NavyblueAspNetCoreOptions options = app.ApplicationServices.GetRequiredService<NavyblueAspNetCoreOptions>();
         if (options.EnableExceptionHandling) app.UseExceptionHandler(errorApp => errorApp.Run(WriteErrorAsync));
-        if (options.EnableTraceId) app.UseMiddleware<TraceIdMiddleware>();
+        if (options.EnableTraceId || options.EnableCorrelationId)
+            app.UseNavyblueCorrelationId();
         if (options.EnableTenantResolution) app.UseMiddleware<TenantResolutionMiddleware>();
         if (options.EnableRequestContext) app.UseMiddleware<RequestContextMiddleware>();
         if (options.EnableSecurityHeaders) app.UseMiddleware<SecurityHeadersMiddleware>();

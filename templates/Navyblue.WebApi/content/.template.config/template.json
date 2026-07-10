@@ -1,0 +1,45 @@
+{
+  "$schema": "http://json.schemastore.org/template",
+  "author": "Navyblue",
+  "classifications": [ "Web", "WebAPI", "Navyblue", "CQRS", "DDD" ],
+  "name": "Navyblue ASP.NET Core Web API",
+  "displayName": "Navyblue ASP.NET Core Web API",
+  "description": "Layered DDD/CQRS ASP.NET Core Web API using Navyblue.Foundation (ApiResult, JWT, CorrelationId, Command/Query buses, in-memory persistence).",
+  "groupIdentity": "Navyblue.Templates.WebApi",
+  "identity": "Navyblue.Templates.WebApi.CSharp",
+  "shortName": "navyblue-webapi",
+  "tags": {
+    "language": "C#",
+    "type": "solution"
+  },
+  "sourceName": "NavyblueWebApi",
+  "preferNameDirectory": true,
+  "guids": [
+    "D0D0D0D0-0000-0000-0000-000000000001",
+    "D0D0D0D0-0000-0000-0000-000000000002",
+    "D0D0D0D0-0000-0000-0000-000000000003",
+    "D0D0D0D0-0000-0000-0000-000000000004",
+    "D0D0D0D0-0000-0000-0000-000000000005",
+    "A1A1A1A1-1111-1111-1111-111111111111",
+    "B2B2B2B2-2222-2222-2222-222222222222"
+  ],
+  "symbols": {
+    "Framework": {
+      "type": "parameter",
+      "description": "The target framework for the project.",
+      "datatype": "choice",
+      "choices": [
+        { "choice": "net8.0", "description": ".NET 8" },
+        { "choice": "net9.0", "description": ".NET 9" },
+        { "choice": "net10.0", "description": ".NET 10" }
+      ],
+      "defaultValue": "net10.0",
+      "replaces": "net10.0"
+    }
+  },
+  "primaryOutputs": [
+    { "path": "NavyblueWebApi.sln" },
+    { "path": "NavyblueWebApi.Web/NavyblueWebApi.Web.csproj" }
+  ],
+  "defaultName": "NavyblueWebApi"
+}

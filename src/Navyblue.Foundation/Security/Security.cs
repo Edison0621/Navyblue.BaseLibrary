@@ -13,6 +13,8 @@
 
 using System.Security.Cryptography;
 using System.Text;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Navyblue.Foundation.Primitives;
 
 namespace Navyblue.Foundation.Security;
@@ -151,5 +153,64 @@ public static class PasswordHasher
         using Rfc2898DeriveBytes deriveBytes = new Rfc2898DeriveBytes(password, salt, iterations, HashAlgorithmName.SHA256);
         return deriveBytes.GetBytes(hashSize);
 #endif
+    }
+}
+
+/// <summary>
+///     DotNetCore.Security-compatible hash service (PBKDF2).
+/// </summary>
+public interface IHashService
+{
+    string Create(string value, string salt);
+    bool Validate(string value, string salt, string hash);
+}
+
+/// <summary>
+///     Default <see cref="IHashService" /> using PBKDF2-SHA512.
+/// </summary>
+public sealed class HashService : IHashService
+{
+    private const int KeySize = 64;
+    private const int Iterations = 100_000;
+
+    public static string CreateSalt(int size = 32) => Convert.ToBase64String(RandomNumberGenerator.GetBytes(size));
+
+    public string Create(string value, string salt)
+    {
+        Guard.NotNullOrWhiteSpace(value, nameof(value));
+        Guard.NotNullOrWhiteSpace(salt, nameof(salt));
+#if NET7_0_OR_GREATER
+        byte[] hash = Rfc2898DeriveBytes.Pbkdf2(Encoding.UTF8.GetBytes(value), Encoding.UTF8.GetBytes(salt), Iterations, HashAlgorithmName.SHA512, KeySize);
+#else
+        using Rfc2898DeriveBytes deriveBytes = new(value, Encoding.UTF8.GetBytes(salt), Iterations, HashAlgorithmName.SHA512);
+        byte[] hash = deriveBytes.GetBytes(KeySize);
+#endif
+        return Convert.ToBase64String(hash);
+    }
+
+    public bool Validate(string value, string salt, string hash)
+    {
+        try
+        {
+            return CryptographicOperations.FixedTimeEquals(
+                Convert.FromBase64String(this.Create(value, salt)),
+                Convert.FromBase64String(hash));
+        }
+        catch
+        {
+            return false;
+        }
+    }
+}
+
+/// <summary>
+///     DI helpers for security services.
+/// </summary>
+public static class SecurityServiceCollectionExtensions
+{
+    public static IServiceCollection AddNavyblueHashService(this IServiceCollection services)
+    {
+        services.TryAddSingleton<IHashService, HashService>();
+        return services;
     }
 }

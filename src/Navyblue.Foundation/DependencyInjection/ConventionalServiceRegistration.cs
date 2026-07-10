@@ -72,6 +72,36 @@ public static class ConventionalServiceRegistration
     }
 
     /// <summary>
+    ///     Registers concrete classes as their matching interfaces (IFoo → Foo) for assemblies
+    ///     whose name starts with <paramref name="namespacePrefix" />. DotNetCore.IoC compatible.
+    /// </summary>
+    public static IServiceCollection AddClassesMatchingInterfaces(this IServiceCollection services, string namespacePrefix, ServiceLifetime lifetime = ServiceLifetime.Scoped)
+    {
+        ArgumentNullException.ThrowIfNull(services);
+        if (string.IsNullOrWhiteSpace(namespacePrefix))
+            throw new ArgumentException("Value cannot be null or whitespace.", nameof(namespacePrefix));
+
+        IEnumerable<Assembly> assemblies = AppDomain.CurrentDomain.GetAssemblies()
+            .Where(a => !a.IsDynamic && (a.GetName().Name?.StartsWith(namespacePrefix, StringComparison.OrdinalIgnoreCase) ?? false));
+
+        foreach (Assembly assembly in assemblies)
+        {
+            foreach (Type implementation in assembly.GetTypes().Where(t => t is { IsClass: true, IsAbstract: false }))
+            {
+                foreach (Type serviceType in implementation.GetInterfaces()
+                             .Where(i => i.Name == "I" + implementation.Name
+                                         || (i.IsGenericType && implementation.IsGenericType
+                                             && i.Name == "I" + implementation.Name)))
+                {
+                    services.TryAdd(new ServiceDescriptor(serviceType, implementation, lifetime));
+                }
+            }
+        }
+
+        return services;
+    }
+
+    /// <summary>
     ///     Gets the lifetime.
     /// </summary>
     /// <param name="type">The type.</param>

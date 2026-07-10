@@ -14,9 +14,27 @@ Navyblue.BaseLibrary 是一个面向 .NET 企业应用的现代化基础库，�
 | Package | Target frameworks | Purpose |
 | --- | --- | --- |
 | `Navyblue.BaseLibrary` | `net6.0;net7.0;net8.0;net9.0;net10.0` | Common extensions, JSON, Guid, hash, Span/Memory, stream, URI, HTTP, modern BCL helpers |
-| `Navyblue.Foundation` | `net6.0;net7.0;net8.0;net9.0;net10.0` | DDD, Result, paging, events, caching, idempotency, locks, diagnostics, DI |
-| `Navyblue.Foundation.AspNetCore` | `net6.0;net7.0;net8.0;net9.0;net10.0` | Standard Web API responses, JWT issuance/JwtBearer, exception mapping, TraceId, tenant context, audit, security headers, Minimal API helpers |
-| `Navyblue.Foundation.Testing` | `net6.0;net7.0;net8.0;net9.0;net10.0` | Fake user/tenant/auditor, TestClock, in-memory repo/cache/idempotency/lock, event spies, AspNetCore/JWT test helpers, DI |
+| `Navyblue.Foundation` | `net6.0;net7.0;net8.0;net9.0;net10.0` | DDD, Result, paging, Grid, events, caching, idempotency, locks, diagnostics, DI, HashService |
+| `Navyblue.Foundation.Cqrs` | `net6.0;net7.0;net8.0;net9.0;net10.0` | Command/Query/Event buses, pipeline behaviors, inbox/outbox, `AddNavyblueCqrs()` |
+| `Navyblue.Foundation.AspNetCore` | `net6.0;net7.0;net8.0;net9.0;net10.0` | ApiResult, JWT, exception mapping, TraceId/CorrelationId, tenant, audit, security headers |
+| `Navyblue.Foundation.Testing` | `net6.0;net7.0;net8.0;net9.0;net10.0` | Fake user/tenant/auditor, TestClock, in-memory repo/cache/idempotency/lock, event spies |
+
+## Samples / 样板
+
+- [Navyblue.Samples](samples/Navyblue.Samples/README.md) — end-to-end CQRS + ApiResult + JWT + Swagger + in-memory repos
+- [Web API template](templates/Navyblue.WebApi/README.md) — `dotnet new navyblue-webapi` / Visual Studio project template
+
+```powershell
+./scripts/Install-NavyblueWebApiTemplate.ps1
+dotnet new navyblue-webapi -n Contoso.Catalog -o Contoso.Catalog
+```
+
+## Related docs / 相关文档
+
+- [Enterprise architecture](docs/enterprise-foundation-architecture.md)
+- [Capability map](docs/foundation-capability-map.md)
+- [Migration checklist](docs/migration-capability-checklist.md)
+- [Deferred adapters](docs/deferred-adapters.md)
 
 ## Quick Start / 快速开始
 

@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <PackageType>Template</PackageType>
+    <PackageId>Navyblue.Templates.WebApi</PackageId>
+    <Title>Navyblue ASP.NET Core Web API Template</Title>
+    <Authors>Edison.Ma;Navyblue</Authors>
+    <Company>Navyblue</Company>
+    <Description>dotnet new / Visual Studio template for a layered DDD/CQRS Web API on Navyblue.Foundation.</Description>
+    <PackageTags>dotnet-new;templates;navyblue;aspnetcore;webapi;cqrs;ddd</PackageTags>
+    <PackageVersion>3.0.0</PackageVersion>
+    <IncludeContentInPack>true</IncludeContentInPack>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+    <ContentTargetFolders>content</ContentTargetFolders>
+    <NoDefaultExcludes>true</NoDefaultExcludes>
+    <NoWarn>$(NoWarn);NU5128</NoWarn>
+    <PackageProjectUrl>https://github.com/Edison0621/Navyblue.BaseLibrary</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/Edison0621/Navyblue.BaseLibrary.git</RepositoryUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="content\**\*" Exclude="content\**\bin\**;content\**\obj\**" />
+    <Compile Remove="**\*" />
+    <None Include="README.md" Pack="true" PackagePath="\" Visible="false" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <LangVersion>latest</LangVersion>
+    <RootNamespace>Navyblue.Samples.Application</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Navyblue.Samples.Domain\Navyblue.Samples.Domain.csproj" />
+    <ProjectReference Include="..\Navyblue.Samples.Model\Navyblue.Samples.Model.csproj" />
+    <ProjectReference Include="..\..\..\src\Navyblue.Foundation.Cqrs\Navyblue.Foundation.Cqrs.csproj" />
+  </ItemGroup>
+
+</Project>
