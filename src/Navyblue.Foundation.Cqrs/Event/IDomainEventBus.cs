@@ -1,38 +1,34 @@
-﻿// ******************************************************************************************************
-// Project          : CQRS.Mediatr.Lite.Samples
+﻿// ****************************************************************************************************************************************
+// Project          : Navyblue.BaseLibrary
 // File             : IDomainEventBus.cs
-// Created          : 2025-11-14  15:11
+// Created          : 2026-07-10  17:07
 // 
-// Last Modified By : Edison.Ma(jstsmaxx@163.com)
-// Last Modified On : 2025-11-14  15:21
-// ******************************************************************************************************
+// Last Modified By : kitt-nostalgic(jstsmaxx@gmail.com)
+// Last Modified On : 2026-07-10  19:06
+// ****************************************************************************************************************************************
 // <copyright file="IDomainEventBus.cs" company="">
-//     Copyright ©  2011-2025. All rights reserved.
+//     Copyright ©  2011-2026. All rights reserved.
 // </copyright>
-// ******************************************************************************************************
+// ****************************************************************************************************************************************
 
-using System.Collections.Generic;
-using System.Threading.Tasks;
+namespace Navyblue.Foundation.Cqrs;
 
-namespace Navyblue.Foundation.Cqrs
+/// <summary>
+///     Bus for sending events
+/// </summary>
+public interface IDomainEventBus
 {
     /// <summary>
-    ///     Bus for sending events
+    ///     Sends an event to the bus
     /// </summary>
-    public interface IDomainEventBus
-    {
-        /// <summary>
-        ///     Sends an event to the bus
-        /// </summary>
-        /// <param name="event" cref="Event">Event being published</param>
-        /// <returns>Completed Task</returns>
-        Task Send(Event @event);
+    /// <param name="event" cref="Event">Event being published</param>
+    /// <returns>Completed Task</returns>
+    Task Send(Event @event);
 
-        /// <summary>
-        ///     Sends a stream of event to the bus
-        /// </summary>
-        /// <param name="events" cref="IEnumerable{Event}">Event stream</param>
-        /// <returns>Completed Task</returns>
-        Task Send(IEnumerable<Event> events);
-    }
+    /// <summary>
+    ///     Sends a stream of event to the bus
+    /// </summary>
+    /// <param name="events" cref="IEnumerable{Event}">Event stream</param>
+    /// <returns>Completed Task</returns>
+    Task Send(IEnumerable<Event> events);
 }

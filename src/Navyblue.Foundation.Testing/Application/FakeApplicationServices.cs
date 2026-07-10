@@ -1,10 +1,10 @@
 // ****************************************************************************************************************************************
 // Project          : Navyblue.BaseLibrary
 // File             : FakeApplicationServices.cs
-// Created          : 2026-07-09  16:06
+// Created          : 2026-07-09  16:07
 // 
 // Last Modified By : kitt-nostalgic(jstsmaxx@gmail.com)
-// Last Modified On : 2026-07-09  16:06
+// Last Modified On : 2026-07-10  19:05
 // ****************************************************************************************************************************************
 // <copyright file="FakeApplicationServices.cs" company="">
 //     Copyright ©  2011-2026. All rights reserved.
@@ -29,6 +29,22 @@ public sealed class FakePermissionChecker : IPermissionChecker
     /// </summary>
     public bool GrantAllWhenEmpty { get; set; } = true;
 
+    #region IPermissionChecker Members
+
+    /// <inheritdoc />
+    public ValueTask<bool> IsGrantedAsync(string permissionName, CancellationToken cancellationToken = default)
+    {
+        Guard.NotNullOrWhiteSpace(permissionName, nameof(permissionName));
+        if (this._granted.IsEmpty)
+        {
+            return ValueTask.FromResult(this.GrantAllWhenEmpty);
+        }
+
+        return ValueTask.FromResult(this._granted.ContainsKey(permissionName));
+    }
+
+    #endregion
+
     /// <summary>
     ///     Grants the specified permission.
     /// </summary>
@@ -49,18 +65,6 @@ public sealed class FakePermissionChecker : IPermissionChecker
         return this;
     }
 
-    /// <inheritdoc />
-    public ValueTask<bool> IsGrantedAsync(string permissionName, CancellationToken cancellationToken = default)
-    {
-        Guard.NotNullOrWhiteSpace(permissionName, nameof(permissionName));
-        if (this._granted.IsEmpty)
-        {
-            return ValueTask.FromResult(this.GrantAllWhenEmpty);
-        }
-
-        return ValueTask.FromResult(this._granted.ContainsKey(permissionName));
-    }
-
     /// <summary>
     ///     Clears granted permissions.
     /// </summary>
@@ -72,19 +76,23 @@ public sealed class FakePermissionChecker : IPermissionChecker
 /// </summary>
 public sealed class FakeDataPermissionContext : IDataPermissionContext
 {
+    /// <summary>
+    ///     Gets the mutable role list.
+    /// </summary>
+    public List<string> RoleList { get; } = [];
+
+    #region IDataPermissionContext Members
+
     /// <inheritdoc />
     public string? UserId { get; set; } = "test-user";
 
     /// <inheritdoc />
     public string? TenantId { get; set; } = "test-tenant";
 
-    /// <summary>
-    ///     Gets the mutable role list.
-    /// </summary>
-    public List<string> RoleList { get; } = [];
-
     /// <inheritdoc />
     public IReadOnlyCollection<string> Roles => this.RoleList;
+
+    #endregion
 }
 
 /// <summary>
@@ -94,16 +102,7 @@ public sealed class FakeObjectMapper : IObjectMapper
 {
     private readonly Dictionary<(Type Source, Type Destination), Func<object, object?, object>> _maps = [];
 
-    /// <summary>
-    ///     Registers a mapping function from <typeparamref name="TSource" /> to <typeparamref name="TDestination" />.
-    /// </summary>
-    public FakeObjectMapper Register<TSource, TDestination>(Func<TSource, TDestination?, TDestination> map)
-    {
-        ArgumentNullException.ThrowIfNull(map);
-        this._maps[(typeof(TSource), typeof(TDestination))] = (source, destination) =>
-            map((TSource)source, destination is null ? default : (TDestination)destination)!;
-        return this;
-    }
+    #region IObjectMapper Members
 
     /// <inheritdoc />
     public TDestination Map<TDestination>(object source)
@@ -132,5 +131,18 @@ public sealed class FakeObjectMapper : IObjectMapper
         }
 
         return destination;
+    }
+
+    #endregion
+
+    /// <summary>
+    ///     Registers a mapping function from <typeparamref name="TSource" /> to <typeparamref name="TDestination" />.
+    /// </summary>
+    public FakeObjectMapper Register<TSource, TDestination>(Func<TSource, TDestination?, TDestination> map)
+    {
+        ArgumentNullException.ThrowIfNull(map);
+        this._maps[(typeof(TSource), typeof(TDestination))] = (source, destination) =>
+            map((TSource)source, destination is null ? default : (TDestination)destination)!;
+        return this;
     }
 }

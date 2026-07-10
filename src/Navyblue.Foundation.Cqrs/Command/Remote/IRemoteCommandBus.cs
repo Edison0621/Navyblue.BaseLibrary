@@ -1,22 +1,27 @@
-﻿// ******************************************************************************************************
-// Project          : CQRS.Mediatr.Lite.Samples
+﻿// ****************************************************************************************************************************************
+// Project          : Navyblue.BaseLibrary
 // File             : IRemoteCommandBus.cs
-// Created          : 2025-11-14  15:11
+// Created          : 2026-07-10  17:07
 // 
-// Last Modified By : Edison.Ma(jstsmaxx@163.com)
-// Last Modified On : 2025-11-14  15:21
-// ******************************************************************************************************
+// Last Modified By : kitt-nostalgic(jstsmaxx@gmail.com)
+// Last Modified On : 2026-07-10  19:06
+// ****************************************************************************************************************************************
 // <copyright file="IRemoteCommandBus.cs" company="">
-//     Copyright ©  2011-2025. All rights reserved.
+//     Copyright ©  2011-2026. All rights reserved.
 // </copyright>
-// ******************************************************************************************************
+// ****************************************************************************************************************************************
 
-using System.Threading.Tasks;
+namespace Navyblue.Foundation.Cqrs;
 
-namespace Navyblue.Foundation.Cqrs
+/// <summary>
+/// </summary>
+public interface IRemoteCommandBus
 {
-    public interface IRemoteCommandBus
-    {
-        Task<object> Send(string commandName, string serializedCommand);
-    }
+    /// <summary>
+    ///     Sends the specified command name.
+    /// </summary>
+    /// <param name="commandName">Name of the command.</param>
+    /// <param name="serializedCommand">The serialized command.</param>
+    /// <returns></returns>
+    Task<object> Send(string commandName, string serializedCommand);
 }

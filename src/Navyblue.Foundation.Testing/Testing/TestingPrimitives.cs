@@ -4,7 +4,7 @@
 // Created          : 2026-06-29  11:06
 // 
 // Last Modified By : kitt-nostalgic(jstsmaxx@gmail.com)
-// Last Modified On : 2026-07-09  16:06
+// Last Modified On : 2026-07-10  19:06
 // ****************************************************************************************************************************************
 // <copyright file="TestingPrimitives.cs" company="">
 //     Copyright ©  2011-2026. All rights reserved.
@@ -27,10 +27,14 @@ public sealed class TestClock : IClock
     /// </summary>
     public DateTimeOffset UtcNow { get; set; } = DateTimeOffset.UtcNow;
 
+    #region IClock Members
+
     /// <inheritdoc />
     public DateTimeOffset Now => this.UtcNow.ToLocalTime();
 
     DateTimeOffset IClock.UtcNow => this.UtcNow;
+
+    #endregion
 
     /// <summary>
     ///     Advances the clock by the specified duration.

@@ -4,7 +4,7 @@
 // Created          : 2026-06-29  11:06
 // 
 // Last Modified By : kitt-nostalgic(jstsmaxx@gmail.com)
-// Last Modified On : 2026-07-09  14:01
+// Last Modified On : 2026-07-10  19:06
 // ****************************************************************************************************************************************
 // <copyright file="Security.cs" company="">
 //     Copyright ©  2011-2026. All rights reserved.
@@ -161,7 +161,19 @@ public static class PasswordHasher
 /// </summary>
 public interface IHashService
 {
+    /// <summary>
+    /// </summary>
+    /// <param name="value">The value.</param>
+    /// <param name="salt">The salt.</param>
+    /// <returns>A string</returns>
     string Create(string value, string salt);
+
+    /// <summary>
+    /// </summary>
+    /// <param name="value">The value.</param>
+    /// <param name="salt">The salt.</param>
+    /// <param name="hash">The hash.</param>
+    /// <returns>A bool</returns>
     bool Validate(string value, string salt, string hash);
 }
 
@@ -170,24 +182,35 @@ public interface IHashService
 /// </summary>
 public sealed class HashService : IHashService
 {
-    private const int KeySize = 64;
-    private const int Iterations = 100_000;
+    private const int KEY_SIZE = 64;
+    private const int ITERATIONS = 100_000;
 
-    public static string CreateSalt(int size = 32) => Convert.ToBase64String(RandomNumberGenerator.GetBytes(size));
+    #region IHashService Members
 
+    /// <summary>
+    /// </summary>
+    /// <param name="value">The value.</param>
+    /// <param name="salt">The salt.</param>
+    /// <returns>A string</returns>
     public string Create(string value, string salt)
     {
         Guard.NotNullOrWhiteSpace(value, nameof(value));
         Guard.NotNullOrWhiteSpace(salt, nameof(salt));
 #if NET7_0_OR_GREATER
-        byte[] hash = Rfc2898DeriveBytes.Pbkdf2(Encoding.UTF8.GetBytes(value), Encoding.UTF8.GetBytes(salt), Iterations, HashAlgorithmName.SHA512, KeySize);
+        byte[] hash = Rfc2898DeriveBytes.Pbkdf2(Encoding.UTF8.GetBytes(value), Encoding.UTF8.GetBytes(salt), ITERATIONS, HashAlgorithmName.SHA512, KEY_SIZE);
 #else
-        using Rfc2898DeriveBytes deriveBytes = new(value, Encoding.UTF8.GetBytes(salt), Iterations, HashAlgorithmName.SHA512);
-        byte[] hash = deriveBytes.GetBytes(KeySize);
+        using Rfc2898DeriveBytes deriveBytes = new(value, Encoding.UTF8.GetBytes(salt), ITERATIONS, HashAlgorithmName.SHA512);
+        byte[] hash = deriveBytes.GetBytes(KEY_SIZE);
 #endif
         return Convert.ToBase64String(hash);
     }
 
+    /// <summary>
+    /// </summary>
+    /// <param name="value">The value.</param>
+    /// <param name="salt">The salt.</param>
+    /// <param name="hash">The hash.</param>
+    /// <returns>A bool</returns>
     public bool Validate(string value, string salt, string hash)
     {
         try
@@ -201,6 +224,15 @@ public sealed class HashService : IHashService
             return false;
         }
     }
+
+    #endregion
+
+    /// <summary>
+    ///     Creates the salt.
+    /// </summary>
+    /// <param name="size">The size.</param>
+    /// <returns>A string</returns>
+    public static string CreateSalt(int size = 32) => Convert.ToBase64String(RandomNumberGenerator.GetBytes(size));
 }
 
 /// <summary>
@@ -208,6 +240,11 @@ public sealed class HashService : IHashService
 /// </summary>
 public static class SecurityServiceCollectionExtensions
 {
+    /// <summary>
+    ///     Add navyblue hash service.
+    /// </summary>
+    /// <param name="services">The services.</param>
+    /// <returns>An IServiceCollection</returns>
     public static IServiceCollection AddNavyblueHashService(this IServiceCollection services)
     {
         services.TryAddSingleton<IHashService, HashService>();

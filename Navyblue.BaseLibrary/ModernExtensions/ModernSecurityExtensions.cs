@@ -4,7 +4,7 @@
 // Created          : 2026-06-30  14:06
 // 
 // Last Modified By : kitt-nostalgic(jstsmaxx@gmail.com)
-// Last Modified On : 2026-07-09  14:00
+// Last Modified On : 2026-07-10  19:04
 // ****************************************************************************************************************************************
 // <copyright file="ModernSecurityExtensions.cs" company="">
 //     Copyright ©  2011-2026. All rights reserved.
@@ -157,7 +157,7 @@ public static class ModernBase64UrlExtensions
     /// <returns></returns>
     public static string ToBase64UrlString(this Span<byte> value)
     {
-        return Convert.ToBase64String((ReadOnlySpan<byte>)value).TrimEnd('=').Replace('+', '-').Replace('/', '_');
+        return Convert.ToBase64String(value).TrimEnd('=').Replace('+', '-').Replace('/', '_');
     }
 
     /// <summary>
@@ -198,7 +198,7 @@ public static class ModernAuthenticatedEncryptionExtensions
     /// <returns></returns>
     public static AesGcmPayload EncryptAesGcm(this Span<byte> plaintext, ReadOnlySpan<byte> key, ReadOnlySpan<byte> associatedData = default)
     {
-        return EncryptAesGcm((ReadOnlySpan<byte>)plaintext, key, associatedData);
+        return ((ReadOnlySpan<byte>)plaintext).EncryptAesGcm(key, associatedData);
     }
 
     /// <summary>
@@ -263,20 +263,19 @@ public static class ModernAuthenticatedEncryptionExtensions
 
 #if NET8_0_OR_GREATER
 /// <summary>
-/// 
 /// </summary>
 public static class ModernSha3Extensions
 {
     /// <summary>
-    /// Gets a value indicating whether [sha3 is supported].
+    ///     Gets a value indicating whether [sha3 is supported].
     /// </summary>
     /// <value>
-    ///   <c>true</c> if [sha3 is supported]; otherwise, <c>false</c>.
+    ///     <c>true</c> if [sha3 is supported]; otherwise, <c>false</c>.
     /// </value>
     public static bool Sha3IsSupported => SHA3_256.IsSupported;
 
     /// <summary>
-    /// Sha3s the 256.
+    ///     Sha3s the 256.
     /// </summary>
     /// <param name="value">The value.</param>
     /// <returns></returns>
@@ -287,7 +286,7 @@ public static class ModernSha3Extensions
     }
 
     /// <summary>
-    /// Sha3s the 384.
+    ///     Sha3s the 384.
     /// </summary>
     /// <param name="value">The value.</param>
     /// <returns></returns>
@@ -298,7 +297,7 @@ public static class ModernSha3Extensions
     }
 
     /// <summary>
-    /// Sha3s the 512.
+    ///     Sha3s the 512.
     /// </summary>
     /// <param name="value">The value.</param>
     /// <returns></returns>
@@ -309,7 +308,7 @@ public static class ModernSha3Extensions
     }
 
     /// <summary>
-    /// Hmacs the sha3 256.
+    ///     Hmacs the sha3 256.
     /// </summary>
     /// <param name="value">The value.</param>
     /// <param name="key">The key.</param>
@@ -321,7 +320,7 @@ public static class ModernSha3Extensions
     }
 
     /// <summary>
-    /// Hmacs the sha3 384.
+    ///     Hmacs the sha3 384.
     /// </summary>
     /// <param name="value">The value.</param>
     /// <param name="key">The key.</param>
@@ -333,7 +332,7 @@ public static class ModernSha3Extensions
     }
 
     /// <summary>
-    /// Hmacs the sha3 512.
+    ///     Hmacs the sha3 512.
     /// </summary>
     /// <param name="value">The value.</param>
     /// <param name="key">The key.</param>
@@ -345,7 +344,7 @@ public static class ModernSha3Extensions
     }
 
     /// <summary>
-    /// Ensures the sha3 supported.
+    ///     Ensures the sha3 supported.
     /// </summary>
     /// <returns></returns>
     /// <exception cref="PlatformNotSupportedException">SHA-3 is not supported on the current platform.</exception>

@@ -1,10 +1,10 @@
 // ****************************************************************************************************************************************
 // Project          : Navyblue.BaseLibrary
 // File             : JwtClaimNames.cs
-// Created          : 2026-07-09  15:03
+// Created          : 2026-07-09  15:07
 // 
 // Last Modified By : kitt-nostalgic(jstsmaxx@gmail.com)
-// Last Modified On : 2026-07-09  15:03
+// Last Modified On : 2026-07-10  19:05
 // ****************************************************************************************************************************************
 // <copyright file="JwtClaimNames.cs" company="">
 //     Copyright ©  2011-2026. All rights reserved.

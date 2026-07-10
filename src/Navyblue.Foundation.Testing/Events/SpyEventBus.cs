@@ -1,10 +1,10 @@
 // ****************************************************************************************************************************************
 // Project          : Navyblue.BaseLibrary
 // File             : SpyEventBus.cs
-// Created          : 2026-07-09  16:06
+// Created          : 2026-07-09  16:07
 // 
 // Last Modified By : kitt-nostalgic(jstsmaxx@gmail.com)
-// Last Modified On : 2026-07-09  16:06
+// Last Modified On : 2026-07-10  19:05
 // ****************************************************************************************************************************************
 // <copyright file="SpyEventBus.cs" company="">
 //     Copyright ©  2011-2026. All rights reserved.
@@ -27,6 +27,8 @@ public sealed class SpyEventBus(IEventBus? inner = null) : IEventBus
     /// </summary>
     public IReadOnlyList<object> Published => this._published;
 
+    #region IEventBus Members
+
     /// <inheritdoc />
     public async ValueTask PublishAsync<TEvent>(TEvent integrationEvent, CancellationToken cancellationToken = default) where TEvent : class, IIntegrationEvent
     {
@@ -43,6 +45,8 @@ public sealed class SpyEventBus(IEventBus? inner = null) : IEventBus
         where TEvent : class, IIntegrationEvent
         where TConsumer : IMessageConsumer<TEvent>
         => inner?.SubscribeAsync<TEvent, TConsumer>(cancellationToken) ?? ValueTask.CompletedTask;
+
+    #endregion
 
     /// <summary>
     ///     Clears recorded events.

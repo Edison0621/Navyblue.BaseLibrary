@@ -4,7 +4,7 @@
 // Created          : 2026-06-30  13:06
 // 
 // Last Modified By : kitt-nostalgic(jstsmaxx@gmail.com)
-// Last Modified On : 2026-07-09  14:01
+// Last Modified On : 2026-07-10  19:06
 // ****************************************************************************************************************************************
 // <copyright file="ConventionalServiceRegistration.cs" company="">
 //     Copyright ©  2011-2026. All rights reserved.
@@ -91,7 +91,7 @@ public static class ConventionalServiceRegistration
                 foreach (Type serviceType in implementation.GetInterfaces()
                              .Where(i => i.Name == "I" + implementation.Name
                                          || (i.IsGenericType && implementation.IsGenericType
-                                             && i.Name == "I" + implementation.Name)))
+                                                             && i.Name == "I" + implementation.Name)))
                 {
                     services.TryAdd(new ServiceDescriptor(serviceType, implementation, lifetime));
                 }

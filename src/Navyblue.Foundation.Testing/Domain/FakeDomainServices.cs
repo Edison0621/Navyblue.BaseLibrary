@@ -1,10 +1,10 @@
 // ****************************************************************************************************************************************
 // Project          : Navyblue.BaseLibrary
 // File             : FakeDomainServices.cs
-// Created          : 2026-07-09  16:06
+// Created          : 2026-07-09  16:07
 // 
 // Last Modified By : kitt-nostalgic(jstsmaxx@gmail.com)
-// Last Modified On : 2026-07-09  16:06
+// Last Modified On : 2026-07-10  19:05
 // ****************************************************************************************************************************************
 // <copyright file="FakeDomainServices.cs" company="">
 //     Copyright ©  2011-2026. All rights reserved.
@@ -21,11 +21,15 @@ namespace Navyblue.Foundation.Testing;
 /// </summary>
 public sealed class FakeAuditor : IAuditor
 {
+    #region IAuditor Members
+
     /// <inheritdoc />
     public string? CurrentUserId { get; set; } = "test-user";
 
     /// <inheritdoc />
     public string? CurrentUserName { get; set; } = "Test User";
+
+    #endregion
 }
 
 /// <summary>
@@ -33,8 +37,12 @@ public sealed class FakeAuditor : IAuditor
 /// </summary>
 public sealed class FakeTenantResolver : ITenantResolver
 {
+    #region ITenantResolver Members
+
     /// <inheritdoc />
     public string? CurrentTenantId { get; set; } = "test-tenant";
+
+    #endregion
 }
 
 /// <summary>
@@ -42,8 +50,8 @@ public sealed class FakeTenantResolver : ITenantResolver
 /// </summary>
 public sealed class FakeAuditPropertySetter(IClock? clock = null, IAuditor? auditor = null) : IAuditPropertySetter
 {
-    private readonly IClock _clock = clock ?? new SystemClock();
     private readonly IAuditor _auditor = auditor ?? new FakeAuditor();
+    private readonly IClock _clock = clock ?? new SystemClock();
 
     /// <summary>
     ///     Gets entities that received creation audit.
@@ -59,6 +67,8 @@ public sealed class FakeAuditPropertySetter(IClock? clock = null, IAuditor? audi
     ///     Gets entities that received deletion audit.
     /// </summary>
     public List<object> Deleted { get; } = [];
+
+    #region IAuditPropertySetter Members
 
     /// <inheritdoc />
     public void SetCreationAudit(object entity)
@@ -97,6 +107,8 @@ public sealed class FakeAuditPropertySetter(IClock? clock = null, IAuditor? audi
         }
     }
 
+    #endregion
+
     /// <summary>
     ///     Clears recorded entities.
     /// </summary>
@@ -115,8 +127,12 @@ public sealed class SequentialIdGenerator(long start = 1) : IIdGenerator<long>
 {
     private long _next = start;
 
+    #region IIdGenerator<long> Members
+
     /// <inheritdoc />
     public long NextId() => Interlocked.Increment(ref this._next) - 1;
+
+    #endregion
 
     /// <summary>
     ///     Resets the sequence to <paramref name="startValue" />.
@@ -131,6 +147,8 @@ public sealed class SequentialGuidIdGenerator : IIdGenerator<Guid>
 {
     private long _next;
 
+    #region IIdGenerator<Guid> Members
+
     /// <inheritdoc />
     public Guid NextId()
     {
@@ -139,4 +157,6 @@ public sealed class SequentialGuidIdGenerator : IIdGenerator<Guid>
         BitConverter.TryWriteBytes(bytes, value);
         return new Guid(bytes);
     }
+
+    #endregion
 }

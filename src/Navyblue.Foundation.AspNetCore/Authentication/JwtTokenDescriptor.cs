@@ -1,10 +1,10 @@
 // ****************************************************************************************************************************************
 // Project          : Navyblue.BaseLibrary
 // File             : JwtTokenDescriptor.cs
-// Created          : 2026-07-09  14:58
+// Created          : 2026-07-09  14:07
 // 
 // Last Modified By : kitt-nostalgic(jstsmaxx@gmail.com)
-// Last Modified On : 2026-07-09  15:03
+// Last Modified On : 2026-07-10  19:05
 // ****************************************************************************************************************************************
 // <copyright file="JwtTokenDescriptor.cs" company="">
 //     Copyright ©  2011-2026. All rights reserved.

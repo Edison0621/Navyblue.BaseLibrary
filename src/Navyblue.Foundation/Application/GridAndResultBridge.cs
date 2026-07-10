@@ -1,3 +1,16 @@
+﻿// ****************************************************************************************************************************************
+// Project          : Navyblue.BaseLibrary
+// File             : GridAndResultBridge.cs
+// Created          : 2026-07-10  17:07
+// 
+// Last Modified By : kitt-nostalgic(jstsmaxx@gmail.com)
+// Last Modified On : 2026-07-10  19:06
+// ****************************************************************************************************************************************
+// <copyright file="GridAndResultBridge.cs" company="">
+//     Copyright ©  2011-2026. All rights reserved.
+// </copyright>
+// ****************************************************************************************************************************************
+
 using System.Net;
 using Navyblue.Foundation.Primitives;
 
@@ -8,11 +21,30 @@ namespace Navyblue.Foundation.Application;
 /// </summary>
 public sealed class GridParameters
 {
+    /// <summary>
+    ///     Gets or sets the page.
+    /// </summary>
     public PageRequest Page { get; set; } = new();
+
+    /// <summary>
+    ///     Gets or sets the order.
+    /// </summary>
     public SortDescriptor? Order { get; set; }
+
+    /// <summary>
+    ///     Gets or sets the filters.
+    /// </summary>
     public IList<FilterDescriptor> Filters { get; set; } = [];
+
+    /// <summary>
+    ///     Gets or sets the keyword.
+    /// </summary>
     public string? Keyword { get; set; }
 
+    /// <summary>
+    ///     Converts to query request.
+    /// </summary>
+    /// <returns>A QueryRequest</returns>
     public QueryRequest ToQueryRequest() => new()
     {
         Page = this.Page,
@@ -27,6 +59,12 @@ public sealed class GridParameters
 /// </summary>
 public sealed class GridResult<T>
 {
+    /// <summary>
+    ///     Initializes a new instance of the <see cref="GridResult" /> class.
+    /// </summary>
+    /// <param name="list">The list.</param>
+    /// <param name="count">The count.</param>
+    /// <param name="parameters">The parameters.</param>
     public GridResult(IEnumerable<T> list, long count, GridParameters? parameters = null)
     {
         this.List = list?.ToList() ?? [];
@@ -34,16 +72,37 @@ public sealed class GridResult<T>
         this.Parameters = parameters;
     }
 
+    /// <summary>
+    ///     Gets the count.
+    /// </summary>
     public long Count { get; }
+
+    /// <summary>
+    ///     Gets the list.
+    /// </summary>
     public IReadOnlyList<T> List { get; }
+
+    /// <summary>
+    ///     Gets the parameters.
+    /// </summary>
     public GridParameters? Parameters { get; }
 
+    /// <summary>
+    ///     Converts to page result.
+    /// </summary>
+    /// <returns><![CDATA[PageResult<T>]]></returns>
     public PageResult<T> ToPageResult()
     {
         PageRequest page = this.Parameters?.Page.Normalize() ?? new PageRequest();
         return new PageResult<T>(this.List, this.Count, page.PageIndex, page.PageSize);
     }
 
+    /// <summary>
+    ///     Froms page result.
+    /// </summary>
+    /// <param name="page">The page.</param>
+    /// <param name="parameters">The parameters.</param>
+    /// <returns><![CDATA[GridResult<T>]]></returns>
     public static GridResult<T> FromPageResult(PageResult<T> page, GridParameters? parameters = null)
         => new(page.Items, page.Total, parameters);
 }
@@ -53,6 +112,13 @@ public sealed class GridResult<T>
 /// </summary>
 public static class HttpStatusResultBridge
 {
+    /// <summary>
+    ///     Converts to api result.
+    /// </summary>
+    /// <param name="result">The result.</param>
+    /// <param name="traceId">The trace id.</param>
+    /// <exception cref="ArgumentNullException"></exception>
+    /// <returns>An ApiResult</returns>
     public static ApiResult ToApiResult(this Result result, string? traceId = null)
     {
         ArgumentNullException.ThrowIfNull(result);
@@ -64,6 +130,14 @@ public static class HttpStatusResultBridge
         return ApiResult.Fail(code, message, traceId);
     }
 
+    /// <summary>
+    ///     Converts to api result.
+    /// </summary>
+    /// <typeparam name="T" />
+    /// <param name="result">The result.</param>
+    /// <param name="traceId">The trace id.</param>
+    /// <exception cref="ArgumentNullException"></exception>
+    /// <returns><![CDATA[ApiResult<T>]]></returns>
     public static ApiResult<T> ToApiResult<T>(this Result<T> result, string? traceId = null)
     {
         ArgumentNullException.ThrowIfNull(result);
@@ -98,6 +172,14 @@ public static class HttpStatusResultBridge
         return Result.Failure(new Error(businessCode.ToString(), message ?? status.ToString()));
     }
 
+    /// <summary>
+    ///     Froms http status.
+    /// </summary>
+    /// <typeparam name="T" />
+    /// <param name="status">The status.</param>
+    /// <param name="value">The value.</param>
+    /// <param name="message">The message.</param>
+    /// <returns><![CDATA[Result<T>]]></returns>
     public static Result<T> FromHttpStatus<T>(HttpStatusCode status, T value, string? message = null)
     {
         int code = (int)status;

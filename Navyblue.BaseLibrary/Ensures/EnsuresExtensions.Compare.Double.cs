@@ -4,7 +4,7 @@
 // Created          : 2026-06-26  17:06
 // 
 // Last Modified By : kitt-nostalgic(jstsmaxx@gmail.com)
-// Last Modified On : 2026-07-09  14:00
+// Last Modified On : 2026-07-10  19:04
 // ****************************************************************************************************************************************
 // <copyright file="EnsuresExtensions.Compare.Double.cs" company="">
 //     Copyright ©  2011-2026. All rights reserved.

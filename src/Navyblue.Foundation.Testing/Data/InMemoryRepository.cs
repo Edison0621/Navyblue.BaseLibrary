@@ -1,10 +1,10 @@
 // ****************************************************************************************************************************************
 // Project          : Navyblue.BaseLibrary
 // File             : InMemoryRepository.cs
-// Created          : 2026-07-09  16:06
+// Created          : 2026-07-09  16:07
 // 
 // Last Modified By : kitt-nostalgic(jstsmaxx@gmail.com)
-// Last Modified On : 2026-07-09  16:06
+// Last Modified On : 2026-07-10  19:05
 // ****************************************************************************************************************************************
 // <copyright file="InMemoryRepository.cs" company="">
 //     Copyright ©  2011-2026. All rights reserved.
@@ -38,6 +38,8 @@ public class InMemoryRepository<TEntity> : IRepository<TEntity> where TEntity : 
             }
         }
     }
+
+    #region IRepository<TEntity> Members
 
     /// <inheritdoc />
     public IQueryable<TEntity> Queryable
@@ -148,6 +150,8 @@ public class InMemoryRepository<TEntity> : IRepository<TEntity> where TEntity : 
         }
     }
 
+    #endregion
+
     /// <summary>
     ///     Clears all entities.
     /// </summary>
@@ -176,9 +180,13 @@ public class InMemoryRepository<TEntity> : IRepository<TEntity> where TEntity : 
 public sealed class InMemoryRepository<TEntity, TKey> : InMemoryRepository<TEntity>, IRepository<TEntity, TKey>
     where TEntity : class, IEntity<TKey>
 {
+    #region IRepository<TEntity,TKey> Members
+
     /// <inheritdoc />
     public ValueTask<TEntity?> FindAsync(TKey id, CancellationToken cancellationToken = default)
         => this.FindAsync([id!], cancellationToken);
+
+    #endregion
 }
 
 /// <summary>
@@ -196,12 +204,16 @@ public sealed class InMemoryUnitOfWork : IUnitOfWork
     /// </summary>
     public int SaveChangesResult { get; set; }
 
+    #region IUnitOfWork Members
+
     /// <inheritdoc />
     public Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
         this.SaveChangesCallCount++;
         return Task.FromResult(this.SaveChangesResult);
     }
+
+    #endregion
 
     /// <summary>
     ///     Resets call counters.

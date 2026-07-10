@@ -4,7 +4,7 @@
 // Created          : 2026-07-09  13:07
 // 
 // Last Modified By : kitt-nostalgic(jstsmaxx@gmail.com)
-// Last Modified On : 2026-07-09  14:01
+// Last Modified On : 2026-07-10  19:05
 // ****************************************************************************************************************************************
 // <copyright file="AspNetCoreIntegration.cs" company="">
 //     Copyright ©  2011-2026. All rights reserved.
@@ -88,7 +88,7 @@ public sealed class NavyblueAspNetCoreOptions
     public bool WrapApiResult { get; set; }
 
     /// <summary>
-    ///     When true (default with <see cref="EnableTraceId"/>), uses CorrelationId middleware
+    ///     When true (default with <see cref="EnableTraceId" />), uses CorrelationId middleware
     ///     (header read/write, logging scope, CorrelationContext) instead of the simple TraceId middleware.
     /// </summary>
     public bool EnableCorrelationId { get; set; } = true;

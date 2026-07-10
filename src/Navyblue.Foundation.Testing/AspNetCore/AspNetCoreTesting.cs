@@ -1,10 +1,10 @@
 // ****************************************************************************************************************************************
 // Project          : Navyblue.BaseLibrary
 // File             : AspNetCoreTesting.cs
-// Created          : 2026-07-09  16:06
+// Created          : 2026-07-09  16:07
 // 
 // Last Modified By : kitt-nostalgic(jstsmaxx@gmail.com)
-// Last Modified On : 2026-07-09  16:06
+// Last Modified On : 2026-07-10  19:05
 // ****************************************************************************************************************************************
 // <copyright file="AspNetCoreTesting.cs" company="">
 //     Copyright ©  2011-2026. All rights reserved.
@@ -31,6 +31,8 @@ public sealed class InMemoryAuditLogSink : IAuditLogSink
     /// </summary>
     public IReadOnlyList<AuditLogEntry> Entries => this._entries.ToArray();
 
+    #region IAuditLogSink Members
+
     /// <inheritdoc />
     public ValueTask WriteAsync(AuditLogEntry entry, CancellationToken cancellationToken = default)
     {
@@ -38,6 +40,8 @@ public sealed class InMemoryAuditLogSink : IAuditLogSink
         this._entries.Enqueue(entry);
         return ValueTask.CompletedTask;
     }
+
+    #endregion
 
     /// <summary>
     ///     Clears recorded entries.
@@ -55,6 +59,8 @@ public sealed class InMemoryAuditLogSink : IAuditLogSink
 /// </summary>
 public sealed class FakeHttpRequestContext : IHttpRequestContext
 {
+    #region IHttpRequestContext Members
+
     /// <inheritdoc />
     public string? ClientIp { get; set; } = "127.0.0.1";
 
@@ -84,6 +90,8 @@ public sealed class FakeHttpRequestContext : IHttpRequestContext
 
     /// <inheritdoc />
     public string? UserName { get; set; } = "Test User";
+
+    #endregion
 }
 
 /// <summary>
@@ -91,8 +99,12 @@ public sealed class FakeHttpRequestContext : IHttpRequestContext
 /// </summary>
 public sealed class FakeTenantIdAccessor : ITenantIdAccessor
 {
+    #region ITenantIdAccessor Members
+
     /// <inheritdoc />
     public string? TenantId { get; set; } = "test-tenant";
+
+    #endregion
 }
 
 /// <summary>

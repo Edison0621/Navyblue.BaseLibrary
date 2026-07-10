@@ -1,10 +1,10 @@
 // ****************************************************************************************************************************************
 // Project          : Navyblue.BaseLibrary
 // File             : InMemoryCacheProvider.cs
-// Created          : 2026-07-09  16:06
+// Created          : 2026-07-09  16:07
 // 
 // Last Modified By : kitt-nostalgic(jstsmaxx@gmail.com)
-// Last Modified On : 2026-07-09  16:06
+// Last Modified On : 2026-07-10  19:05
 // ****************************************************************************************************************************************
 // <copyright file="InMemoryCacheProvider.cs" company="">
 //     Copyright ©  2011-2026. All rights reserved.
@@ -23,13 +23,15 @@ namespace Navyblue.Foundation.Testing;
 /// </summary>
 public sealed class InMemoryCacheProvider(IClock? clock = null) : IDistributedCacheProvider
 {
-    private readonly ConcurrentDictionary<string, CacheEntry> _entries = new(StringComparer.Ordinal);
     private readonly IClock _clock = clock ?? new SystemClock();
+    private readonly ConcurrentDictionary<string, CacheEntry> _entries = new(StringComparer.Ordinal);
 
     /// <summary>
     ///     Gets the number of stored entries (including expired ones not yet purged).
     /// </summary>
     public int Count => this._entries.Count;
+
+    #region IDistributedCacheProvider Members
 
     /// <inheritdoc />
     public ValueTask<T?> GetAsync<T>(string key, CancellationToken cancellationToken = default)
@@ -84,6 +86,8 @@ public sealed class InMemoryCacheProvider(IClock? clock = null) : IDistributedCa
         return created;
     }
 
+    #endregion
+
     /// <summary>
     ///     Clears all cache entries.
     /// </summary>
@@ -113,10 +117,14 @@ public sealed class InMemoryCacheProvider(IClock? clock = null) : IDistributedCa
 
     private bool IsExpired(CacheEntry entry) => entry.AbsoluteExpiration is { } expiry && expiry <= this._clock.UtcNow;
 
+    #region Nested type: CacheEntry
+
     private sealed class CacheEntry(object? value, DateTimeOffset? absoluteExpiration, TimeSpan? slidingExpiration)
     {
         public object? Value { get; } = value;
         public DateTimeOffset? AbsoluteExpiration { get; set; } = absoluteExpiration;
         public TimeSpan? SlidingExpiration { get; } = slidingExpiration;
     }
+
+    #endregion
 }

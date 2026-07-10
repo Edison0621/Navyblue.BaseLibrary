@@ -1,12 +1,12 @@
 // ****************************************************************************************************************************************
 // Project          : Navyblue.BaseLibrary
-// File             : CoreServiceCollectionExtensions.cs
+// File             : FoundationServiceCollectionExtensions.cs
 // Created          : 2026-06-29  11:06
 // 
 // Last Modified By : kitt-nostalgic(jstsmaxx@gmail.com)
-// Last Modified On : 2026-07-09  14:01
+// Last Modified On : 2026-07-10  19:06
 // ****************************************************************************************************************************************
-// <copyright file="CoreServiceCollectionExtensions.cs" company="">
+// <copyright file="FoundationServiceCollectionExtensions.cs" company="">
 //     Copyright ©  2011-2026. All rights reserved.
 // </copyright>
 // ****************************************************************************************************************************************

@@ -1,10 +1,10 @@
 // ****************************************************************************************************************************************
 // Project          : Navyblue.BaseLibrary
 // File             : JwtTokenService.cs
-// Created          : 2026-07-09  14:58
+// Created          : 2026-07-09  14:07
 // 
 // Last Modified By : kitt-nostalgic(jstsmaxx@gmail.com)
-// Last Modified On : 2026-07-09  15:03
+// Last Modified On : 2026-07-10  19:05
 // ****************************************************************************************************************************************
 // <copyright file="JwtTokenService.cs" company="">
 //     Copyright ©  2011-2026. All rights reserved.
@@ -25,6 +25,8 @@ namespace Navyblue.Foundation.AspNetCore;
 public sealed class JwtTokenService(JwtOptions options) : IJwtTokenService
 {
     private readonly JwtSecurityTokenHandler _handler = new();
+
+    #region IJwtTokenService Members
 
     /// <inheritdoc />
     public string CreateToken(JwtTokenDescriptor descriptor)
@@ -79,11 +81,10 @@ public sealed class JwtTokenService(JwtOptions options) : IJwtTokenService
     {
         Guard.NotNullOrWhiteSpace(subject, nameof(subject));
         ArgumentNullException.ThrowIfNull(claims);
-        return this.CreateToken(descriptor =>
-        {
-            descriptor.WithSubject(subject).WithClaims(claims);
-        });
+        return this.CreateToken(descriptor => { descriptor.WithSubject(subject).WithClaims(claims); });
     }
+
+    #endregion
 
     private static void AddClaimIfMissing(List<Claim> claims, string type, string value)
     {

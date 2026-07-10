@@ -4,7 +4,7 @@
 // Created          : 2026-06-29  11:06
 // 
 // Last Modified By : kitt-nostalgic(jstsmaxx@gmail.com)
-// Last Modified On : 2026-07-09  16:06
+// Last Modified On : 2026-07-10  19:06
 // ****************************************************************************************************************************************
 // <copyright file="FakeApplicationContext.cs" company="">
 //     Copyright ©  2011-2026. All rights reserved.
@@ -31,6 +31,8 @@ public sealed class FakeCurrentUser : ICurrentUser
     /// </summary>
     public List<string> RoleList { get; } = [];
 
+    #region ICurrentUser Members
+
     /// <inheritdoc />
     public IReadOnlyCollection<Claim> Claims => this.ClaimList;
 
@@ -51,6 +53,8 @@ public sealed class FakeCurrentUser : ICurrentUser
 
     /// <inheritdoc />
     public bool IsInRole(string role) => this.RoleList.Contains(role, StringComparer.OrdinalIgnoreCase);
+
+    #endregion
 
     /// <summary>
     ///     Creates a fake user from a claims principal.
@@ -75,6 +79,8 @@ public sealed class FakeCurrentUser : ICurrentUser
 /// </summary>
 public sealed class FakeCurrentTenant : ICurrentTenant
 {
+    #region ICurrentTenant Members
+
     /// <inheritdoc />
     public bool IsAvailable => !string.IsNullOrWhiteSpace(this.TenantId);
 
@@ -83,4 +89,6 @@ public sealed class FakeCurrentTenant : ICurrentTenant
 
     /// <inheritdoc />
     public string? TenantName { get; set; } = "Test Tenant";
+
+    #endregion
 }

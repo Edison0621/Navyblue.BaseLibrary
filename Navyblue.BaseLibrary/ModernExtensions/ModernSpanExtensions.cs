@@ -4,7 +4,7 @@
 // Created          : 2026-06-30  13:06
 // 
 // Last Modified By : kitt-nostalgic(jstsmaxx@gmail.com)
-// Last Modified On : 2026-07-09  14:00
+// Last Modified On : 2026-07-10  19:04
 // ****************************************************************************************************************************************
 // <copyright file="ModernSpanExtensions.cs" company="">
 //     Copyright ©  2011-2026. All rights reserved.
@@ -155,11 +155,11 @@ public static class ModernSpanExtensions
     public static byte[] Sha256(this ReadOnlySpan<byte> value) => SHA256.HashData(value);
 
     /// <summary>
-    /// Sha256s the specified value.
+    ///     Sha256s the specified value.
     /// </summary>
     /// <param name="value">The value.</param>
     /// <returns></returns>
-    public static byte[] Sha256(this Span<byte> value) => SHA256.HashData((ReadOnlySpan<byte>)value);
+    public static byte[] Sha256(this Span<byte> value) => SHA256.HashData(value);
 
     /// <summary>
     ///     Splits the specified separator.
@@ -178,11 +178,11 @@ public static class ModernSpanExtensions
     public static string ToBase64String(this ReadOnlySpan<byte> value) => Convert.ToBase64String(value);
 
     /// <summary>
-    /// Converts to base64string.
+    ///     Converts to base64string.
     /// </summary>
     /// <param name="value">The value.</param>
     /// <returns></returns>
-    public static string ToBase64String(this Span<byte> value) => Convert.ToBase64String((ReadOnlySpan<byte>)value);
+    public static string ToBase64String(this Span<byte> value) => Convert.ToBase64String(value);
 
     /// <summary>
     ///     Converts to hexstringlower.
@@ -192,11 +192,11 @@ public static class ModernSpanExtensions
     public static string ToHexStringLower(this ReadOnlySpan<byte> value) => Convert.ToHexString(value).ToLowerInvariant();
 
     /// <summary>
-    /// Converts to hexstringlower.
+    ///     Converts to hexstringlower.
     /// </summary>
     /// <param name="value">The value.</param>
     /// <returns></returns>
-    public static string ToHexStringLower(this Span<byte> value) => Convert.ToHexString((ReadOnlySpan<byte>)value).ToLowerInvariant();
+    public static string ToHexStringLower(this Span<byte> value) => Convert.ToHexString(value).ToLowerInvariant();
 
     /// <summary>
     ///     Converts to hexstringupper.
@@ -206,11 +206,11 @@ public static class ModernSpanExtensions
     public static string ToHexStringUpper(this ReadOnlySpan<byte> value) => Convert.ToHexString(value);
 
     /// <summary>
-    /// Converts to hexstringupper.
+    ///     Converts to hexstringupper.
     /// </summary>
     /// <param name="value">The value.</param>
     /// <returns></returns>
-    public static string ToHexStringUpper(this Span<byte> value) => Convert.ToHexString((ReadOnlySpan<byte>)value);
+    public static string ToHexStringUpper(this Span<byte> value) => Convert.ToHexString(value);
 
     /// <summary>
     ///     Converts to utf8string.

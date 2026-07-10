@@ -1,36 +1,52 @@
-﻿// ******************************************************************************************************
-// Project          : CQRS.Mediatr.Lite.Samples
+﻿// ****************************************************************************************************************************************
+// Project          : Navyblue.BaseLibrary
 // File             : IRequest.cs
-// Created          : 2025-11-14  15:11
+// Created          : 2026-07-10  17:07
 // 
-// Last Modified By : Edison.Ma(jstsmaxx@163.com)
-// Last Modified On : 2025-11-14  15:22
-// ******************************************************************************************************
+// Last Modified By : kitt-nostalgic(jstsmaxx@gmail.com)
+// Last Modified On : 2026-07-10  19:06
+// ****************************************************************************************************************************************
 // <copyright file="IRequest.cs" company="">
-//     Copyright ©  2011-2025. All rights reserved.
+//     Copyright ©  2011-2026. All rights reserved.
 // </copyright>
-// ******************************************************************************************************
+// ****************************************************************************************************************************************
 
-namespace Navyblue.Foundation.Cqrs
+namespace Navyblue.Foundation.Cqrs;
+
+/// <summary>
+/// </summary>
+public interface IRequest
 {
-    public interface IRequest
-    {
-        string DisplayName { get; }
-
-        string Id { get; }
-
-        /// <summary>
-        ///     Validates the request object
-        /// </summary>
-        /// <returns>True - If query is valid. False - If query is invalid</returns>
-        bool Validate(out string validationErrorMessage);
-    }
+    /// <summary>
+    ///     Gets the display name.
+    /// </summary>
+    /// <value>
+    ///     The display name.
+    /// </value>
+    string DisplayName { get; }
 
     /// <summary>
-    ///     Represents a request which returns a response - Query/Command/Event
+    ///     Gets the identifier.
     /// </summary>
-    /// <typeparam name="IResponse">Response type of the Request</typeparam>
-    public interface IRequest<IResponse> : IRequest
-    {
-    }
+    /// <value>
+    ///     The identifier.
+    /// </value>
+    string Id { get; }
+
+    /// <summary>
+    ///     Validates the request object
+    /// </summary>
+    /// <param name="validationErrorMessage">The validation error message.</param>
+    /// <returns>
+    ///     True - If query is valid. False - If query is invalid
+    /// </returns>
+    bool Validate(out string validationErrorMessage);
+}
+
+/// <summary>
+///     Represents a request which returns a response - Query/Command/Event
+/// </summary>
+/// <typeparam name="IResponse">Response type of the Request</typeparam>
+public interface IRequest<IResponse> : IRequest
+{
 }

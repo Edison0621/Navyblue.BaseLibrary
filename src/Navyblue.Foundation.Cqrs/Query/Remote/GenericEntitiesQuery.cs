@@ -1,33 +1,63 @@
-﻿// ******************************************************************************************************
-// Project          : CQRS.Mediatr.Lite.Samples
+﻿// ****************************************************************************************************************************************
+// Project          : Navyblue.BaseLibrary
 // File             : GenericEntitiesQuery.cs
-// Created          : 2025-11-14  15:11
+// Created          : 2026-07-10  17:07
 // 
-// Last Modified By : Edison.Ma(jstsmaxx@163.com)
-// Last Modified On : 2025-11-14  15:21
-// ******************************************************************************************************
+// Last Modified By : kitt-nostalgic(jstsmaxx@gmail.com)
+// Last Modified On : 2026-07-10  19:06
+// ****************************************************************************************************************************************
 // <copyright file="GenericEntitiesQuery.cs" company="">
-//     Copyright ©  2011-2025. All rights reserved.
+//     Copyright ©  2011-2026. All rights reserved.
 // </copyright>
-// ******************************************************************************************************
+// ****************************************************************************************************************************************
 
 using System.Diagnostics.CodeAnalysis;
 
-namespace Navyblue.Foundation.Cqrs
+namespace Navyblue.Foundation.Cqrs;
+
+/// <summary>
+///     The generic entities query.
+/// </summary>
+/// <typeparam name="QueryResponse" />
+[ExcludeFromCodeCoverage]
+public abstract class GenericEntitiesQuery<QueryResponse> : Query<GenericEntitiesQueryResponse<QueryResponse>>, IGenericSearchQuery
 {
-    [ExcludeFromCodeCoverage]
-    public abstract class GenericEntitiesQuery<QueryResponse> : Query<GenericEntitiesQueryResponse<QueryResponse>>, IGenericSearchQuery
-    {
-        #region IGenericSearchQuery Members
+    #region IGenericSearchQuery Members
 
-        public string SearchText { get; set; }
-        public string Filter { get; set; }
-        public string Select { get; set; }
-        public string OrderBy { get; set; }
-        public int Top { get; set; }
-        public int Skip { get; set; }
-        public bool IncludeTotalCount { get; set; }
+    /// <summary>
+    ///     Gets or sets the search text.
+    /// </summary>
+    public string SearchText { get; set; }
 
-        #endregion
-    }
+    /// <summary>
+    ///     Gets or sets the filter.
+    /// </summary>
+    public string Filter { get; set; }
+
+    /// <summary>
+    ///     Gets or sets the select.
+    /// </summary>
+    public string Select { get; set; }
+
+    /// <summary>
+    ///     Gets or sets the order by.
+    /// </summary>
+    public string OrderBy { get; set; }
+
+    /// <summary>
+    ///     Gets or sets the top.
+    /// </summary>
+    public int Top { get; set; }
+
+    /// <summary>
+    ///     Gets or sets the skip.
+    /// </summary>
+    public int Skip { get; set; }
+
+    /// <summary>
+    ///     Gets or sets a value indicating whether include total count.
+    /// </summary>
+    public bool IncludeTotalCount { get; set; }
+
+    #endregion
 }

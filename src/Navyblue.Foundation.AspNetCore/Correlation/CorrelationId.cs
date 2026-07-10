@@ -1,3 +1,16 @@
+// ****************************************************************************************************************************************
+// Project          : Navyblue.BaseLibrary
+// File             : CorrelationId.cs
+// Created          : 2026-07-10  17:07
+// 
+// Last Modified By : kitt-nostalgic(jstsmaxx@gmail.com)
+// Last Modified On : 2026-07-10  19:05
+// ****************************************************************************************************************************************
+// <copyright file="CorrelationId.cs" company="">
+//     Copyright ©  2011-2026. All rights reserved.
+// </copyright>
+// ****************************************************************************************************************************************
+
 using System.Diagnostics;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -10,51 +23,93 @@ using Navyblue.Foundation.Diagnostics;
 namespace Navyblue.Foundation.AspNetCore;
 
 /// <summary>
-///     Options for correlation / trace id propagation (migrated from CorrelationId package).
-/// </summary>
-public sealed class CorrelationIdOptions
-{
-    public const string DefaultHeader = "X-Correlation-ID";
-    public const string LoggerScopeKeyDefault = "CorrelationId";
-
-    /// <summary>Primary request header name. Defaults to <see cref="NavyblueAspNetCoreOptions.TraceHeaderName"/> when wired via framework.</summary>
-    public string RequestHeader { get; set; } = DefaultHeader;
-
-    private string? _responseHeader;
-
-    public string ResponseHeader
-    {
-        get => this._responseHeader ?? this.RequestHeader;
-        set => this._responseHeader = value;
-    }
-
-    public bool IgnoreRequestHeader { get; set; }
-    public bool EnforceHeader { get; set; }
-    public bool AddToLoggingScope { get; set; } = true;
-    public string LoggingScopeKey { get; set; } = LoggerScopeKeyDefault;
-    public bool IncludeInResponse { get; set; } = true;
-    public bool UpdateTraceIdentifier { get; set; } = true;
-    public Func<string>? CorrelationIdGenerator { get; set; }
-    public string[] AdditionalRequestHeaders { get; set; } = ["X-Trace-Id", "X-Request-ID", "X-CorrelationId", "Correlation-Id", "Request-Id"];
-}
-
-/// <summary>
 ///     Generates correlation ids when none are present on the request.
 /// </summary>
 public interface ICorrelationIdProvider
 {
+    /// <summary>
+    ///     Generates the correlation identifier.
+    /// </summary>
+    /// <param name="context">The context.</param>
+    /// <returns></returns>
     string GenerateCorrelationId(HttpContext context);
 }
 
-public sealed class GuidCorrelationIdProvider : ICorrelationIdProvider
+/// <summary>
+///     DI / pipeline extensions for correlation id.
+/// </summary>
+public static class CorrelationIdServiceCollectionExtensions
 {
-    public string GenerateCorrelationId(HttpContext context) => Guid.NewGuid().ToString("N");
+    /// <summary>
+    ///     Adds the navyblue correlation identifier.
+    /// </summary>
+    /// <param name="services">The services.</param>
+    /// <param name="configure">The configure.</param>
+    /// <returns></returns>
+    public static IServiceCollection AddNavyblueCorrelationId(this IServiceCollection services, Action<CorrelationIdOptions>? configure = null)
+    {
+        services.AddHttpContextAccessor();
+        services.Configure(configure ?? (_ => { }));
+        services.TryAddSingleton<ICorrelationIdProvider, GuidCorrelationIdProvider>();
+        return services;
+    }
+
+    /// <summary>
+    ///     Adds the navyblue correlation identifier forwarding.
+    /// </summary>
+    /// <param name="builder">The builder.</param>
+    /// <returns></returns>
+    public static IHttpClientBuilder AddNavyblueCorrelationIdForwarding(this IHttpClientBuilder builder)
+        => builder.AddHttpMessageHandler<CorrelationIdHandler>();
+
+    /// <summary>
+    ///     Adds the navyblue correlation identifier forwarding.
+    /// </summary>
+    /// <param name="services">The services.</param>
+    /// <returns></returns>
+    public static IServiceCollection AddNavyblueCorrelationIdForwarding(this IServiceCollection services)
+    {
+        services.TryAddTransient<CorrelationIdHandler>();
+        return services;
+    }
+
+    /// <summary>
+    ///     Uses the navyblue correlation identifier.
+    /// </summary>
+    /// <param name="app">The application.</param>
+    /// <returns></returns>
+    public static IApplicationBuilder UseNavyblueCorrelationId(this IApplicationBuilder app)
+        => app.UseMiddleware<CorrelationIdMiddleware>();
 }
 
-public sealed class TraceIdCorrelationIdProvider : ICorrelationIdProvider
+/// <summary>
+///     Forwards the current correlation id on outbound HttpClient requests.
+/// </summary>
+/// <seealso cref="System.Net.Http.DelegatingHandler" />
+public sealed class CorrelationIdHandler(IHttpContextAccessor? httpContextAccessor = null) : DelegatingHandler
 {
-    public string GenerateCorrelationId(HttpContext context)
-        => Activity.Current?.TraceId.ToString() ?? context.TraceIdentifier;
+    /// <summary>
+    ///     Sends an HTTP request to the inner handler to send to the server as an asynchronous operation.
+    /// </summary>
+    /// <param name="request">The HTTP request message to send to the server.</param>
+    /// <param name="cancellationToken">A cancellation token to cancel operation.</param>
+    /// <returns>
+    ///     The task object representing the asynchronous operation.
+    /// </returns>
+    protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+    {
+        string? correlationId = CorrelationContext.Current
+                                ?? httpContextAccessor?.HttpContext?.TraceIdentifier;
+        if (!string.IsNullOrEmpty(correlationId))
+        {
+            if (!request.Headers.Contains("X-Correlation-ID"))
+                request.Headers.TryAddWithoutValidation("X-Correlation-ID", correlationId);
+            if (!request.Headers.Contains("X-Trace-Id"))
+                request.Headers.TryAddWithoutValidation("X-Trace-Id", correlationId);
+        }
+
+        return base.SendAsync(request, cancellationToken);
+    }
 }
 
 /// <summary>
@@ -66,6 +121,10 @@ public sealed class CorrelationIdMiddleware(
     IOptions<CorrelationIdOptions> options,
     ICorrelationIdProvider correlationIdProvider)
 {
+    /// <summary>
+    ///     Invokes the asynchronous.
+    /// </summary>
+    /// <param name="context">The context.</param>
     public async Task InvokeAsync(HttpContext context)
     {
         CorrelationIdOptions opts = options.Value;
@@ -142,54 +201,155 @@ public sealed class CorrelationIdMiddleware(
 }
 
 /// <summary>
-///     Forwards the current correlation id on outbound HttpClient requests.
+///     Options for correlation / trace id propagation (migrated from CorrelationId package).
 /// </summary>
-public sealed class CorrelationIdHandler(IHttpContextAccessor? httpContextAccessor = null) : DelegatingHandler
+public sealed class CorrelationIdOptions
 {
-    protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
-    {
-        string? correlationId = CorrelationContext.Current
-                                ?? httpContextAccessor?.HttpContext?.TraceIdentifier;
-        if (!string.IsNullOrEmpty(correlationId))
-        {
-            if (!request.Headers.Contains("X-Correlation-ID"))
-                request.Headers.TryAddWithoutValidation("X-Correlation-ID", correlationId);
-            if (!request.Headers.Contains("X-Trace-Id"))
-                request.Headers.TryAddWithoutValidation("X-Trace-Id", correlationId);
-        }
+    /// <summary>
+    ///     The default header
+    /// </summary>
+    public const string DefaultHeader = "X-Correlation-ID";
 
-        return base.SendAsync(request, cancellationToken);
+    /// <summary>
+    ///     The logger scope key default
+    /// </summary>
+    public const string LoggerScopeKeyDefault = "CorrelationId";
+
+    /// <summary>
+    ///     The response header
+    /// </summary>
+    private string? _responseHeader;
+
+    /// <summary>
+    ///     Gets or sets the additional request headers.
+    /// </summary>
+    /// <value>
+    ///     The additional request headers.
+    /// </value>
+    public string[] AdditionalRequestHeaders { get; set; } = ["X-Trace-Id", "X-Request-ID", "X-CorrelationId", "Correlation-Id", "Request-Id"];
+
+    /// <summary>
+    ///     Gets or sets a value indicating whether [add to logging scope].
+    /// </summary>
+    /// <value>
+    ///     <c>true</c> if [add to logging scope]; otherwise, <c>false</c>.
+    /// </value>
+    public bool AddToLoggingScope { get; set; } = true;
+
+    /// <summary>
+    ///     Gets or sets the correlation identifier generator.
+    /// </summary>
+    /// <value>
+    ///     The correlation identifier generator.
+    /// </value>
+    public Func<string>? CorrelationIdGenerator { get; set; }
+
+    /// <summary>
+    ///     Gets or sets a value indicating whether [enforce header].
+    /// </summary>
+    /// <value>
+    ///     <c>true</c> if [enforce header]; otherwise, <c>false</c>.
+    /// </value>
+    public bool EnforceHeader { get; set; }
+
+    /// <summary>
+    ///     Gets or sets a value indicating whether [ignore request header].
+    /// </summary>
+    /// <value>
+    ///     <c>true</c> if [ignore request header]; otherwise, <c>false</c>.
+    /// </value>
+    public bool IgnoreRequestHeader { get; set; }
+
+    /// <summary>
+    ///     Gets or sets a value indicating whether [include in response].
+    /// </summary>
+    /// <value>
+    ///     <c>true</c> if [include in response]; otherwise, <c>false</c>.
+    /// </value>
+    public bool IncludeInResponse { get; set; } = true;
+
+    /// <summary>
+    ///     Gets or sets the logging scope key.
+    /// </summary>
+    /// <value>
+    ///     The logging scope key.
+    /// </value>
+    public string LoggingScopeKey { get; set; } = LoggerScopeKeyDefault;
+
+    /// <summary>
+    ///     Primary request header name. Defaults to <see cref="NavyblueAspNetCoreOptions.TraceHeaderName" /> when wired via framework.
+    /// </summary>
+    /// <value>
+    ///     The request header.
+    /// </value>
+    public string RequestHeader { get; set; } = DefaultHeader;
+
+    /// <summary>
+    ///     Gets or sets the response header.
+    /// </summary>
+    /// <value>
+    ///     The response header.
+    /// </value>
+    public string ResponseHeader
+    {
+        get => this._responseHeader ?? this.RequestHeader;
+        set => this._responseHeader = value;
     }
+
+    /// <summary>
+    ///     Gets or sets a value indicating whether [update trace identifier].
+    /// </summary>
+    /// <value>
+    ///     <c>true</c> if [update trace identifier]; otherwise, <c>false</c>.
+    /// </value>
+    public bool UpdateTraceIdentifier { get; set; } = true;
 }
 
 /// <summary>
-///     DI / pipeline extensions for correlation id.
 /// </summary>
-public static class CorrelationIdServiceCollectionExtensions
+/// <seealso cref="Navyblue.Foundation.AspNetCore.ICorrelationIdProvider" />
+public sealed class GuidCorrelationIdProvider : ICorrelationIdProvider
 {
-    public static IServiceCollection AddNavyblueCorrelationId(this IServiceCollection services, Action<CorrelationIdOptions>? configure = null)
-    {
-        services.AddHttpContextAccessor();
-        services.Configure(configure ?? (_ => { }));
-        services.TryAddSingleton<ICorrelationIdProvider, GuidCorrelationIdProvider>();
-        return services;
-    }
+    #region ICorrelationIdProvider Members
 
-    public static IHttpClientBuilder AddNavyblueCorrelationIdForwarding(this IHttpClientBuilder builder)
-        => builder.AddHttpMessageHandler<CorrelationIdHandler>();
+    /// <summary>
+    ///     Generates the correlation identifier.
+    /// </summary>
+    /// <param name="context">The context.</param>
+    /// <returns></returns>
+    public string GenerateCorrelationId(HttpContext context) => Guid.NewGuid().ToString("N");
 
-    public static IServiceCollection AddNavyblueCorrelationIdForwarding(this IServiceCollection services)
-    {
-        services.TryAddTransient<CorrelationIdHandler>();
-        return services;
-    }
-
-    public static IApplicationBuilder UseNavyblueCorrelationId(this IApplicationBuilder app)
-        => app.UseMiddleware<CorrelationIdMiddleware>();
+    #endregion
 }
 
+/// <summary>
+/// </summary>
+/// <seealso cref="Navyblue.Foundation.AspNetCore.ICorrelationIdProvider" />
+public sealed class TraceIdCorrelationIdProvider : ICorrelationIdProvider
+{
+    #region ICorrelationIdProvider Members
+
+    /// <summary>
+    ///     Generates the correlation identifier.
+    /// </summary>
+    /// <param name="context">The context.</param>
+    /// <returns></returns>
+    public string GenerateCorrelationId(HttpContext context)
+        => Activity.Current?.TraceId.ToString() ?? context.TraceIdentifier;
+
+    #endregion
+}
+
+/// <summary>
+/// </summary>
 internal static class ServiceCollectionTryAddExtensions
 {
+    /// <summary>
+    ///     Tries the add singleton.
+    /// </summary>
+    /// <typeparam name="TService">The type of the service.</typeparam>
+    /// <typeparam name="TImplementation">The type of the implementation.</typeparam>
+    /// <param name="services">The services.</param>
     public static void TryAddSingleton<TService, TImplementation>(this IServiceCollection services)
         where TService : class
         where TImplementation : class, TService
@@ -198,6 +358,11 @@ internal static class ServiceCollectionTryAddExtensions
         services.AddSingleton<TService, TImplementation>();
     }
 
+    /// <summary>
+    ///     Tries the add transient.
+    /// </summary>
+    /// <typeparam name="TService">The type of the service.</typeparam>
+    /// <param name="services">The services.</param>
     public static void TryAddTransient<TService>(this IServiceCollection services)
         where TService : class
     {

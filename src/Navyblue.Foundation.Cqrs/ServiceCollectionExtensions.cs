@@ -1,4 +1,17 @@
-﻿using System.Reflection;
+﻿// ****************************************************************************************************************************************
+// Project          : Navyblue.BaseLibrary
+// File             : ServiceCollectionExtensions.cs
+// Created          : 2026-07-10  17:07
+// 
+// Last Modified By : kitt-nostalgic(jstsmaxx@gmail.com)
+// Last Modified On : 2026-07-10  19:06
+// ****************************************************************************************************************************************
+// <copyright file="ServiceCollectionExtensions.cs" company="">
+//     Copyright ©  2011-2026. All rights reserved.
+// </copyright>
+// ****************************************************************************************************************************************
+
+using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Navyblue.Foundation.Cqrs.Internal;

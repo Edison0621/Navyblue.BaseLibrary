@@ -1,10 +1,10 @@
 // ****************************************************************************************************************************************
 // Project          : Navyblue.BaseLibrary
 // File             : InMemoryDomainEventCollector.cs
-// Created          : 2026-07-09  16:06
+// Created          : 2026-07-09  16:07
 // 
 // Last Modified By : kitt-nostalgic(jstsmaxx@gmail.com)
-// Last Modified On : 2026-07-09  16:06
+// Last Modified On : 2026-07-10  19:05
 // ****************************************************************************************************************************************
 // <copyright file="InMemoryDomainEventCollector.cs" company="">
 //     Copyright ©  2011-2026. All rights reserved.
@@ -27,6 +27,8 @@ public sealed class InMemoryDomainEventCollector(IDomainEventDispatcher? inner =
     /// </summary>
     public IReadOnlyList<IDomainEvent> Events => this._events;
 
+    #region IDomainEventDispatcher Members
+
     /// <inheritdoc />
     public async ValueTask DispatchAsync(IEnumerable<IDomainEvent> domainEvents, CancellationToken cancellationToken = default)
     {
@@ -38,6 +40,8 @@ public sealed class InMemoryDomainEventCollector(IDomainEventDispatcher? inner =
             await inner.DispatchAsync(batch, cancellationToken).ConfigureAwait(false);
         }
     }
+
+    #endregion
 
     /// <summary>
     ///     Clears recorded events.

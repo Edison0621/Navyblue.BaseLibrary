@@ -1,31 +1,28 @@
-﻿// ******************************************************************************************************
-// Project          : CQRS.Mediatr.Lite.Samples
+﻿// ****************************************************************************************************************************************
+// Project          : Navyblue.BaseLibrary
 // File             : IQueryService.cs
-// Created          : 2025-11-14  15:11
+// Created          : 2026-07-10  17:07
 // 
-// Last Modified By : Edison.Ma(jstsmaxx@163.com)
-// Last Modified On : 2025-11-14  15:22
-// ******************************************************************************************************
+// Last Modified By : kitt-nostalgic(jstsmaxx@gmail.com)
+// Last Modified On : 2026-07-10  19:06
+// ****************************************************************************************************************************************
 // <copyright file="IQueryService.cs" company="">
-//     Copyright ©  2011-2025. All rights reserved.
+//     Copyright ©  2011-2026. All rights reserved.
 // </copyright>
-// ******************************************************************************************************
+// ****************************************************************************************************************************************
 
-using System.Threading.Tasks;
+namespace Navyblue.Foundation.Cqrs;
 
-namespace Navyblue.Foundation.Cqrs
+/// <summary>
+///     Interface for the Query Service
+/// </summary>
+public interface IQueryService
 {
     /// <summary>
-    ///     Interface for the Query Service
+    ///     Executes the query
     /// </summary>
-    public interface IQueryService
-    {
-        /// <summary>
-        ///     Executes the query
-        /// </summary>
-        /// <typeparam name="TResponse">Type of ther query response</typeparam>
-        /// <param name="query">Query request</param>
-        /// <returns>Query Response</returns>
-        Task<TResponse> Query<TResponse>(Query<TResponse> query);
-    }
+    /// <typeparam name="TResponse">Type of ther query response</typeparam>
+    /// <param name="query">Query request</param>
+    /// <returns>Query Response</returns>
+    Task<TResponse> Query<TResponse>(Query<TResponse> query);
 }

@@ -1,10 +1,10 @@
 // ****************************************************************************************************************************************
 // Project          : Navyblue.BaseLibrary
 // File             : InMemoryIdempotencyStore.cs
-// Created          : 2026-07-09  16:06
+// Created          : 2026-07-09  16:07
 // 
 // Last Modified By : kitt-nostalgic(jstsmaxx@gmail.com)
-// Last Modified On : 2026-07-09  16:06
+// Last Modified On : 2026-07-10  19:05
 // ****************************************************************************************************************************************
 // <copyright file="InMemoryIdempotencyStore.cs" company="">
 //     Copyright ©  2011-2026. All rights reserved.
@@ -22,13 +22,15 @@ namespace Navyblue.Foundation.Testing;
 /// </summary>
 public sealed class InMemoryIdempotencyStore(IClock? clock = null) : IIdempotencyStore
 {
-    private readonly ConcurrentDictionary<string, IdempotencyRecord> _records = new(StringComparer.Ordinal);
     private readonly IClock _clock = clock ?? new SystemClock();
+    private readonly ConcurrentDictionary<string, IdempotencyRecord> _records = new(StringComparer.Ordinal);
 
     /// <summary>
     ///     Gets a snapshot of stored records.
     /// </summary>
     public IReadOnlyDictionary<string, IdempotencyRecord> Records => this._records;
+
+    #region IIdempotencyStore Members
 
     /// <inheritdoc />
     public ValueTask<bool> TryBeginAsync(IdempotencyKey key, TimeSpan ttl, CancellationToken cancellationToken = default)
@@ -72,6 +74,8 @@ public sealed class InMemoryIdempotencyStore(IClock? clock = null) : IIdempotenc
         return ValueTask.FromResult(record);
     }
 
+    #endregion
+
     /// <summary>
     ///     Clears all records.
     /// </summary>
@@ -101,7 +105,11 @@ public sealed class FakeIdempotencyKeyProvider(string? key = "test-idempotency-k
     /// </summary>
     public string? Key { get; set; } = key;
 
+    #region IIdempotencyKeyProvider Members
+
     /// <inheritdoc />
     public ValueTask<IdempotencyKey?> GetKeyAsync(CancellationToken cancellationToken = default)
         => ValueTask.FromResult(string.IsNullOrWhiteSpace(this.Key) ? null : IdempotencyKey.From(this.Key));
+
+    #endregion
 }

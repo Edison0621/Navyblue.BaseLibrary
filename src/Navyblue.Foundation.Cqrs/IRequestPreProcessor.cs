@@ -1,30 +1,27 @@
-﻿// ******************************************************************************************************
-// Project          : CQRS.Mediatr.Lite.Samples
+﻿// ****************************************************************************************************************************************
+// Project          : Navyblue.BaseLibrary
 // File             : IRequestPreProcessor.cs
-// Created          : 2025-11-14  15:11
+// Created          : 2026-07-10  17:07
 // 
-// Last Modified By : Edison.Ma(jstsmaxx@163.com)
-// Last Modified On : 2025-11-14  15:22
-// ******************************************************************************************************
+// Last Modified By : kitt-nostalgic(jstsmaxx@gmail.com)
+// Last Modified On : 2026-07-10  19:06
+// ****************************************************************************************************************************************
 // <copyright file="IRequestPreProcessor.cs" company="">
-//     Copyright ©  2011-2025. All rights reserved.
+//     Copyright ©  2011-2026. All rights reserved.
 // </copyright>
-// ******************************************************************************************************
+// ****************************************************************************************************************************************
 
-using System.Threading.Tasks;
+namespace Navyblue.Foundation.Cqrs;
 
-namespace Navyblue.Foundation.Cqrs
+/// <summary>
+///     Base interface any request pre-processor
+/// </summary>
+public interface IRequestPreProcessor<in TRequest>
 {
     /// <summary>
-    ///     Base interface any request pre-processor
+    ///     Process the request before the handler the can recive it
     /// </summary>
-    public interface IRequestPreProcessor<in TRequest>
-    {
-        /// <summary>
-        ///     Process the request before the handler the can recive it
-        /// </summary>
-        /// <param name="request">Incoming request</param>
-        /// <returns>Completed Task</returns>
-        Task Process(TRequest request);
-    }
+    /// <param name="request">Incoming request</param>
+    /// <returns>Completed Task</returns>
+    Task Process(TRequest request);
 }

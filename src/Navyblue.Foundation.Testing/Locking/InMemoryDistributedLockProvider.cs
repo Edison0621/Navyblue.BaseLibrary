@@ -1,10 +1,10 @@
 // ****************************************************************************************************************************************
 // Project          : Navyblue.BaseLibrary
 // File             : InMemoryDistributedLockProvider.cs
-// Created          : 2026-07-09  16:06
+// Created          : 2026-07-09  16:07
 // 
 // Last Modified By : kitt-nostalgic(jstsmaxx@gmail.com)
-// Last Modified On : 2026-07-09  16:06
+// Last Modified On : 2026-07-10  19:06
 // ****************************************************************************************************************************************
 // <copyright file="InMemoryDistributedLockProvider.cs" company="">
 //     Copyright ©  2011-2026. All rights reserved.
@@ -23,8 +23,10 @@ namespace Navyblue.Foundation.Testing;
 /// </summary>
 public sealed class InMemoryDistributedLockProvider(IClock? clock = null) : IDistributedLockProvider
 {
-    private readonly ConcurrentDictionary<string, LockState> _locks = new(StringComparer.Ordinal);
     private readonly IClock _clock = clock ?? new SystemClock();
+    private readonly ConcurrentDictionary<string, LockState> _locks = new(StringComparer.Ordinal);
+
+    #region IDistributedLockProvider Members
 
     /// <inheritdoc />
     public async ValueTask<IDistributedLock?> TryAcquireAsync(string name, TimeSpan expiry, TimeSpan waitTime, CancellationToken cancellationToken = default)
@@ -50,6 +52,8 @@ public sealed class InMemoryDistributedLockProvider(IClock? clock = null) : IDis
             await Task.Delay(10, cancellationToken).ConfigureAwait(false);
         }
     }
+
+    #endregion
 
     /// <summary>
     ///     Clears all locks.
@@ -79,5 +83,9 @@ public sealed class InMemoryDistributedLockProvider(IClock? clock = null) : IDis
         }
     }
 
+    #region Nested type: LockState
+
     private sealed record LockState(string Token, DateTimeOffset ExpiresAt);
+
+    #endregion
 }

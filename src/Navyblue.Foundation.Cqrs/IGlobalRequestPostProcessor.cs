@@ -1,19 +1,20 @@
-﻿// ******************************************************************************************************
-// Project          : CQRS.Mediatr.Lite.Samples
+﻿// ****************************************************************************************************************************************
+// Project          : Navyblue.BaseLibrary
 // File             : IGlobalRequestPostProcessor.cs
-// Created          : 2025-11-14  15:11
+// Created          : 2026-07-10  17:07
 // 
-// Last Modified By : Edison.Ma(jstsmaxx@163.com)
-// Last Modified On : 2025-11-14  15:22
-// ******************************************************************************************************
+// Last Modified By : kitt-nostalgic(jstsmaxx@gmail.com)
+// Last Modified On : 2026-07-10  19:06
+// ****************************************************************************************************************************************
 // <copyright file="IGlobalRequestPostProcessor.cs" company="">
-//     Copyright ©  2011-2025. All rights reserved.
+//     Copyright ©  2011-2026. All rights reserved.
 // </copyright>
-// ******************************************************************************************************
+// ****************************************************************************************************************************************
 
-namespace Navyblue.Foundation.Cqrs
+namespace Navyblue.Foundation.Cqrs;
+
+/// <summary>
+/// </summary>
+public interface IGlobalRequestPostProcessor : IRequestPostProcessor<IRequest, object>
 {
-    public interface IGlobalRequestPostProcessor : IRequestPostProcessor<IRequest, object>
-    {
-    }
 }
