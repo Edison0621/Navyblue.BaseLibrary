@@ -9,9 +9,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Navyblue.Foundation.Cqrs" Version="3.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Navyblue.Samples.Domain\Navyblue.Samples.Domain.csproj" />
     <ProjectReference Include="..\Navyblue.Samples.Model\Navyblue.Samples.Model.csproj" />
-    <ProjectReference Include="..\..\..\src\Navyblue.Foundation.Cqrs\Navyblue.Foundation.Cqrs.csproj" />
   </ItemGroup>
 
 </Project>

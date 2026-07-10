@@ -23,10 +23,16 @@ Navyblue.BaseLibrary 是一个面向 .NET 企业应用的现代化基础库，�
 
 - [Navyblue.Samples](samples/Navyblue.Samples/README.md) — end-to-end CQRS + ApiResult + JWT + Swagger + in-memory repos
 - [Web API template](templates/Navyblue.WebApi/README.md) — `dotnet new navyblue-webapi` / Visual Studio project template
+- [VSIX extension](vsix/Navyblue.Templates.WebApi.Vsix/README.md) — install template into Visual Studio / publish to Marketplace
 
 ```powershell
+# CLI template
 ./scripts/Install-NavyblueWebApiTemplate.ps1
 dotnet new navyblue-webapi -n Contoso.Catalog -o Contoso.Catalog
+
+# VSIX (VS Marketplace / local install)
+./scripts/Build-NavyblueWebApiVsix.ps1
+# → artifacts/vsix/Navyblue.Templates.WebApi.Vsix.3.0.0.vsix
 ```
 
 ## Related docs / 相关文档

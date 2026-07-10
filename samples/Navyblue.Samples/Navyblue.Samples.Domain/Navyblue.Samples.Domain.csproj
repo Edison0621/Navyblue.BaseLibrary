@@ -9,7 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\src\Navyblue.Foundation\Navyblue.Foundation.csproj" />
+    <PackageReference Include="Navyblue.Foundation" Version="3.0.0" />
   </ItemGroup>
 
 </Project>

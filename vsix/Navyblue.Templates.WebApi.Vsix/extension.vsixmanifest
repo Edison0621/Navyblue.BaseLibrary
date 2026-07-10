@@ -1,0 +1,31 @@
+<PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011">
+  <Metadata>
+    <Identity Id="Navyblue.Templates.WebApi.Vsix" Version="3.0.0" Language="en-US" Publisher="Navyblue" />
+    <DisplayName>Navyblue ASP.NET Core Web API Templates</DisplayName>
+    <Description xml:space="preserve">Installs the Navyblue layered DDD/CQRS ASP.NET Core Web API project template (dotnet new navyblue-webapi) for Visual Studio 2022+.</Description>
+    <MoreInfo>https://github.com/Edison0621/Navyblue.BaseLibrary</MoreInfo>
+    <Icon>Resources\Icon.png</Icon>
+    <PreviewImage>Resources\Preview.png</PreviewImage>
+    <Tags>navyblue;aspnetcore;webapi;cqrs;ddd;dotnet-new;template</Tags>
+  </Metadata>
+  <Installation>
+    <InstallationTarget Id="Microsoft.VisualStudio.Community" Version="[17.0,19.0)">
+      <ProductArchitecture>amd64</ProductArchitecture>
+    </InstallationTarget>
+    <InstallationTarget Id="Microsoft.VisualStudio.Professional" Version="[17.0,19.0)">
+      <ProductArchitecture>amd64</ProductArchitecture>
+    </InstallationTarget>
+    <InstallationTarget Id="Microsoft.VisualStudio.Enterprise" Version="[17.0,19.0)">
+      <ProductArchitecture>amd64</ProductArchitecture>
+    </InstallationTarget>
+  </Installation>
+  <Dependencies>
+    <Dependency Id="Microsoft.Framework.NDP" DisplayName="Microsoft .NET Framework" Version="[4.7.2,)" />
+  </Dependencies>
+  <Prerequisites>
+    <Prerequisite Id="Microsoft.VisualStudio.Component.CoreEditor" Version="[17.0,)" DisplayName="Visual Studio core editor" />
+  </Prerequisites>
+  <Assets>
+    <Asset Type="Microsoft.VisualStudio.VsPackage" Path="Navyblue.Templates.WebApi.Vsix.pkgdef" />
+  </Assets>
+</PackageManifest>

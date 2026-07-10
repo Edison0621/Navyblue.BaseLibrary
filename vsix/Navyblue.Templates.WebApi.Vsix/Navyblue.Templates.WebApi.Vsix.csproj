@@ -1,0 +1,87 @@
+<Project>
+  <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk" />
+
+  <PropertyGroup>
+    <TargetFramework>net472</TargetFramework>
+    <RootNamespace>Navyblue.Templates.WebApi.Vsix</RootNamespace>
+    <AssemblyName>Navyblue.Templates.WebApi.Vsix</AssemblyName>
+    <Nullable>disable</Nullable>
+    <LangVersion>latest</LangVersion>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <Version>3.0.0</Version>
+    <AssemblyVersion>3.0.0.0</AssemblyVersion>
+    <FileVersion>3.0.0.0</FileVersion>
+
+    <!-- Proper VSIX packaging (required for Marketplace validation).
+         Hand-written pkgdef: CreatePkgDef fails here (System.Numerics.Vectors). -->
+    <GeneratePkgDefFile>false</GeneratePkgDefFile>
+    <UseCodebase>true</UseCodebase>
+    <IncludeAssemblyInVSIXContainer>true</IncludeAssemblyInVSIXContainer>
+    <IncludeDebugSymbolsInVSIXContainer>false</IncludeDebugSymbolsInVSIXContainer>
+    <IncludeDebugSymbolsInLocalVSIXDeployment>false</IncludeDebugSymbolsInLocalVSIXDeployment>
+    <CopyBuildOutputToOutputDirectory>true</CopyBuildOutputToOutputDirectory>
+    <CopyOutputSymbolsToOutputDirectory>false</CopyOutputSymbolsToOutputDirectory>
+    <CreateVsixContainer>true</CreateVsixContainer>
+    <DeployExtension>false</DeployExtension>
+    <IsProductComponent>false</IsProductComponent>
+  </PropertyGroup>
+
+  <!--
+    Do NOT use Microsoft.VSSDK.BuildTools NuGet on this machine:
+    restore fails with AccessDenied on offreg.dll.
+    Import VSSDK targets from the installed Visual Studio instead (AFTER Sdk.targets).
+  -->
+  <PropertyGroup>
+    <_VsSdkTargets Condition="Exists('$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v18.0\VSSDK\Microsoft.VsSDK.targets')">$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v18.0\VSSDK\Microsoft.VsSDK.targets</_VsSdkTargets>
+    <_VsSdkTargets Condition="'$(_VsSdkTargets)' == '' and Exists('$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v17.0\VSSDK\Microsoft.VsSDK.targets')">$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v17.0\VSSDK\Microsoft.VsSDK.targets</_VsSdkTargets>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.VisualStudio.SDK" Version="17.0.32112.339" ExcludeAssets="runtime">
+      <IncludeAssets>compile; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="source.extension.vsixmanifest">
+      <SubType>Designer</SubType>
+    </None>
+    <Content Include="Navyblue.Templates.WebApi.Vsix.pkgdef">
+      <IncludeInVSIX>true</IncludeInVSIX>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Packages\Navyblue.Templates.WebApi.nupkg">
+      <IncludeInVSIX>true</IncludeInVSIX>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <VSIXSubPath>Packages</VSIXSubPath>
+    </Content>
+    <Content Include="Resources\Icon.png">
+      <IncludeInVSIX>true</IncludeInVSIX>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Preview.png">
+      <IncludeInVSIX>true</IncludeInVSIX>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <Target Name="RefreshTemplateNupkg" BeforeTargets="BeforeBuild">
+    <PropertyGroup>
+      <_ArtifactsNupkg>$(MSBuildThisFileDirectory)..\..\artifacts\packages\Navyblue.Templates.WebApi.3.0.0.nupkg</_ArtifactsNupkg>
+      <_EmbeddedNupkg>$(MSBuildThisFileDirectory)Packages\Navyblue.Templates.WebApi.nupkg</_EmbeddedNupkg>
+    </PropertyGroup>
+    <MakeDir Directories="$(MSBuildThisFileDirectory)Packages" />
+    <Copy SourceFiles="$(_ArtifactsNupkg)" DestinationFiles="$(_EmbeddedNupkg)" Condition="Exists('$(_ArtifactsNupkg)')" OverwriteReadOnlyFiles="true" />
+  </Target>
+
+  <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
+
+  <!-- Must come AFTER Sdk.targets so PrepareForRunDependsOn keeps CreateVsixContainer -->
+  <Import Project="$(_VsSdkTargets)" Condition="'$(_VsSdkTargets)' != ''" />
+
+  <Target Name="EnsureVsSdkTargets" BeforeTargets="PrepareForBuild">
+    <Error Text="Visual Studio VSSDK targets not found. Install the 'Visual Studio extension development' workload, then build with VS MSBuild (not dotnet build)."
+           Condition="'$(_VsSdkTargets)' == ''" />
+  </Target>
+
+</Project>

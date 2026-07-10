@@ -11,8 +11,8 @@
   <ItemGroup>
     <ProjectReference Include="..\Navyblue.Samples.Application\Navyblue.Samples.Application.csproj" />
     <ProjectReference Include="..\Navyblue.Samples.Infrastructure\Navyblue.Samples.Infrastructure.csproj" />
-    <ProjectReference Include="..\..\..\src\Navyblue.Foundation.AspNetCore\Navyblue.Foundation.AspNetCore.csproj" />
-    <ProjectReference Include="..\..\..\src\Navyblue.Foundation.Cqrs\Navyblue.Foundation.Cqrs.csproj" />
+    <PackageReference Include="Navyblue.Foundation.AspNetCore" Version="3.0.0" />
+    <PackageReference Include="Navyblue.Foundation.Cqrs" Version="3.0.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="9.0.3" />
   </ItemGroup>
 

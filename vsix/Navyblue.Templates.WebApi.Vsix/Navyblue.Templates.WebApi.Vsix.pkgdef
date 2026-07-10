@@ -1,0 +1,14 @@
+[$RootKey$\Packages\{a1b2c3d4-e5f6-7890-abcd-ef1234567890}]
+@="Navyblue ASP.NET Core Web API Templates"
+"InprocServer32"="$WinDir$\System32\mscoree.dll"
+"Class"="Navyblue.Templates.WebApi.Vsix.NavyblueTemplatesPackage"
+"CodeBase"="$PackageFolder$\Navyblue.Templates.WebApi.Vsix.dll"
+"AllowsBackgroundLoad"=dword:00000001
+
+; Auto-load when no solution is open (background)
+[$RootKey$\AutoLoadPackages\{adfc4e64-0397-11d1-9f4e-00a0c969727e}]
+"{a1b2c3d4-e5f6-7890-abcd-ef1234567890}"=dword:00000002
+
+; Auto-load when a solution exists (background)
+[$RootKey$\AutoLoadPackages\{f1536ef8-92ec-443c-9ed7-fdadf150da82}]
+"{a1b2c3d4-e5f6-7890-abcd-ef1234567890}"=dword:00000002
