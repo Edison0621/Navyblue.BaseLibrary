@@ -32,7 +32,7 @@ dotnet new navyblue-webapi -n Contoso.Catalog -o Contoso.Catalog
 
 # VSIX (VS Marketplace / local install)
 ./scripts/Build-NavyblueWebApiVsix.ps1
-# → artifacts/vsix/Navyblue.Templates.WebApi.Vsix.3.0.0.vsix
+# → artifacts/vsix/Navyblue.Templates.WebApi.Vsix.3.1.0.vsix
 ```
 
 ## Related docs / 相关文档

@@ -9,6 +9,14 @@ namespace NavyblueWebApi.Domain.Authentication;
 /// </summary>
 public sealed class Auth : Entity<long>
 {
+    /// <summary>EF Core materialization constructor.</summary>
+    private Auth() : base(default)
+    {
+        this.Login = null!;
+        this.PasswordHash = null!;
+        this.Salt = null!;
+    }
+
     public Auth(long id, long userId, string login, string passwordHash, string salt) : base(id)
     {
         if (string.IsNullOrWhiteSpace(login))

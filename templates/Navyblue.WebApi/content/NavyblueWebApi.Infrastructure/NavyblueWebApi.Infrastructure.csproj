@@ -11,7 +11,22 @@
   <ItemGroup>
     <ProjectReference Include="..\NavyblueWebApi.Application\NavyblueWebApi.Application.csproj" />
     <ProjectReference Include="..\NavyblueWebApi.Domain\NavyblueWebApi.Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Navyblue.Foundation" Version="3.0.0" />
+    <PackageReference Include="Navyblue.Foundation.Cqrs" Version="3.0.0" />
+    <!-- Pomelo 9.x targets EF Core 9; works on net8/net9/net10. MySQL server: 8.0. -->
+    <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="9.0.0" />
+    <PackageReference Include="StackExchange.Redis" Version="2.8.41" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="10.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="10.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="10.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks" Version="10.0.0" />
   </ItemGroup>
 
 </Project>

@@ -18,7 +18,7 @@ From the repository root:
 Output:
 
 ```text
-artifacts/vsix/Navyblue.Templates.WebApi.Vsix.3.0.0.vsix
+artifacts/vsix/Navyblue.Templates.WebApi.Vsix.3.1.0.vsix
 ```
 
 The script validates that the package contains `manifest.json` and `catalog.json`
@@ -36,7 +36,7 @@ Check **View → Output → Navyblue Templates** for status.
 ## Publish to Visual Studio Marketplace
 
 1. Register a publisher: https://marketplace.visualstudio.com/manage  
-2. **New extension** → **Visual Studio** → upload `Navyblue.Templates.WebApi.Vsix.3.0.0.vsix`  
+2. **New extension** → **Visual Studio** → upload `Navyblue.Templates.WebApi.Vsix.3.1.0.vsix`  
 3. Fill overview, categories (`Templates`, `Coding`), and support links  
 4. Submit for review  
 
@@ -44,8 +44,9 @@ Users then install via **Extensions → Manage Extensions → Online** by search
 
 ## Prerequisites for generated projects
 
-Generated projects reference `Navyblue.Foundation*` **3.0.0**. Ensure those packages are on nuget.org
-or a configured private feed (see `scripts/Install-NavyblueWebApiTemplate.ps1`).
+Generated projects use **EF Core + Pomelo + MySQL 8.0**, **Redis** cache, and reference `Navyblue.Foundation*` **3.0.0**.
+Configure `ConnectionStrings:Default` and `Navyblue:Redis`, and ensure Foundation packages resolve from nuget.org
+or a local feed (see `scripts/Install-NavyblueWebApiTemplate.ps1`).
 
 ## Uninstall
 

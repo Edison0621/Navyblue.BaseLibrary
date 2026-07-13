@@ -5,19 +5,23 @@ using Navyblue.Foundation.AspNetCore;
 namespace NavyblueWebApi.Web.Authentication;
 
 /// <summary>
-///     Adapts the application-layer <see cref="ITokenIssuer" /> to Navyblue's <see cref="IJwtTokenService" />.
-///     Lives in the web host so the application layer never depends on ASP.NET Core.
+///     Issues JWT access tokens via Navyblue <see cref="IJwtTokenService" />.
 /// </summary>
 public sealed class JwtTokenIssuer : ITokenIssuer
 {
     private readonly IJwtTokenService _jwtTokenService;
+    private readonly JwtOptions _jwtOptions;
 
-    public JwtTokenIssuer(IJwtTokenService jwtTokenService)
+    public JwtTokenIssuer(IJwtTokenService jwtTokenService, JwtOptions jwtOptions)
     {
         this._jwtTokenService = jwtTokenService;
+        this._jwtOptions = jwtOptions;
     }
 
-    public string Issue(long userId, string userName, IEnumerable<KeyValuePair<string, string>>? extraClaims = null)
+    public AccessToken IssueAccessToken(
+        long userId,
+        string userName,
+        IEnumerable<KeyValuePair<string, string>>? extraClaims = null)
     {
         List<Claim> claims = [new(ClaimTypes.Name, userName)];
         if (extraClaims is not null)
@@ -26,6 +30,14 @@ public sealed class JwtTokenIssuer : ITokenIssuer
                 claims.Add(new Claim(claim.Key, claim.Value));
         }
 
-        return this._jwtTokenService.CreateToken(userId.ToString(), claims);
+        DateTimeOffset expiresAt = DateTimeOffset.UtcNow.Add(this._jwtOptions.Expire);
+        string value = this._jwtTokenService.CreateToken(new JwtTokenDescriptor
+        {
+            Subject = userId.ToString(),
+            Claims = claims,
+            Expires = expiresAt
+        });
+
+        return new AccessToken(value, expiresAt);
     }
 }

@@ -3,12 +3,18 @@
 namespace NavyblueWebApi.Domain.Users;
 
 /// <summary>
-///     User aggregate root. Owns the user profile and its lifecycle.
-///     Credentials live in the separate <see cref="Auth" /> entity keyed by user id.
+///     User aggregate root with audit + soft-delete fields from <see cref="FullAuditedAggregateRoot{TKey}" />.
 /// </summary>
-public sealed class User : AggregateRoot<long>
+public sealed class User : FullAuditedAggregateRoot<long>
 {
-    public User(long id, string name, string email) : base(id)
+    /// <summary>EF Core materialization constructor.</summary>
+    private User() : base(default)
+    {
+        this.Name = null!;
+        this.Email = null!;
+    }
+
+    public User(long id, string name, string email, string? createdBy = null) : base(id)
     {
         if (string.IsNullOrWhiteSpace(name))
             throw new ArgumentException("User name is required.", nameof(name));
@@ -19,54 +25,64 @@ public sealed class User : AggregateRoot<long>
         this.Email = email;
         this.Status = UserStatus.Active;
         this.CreatedAt = DateTimeOffset.UtcNow;
+        this.CreatedBy = createdBy;
     }
 
-    /// <summary>Display name of the user.</summary>
     public string Name { get; private set; }
 
-    /// <summary>Unique email address, used as the login identity.</summary>
     public string Email { get; private set; }
 
-    /// <summary>Current lifecycle status.</summary>
     public UserStatus Status { get; private set; }
 
-    /// <summary>When the user was created.</summary>
-    public DateTimeOffset CreatedAt { get; private set; }
-
-    /// <summary>Last modification time.</summary>
-    public DateTimeOffset? ModifiedAt { get; private set; }
-
-    /// <summary>Rename the user. Empty names are rejected.</summary>
-    public void Rename(string name)
+    public void Rename(string name, string? modifiedBy = null)
     {
         if (string.IsNullOrWhiteSpace(name))
             throw new DomainRuleViolationException("User name cannot be empty.", "user_name_empty");
+        this.EnsureNotDeleted();
         this.Name = name;
-        this.ModifiedAt = DateTimeOffset.UtcNow;
+        this.Touch(modifiedBy);
     }
 
-    /// <summary>Change the email address.</summary>
-    public void ChangeEmail(string email)
+    public void ChangeEmail(string email, string? modifiedBy = null)
     {
         if (string.IsNullOrWhiteSpace(email))
             throw new DomainRuleViolationException("User email cannot be empty.", "user_email_empty");
+        this.EnsureNotDeleted();
         this.Email = email;
-        this.ModifiedAt = DateTimeOffset.UtcNow;
+        this.Touch(modifiedBy);
     }
 
-    /// <summary>Mark the account inactive. Idempotent.</summary>
-    public void Inactivate()
+    public void Inactivate(string? modifiedBy = null)
     {
+        this.EnsureNotDeleted();
         if (this.Status == UserStatus.Inactive) return;
         this.Status = UserStatus.Inactive;
-        this.ModifiedAt = DateTimeOffset.UtcNow;
+        this.Touch(modifiedBy);
     }
 
-    /// <summary>Reactivate an inactive account.</summary>
-    public void Activate()
+    public void Activate(string? modifiedBy = null)
     {
+        this.EnsureNotDeleted();
         if (this.Status == UserStatus.Active) return;
         this.Status = UserStatus.Active;
+        this.Touch(modifiedBy);
+    }
+
+    /// <summary>Soft-delete the user (does not hard-remove the row).</summary>
+    public void SoftDelete(string? deletedBy = null)
+    {
+        this.EnsureNotDeleted();
+        this.MarkAsDeleted(deletedBy);
+        this.Status = UserStatus.Inactive;
+        // Free unique email for reuse after soft-delete.
+        this.Email = $"{this.Email}#deleted#{this.Id}";
+        this.Touch(deletedBy);
+    }
+
+    private void Touch(string? modifiedBy)
+    {
         this.ModifiedAt = DateTimeOffset.UtcNow;
+        if (!string.IsNullOrWhiteSpace(modifiedBy))
+            this.ModifiedBy = modifiedBy;
     }
 }

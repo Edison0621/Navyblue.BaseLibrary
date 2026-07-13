@@ -1,37 +1,26 @@
-﻿using NavyblueWebApi.Domain.Users;
+﻿using Navyblue.Foundation.Cqrs;
+using Navyblue.Foundation.Data;
+using NavyblueWebApi.Domain.Users;
 using NavyblueWebApi.Model.Users;
-using Navyblue.Foundation.Cqrs;
 
 namespace NavyblueWebApi.Application.Users.Queries;
 
 /// <summary>
 ///     Handles <see cref="ListUsersQuery" />.
 /// </summary>
-public sealed class ListUsersQueryHandler : QueryHandler<ListUsersQuery, List<UserModel>>
+public sealed class ListUsersQueryHandler : QueryHandler<ListUsersQuery, PageData<UserModel>>
 {
     private readonly IUserRepository _userRepository;
 
-    public ListUsersQueryHandler(IUserRepository userRepository)
+    public ListUsersQueryHandler(IUserRepository userRepository) => this._userRepository = userRepository;
+
+    protected override async Task<PageData<UserModel>> ProcessRequest(ListUsersQuery query)
     {
-        this._userRepository = userRepository;
-    }
+        PageData<User> page = await this._userRepository
+            .PageAsync(new PageQuery(query.PageIndex, query.PageSize), query.Keyword)
+            .ConfigureAwait(false);
 
-    protected override async Task<List<UserModel>> ProcessRequest(ListUsersQuery query)
-    {
-        IReadOnlyList<User> users = await this._userRepository.ListAsync();
-
-        IEnumerable<User> filtered = users;
-        if (!string.IsNullOrWhiteSpace(query.Keyword))
-        {
-            string keyword = query.Keyword.Trim();
-            filtered = users.Where(u =>
-                u.Name.Contains(keyword, StringComparison.OrdinalIgnoreCase)
-                || u.Email.Contains(keyword, StringComparison.OrdinalIgnoreCase));
-        }
-
-        return filtered
-            .OrderBy(u => u.Id)
-            .Select(GetUserQueryHandler.ToModel)
-            .ToList();
+        IReadOnlyList<UserModel> items = page.Items.Select(GetUserQueryHandler.ToModel).ToList();
+        return new PageData<UserModel>(items, page.Total, page.PageIndex, page.PageSize);
     }
 }

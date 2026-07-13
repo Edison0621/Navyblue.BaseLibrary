@@ -22,5 +22,9 @@ public sealed class UserModel
 
     public DateTimeOffset CreatedAt { get; init; }
 
+    public string? CreatedBy { get; init; }
+
     public DateTimeOffset? ModifiedAt { get; init; }
+
+    public string? ModifiedBy { get; init; }
 }

@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Navyblue.Foundation.Application;
 using Navyblue.Foundation.AspNetCore;
 using Navyblue.Foundation.Cqrs;
+using Navyblue.Foundation.Data;
 
 namespace NavyblueWebApi.Web.Controllers;
 
@@ -18,10 +19,13 @@ namespace NavyblueWebApi.Web.Controllers;
 public sealed class UsersController(ICommandBus commandBus, IQueryService queryService) : ControllerBase
 {
     [HttpGet]
-    [ProducesResponseType(typeof(ApiResult<List<UserModel>>), StatusCodes.Status200OK)]
-    public async Task<ActionResult<ApiResult<List<UserModel>>>> List([FromQuery] string? keyword)
+    [ProducesResponseType(typeof(ApiResult<PageData<UserModel>>), StatusCodes.Status200OK)]
+    public async Task<ActionResult<ApiResult<PageData<UserModel>>>> List(
+        [FromQuery] string? keyword,
+        [FromQuery] int pageIndex = 1,
+        [FromQuery] int pageSize = 20)
     {
-        List<UserModel> users = await queryService.Query(new ListUsersQuery(keyword));
+        PageData<UserModel> users = await queryService.Query(new ListUsersQuery(keyword, pageIndex, pageSize));
         return this.OkApi(users);
     }
 

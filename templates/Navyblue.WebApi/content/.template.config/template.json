@@ -4,7 +4,7 @@
   "classifications": [ "Web", "WebAPI", "Navyblue", "CQRS", "DDD" ],
   "name": "Navyblue ASP.NET Core Web API",
   "displayName": "Navyblue ASP.NET Core Web API",
-  "description": "Layered DDD/CQRS ASP.NET Core Web API using Navyblue.Foundation (ApiResult, JWT, CorrelationId, Command/Query buses, in-memory persistence).",
+  "description": "Layered DDD/CQRS ASP.NET Core Web API using Navyblue.Foundation (ApiResult, JWT, CorrelationId, Command/Query buses, EF Core + Pomelo MySQL 8.0, Redis cache).",
   "groupIdentity": "Navyblue.Templates.WebApi",
   "identity": "Navyblue.Templates.WebApi.CSharp",
   "shortName": "navyblue-webapi",
@@ -19,9 +19,10 @@
     "D0D0D0D0-0000-0000-0000-000000000002",
     "D0D0D0D0-0000-0000-0000-000000000003",
     "D0D0D0D0-0000-0000-0000-000000000004",
-    "D0D0D0D0-0000-0000-0000-000000000005",
+    "D0D0D0D0-0000-0000-0000-000000000006",
     "A1A1A1A1-1111-1111-1111-111111111111",
-    "B2B2B2B2-2222-2222-2222-222222222222"
+    "B2B2B2B2-2222-2222-2222-222222222222",
+    "C3C3C3C3-3333-3333-3333-333333333333"
   ],
   "symbols": {
     "Framework": {
@@ -41,5 +42,19 @@
     { "path": "NavyblueWebApi.sln" },
     { "path": "NavyblueWebApi.Web/NavyblueWebApi.Web.csproj" }
   ],
-  "defaultName": "NavyblueWebApi"
+  "defaultName": "NavyblueWebApi",
+  "sources": [
+    {
+      "modifiers": [
+        {
+          "exclude": [
+            "**/bin/**",
+            "**/obj/**",
+            "**/.vs/**",
+            "**/*.user"
+          ]
+        }
+      ]
+    }
+  ]
 }

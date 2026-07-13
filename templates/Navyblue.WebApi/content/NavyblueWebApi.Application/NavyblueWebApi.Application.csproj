@@ -12,6 +12,7 @@
     <ProjectReference Include="..\NavyblueWebApi.Domain\NavyblueWebApi.Domain.csproj" />
     <ProjectReference Include="..\NavyblueWebApi.Model\NavyblueWebApi.Model.csproj" />
     <PackageReference Include="Navyblue.Foundation.Cqrs" Version="3.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Options" Version="10.0.0" />
   </ItemGroup>
 
 </Project>

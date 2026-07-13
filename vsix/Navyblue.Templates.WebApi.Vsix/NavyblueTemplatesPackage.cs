@@ -14,7 +14,7 @@ namespace Navyblue.Templates.WebApi.Vsix;
 ///     VS package that registers the Navyblue Web API <c>dotnet new</c> template on load.
 /// </summary>
 [PackageRegistration(UseManagedResourcesOnly = true, AllowsBackgroundLoading = true)]
-[InstalledProductRegistration("Navyblue ASP.NET Core Web API Templates", "Navyblue layered DDD/CQRS Web API project template (navyblue-webapi).", "3.0.0")]
+[InstalledProductRegistration("Navyblue ASP.NET Core Web API Templates", "Navyblue layered DDD/CQRS Web API project template (navyblue-webapi).", "3.1.0")]
 [Guid(PackageGuidString)]
 [ProvideAutoLoad(UIContextGuids80.NoSolution, PackageAutoLoadFlags.BackgroundLoad)]
 [ProvideAutoLoad(UIContextGuids80.SolutionExists, PackageAutoLoadFlags.BackgroundLoad)]

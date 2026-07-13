@@ -1,27 +1,40 @@
-﻿using NavyblueWebApi.Application.Users;
+﻿using Microsoft.Extensions.Options;
+using NavyblueWebApi.Application.Users;
 using NavyblueWebApi.Domain.Authentication;
 using NavyblueWebApi.Domain.Users;
 using Navyblue.Foundation.Cqrs;
 using Navyblue.Foundation.Domain;
+using Navyblue.Foundation.Primitives;
 using Navyblue.Foundation.Security;
 
 namespace NavyblueWebApi.Application.Authentication.Commands;
 
 /// <summary>
-///     Handles <see cref="AuthCommand" />: verifies the stored password hash, ensures the
-///     owning user is active, and issues a JWT through <see cref="ITokenIssuer" />.
+///     Login: verify password, issue access JWT + refresh token (persisted hash).
 /// </summary>
 public sealed class AuthCommandHandler : CommandHandler<AuthCommand, AuthCommandResult>
 {
     private readonly IAuthRepository _authRepository;
     private readonly IUserRepository _userRepository;
+    private readonly IRefreshTokenRepository _refreshTokenRepository;
     private readonly ITokenIssuer _tokenIssuer;
+    private readonly IIdGenerator<long> _idGenerator;
+    private readonly RefreshTokenOptions _refreshTokenOptions;
 
-    public AuthCommandHandler(IAuthRepository authRepository, IUserRepository userRepository, ITokenIssuer tokenIssuer)
+    public AuthCommandHandler(
+        IAuthRepository authRepository,
+        IUserRepository userRepository,
+        IRefreshTokenRepository refreshTokenRepository,
+        ITokenIssuer tokenIssuer,
+        IIdGenerator<long> idGenerator,
+        IOptions<RefreshTokenOptions> refreshTokenOptions)
     {
         this._authRepository = authRepository;
         this._userRepository = userRepository;
+        this._refreshTokenRepository = refreshTokenRepository;
         this._tokenIssuer = tokenIssuer;
+        this._idGenerator = idGenerator;
+        this._refreshTokenOptions = refreshTokenOptions.Value;
     }
 
     protected override async Task<AuthCommandResult> ProcessRequest(AuthCommand command)
@@ -38,11 +51,12 @@ public sealed class AuthCommandHandler : CommandHandler<AuthCommand, AuthCommand
         if (user.Status != UserStatus.Active)
             throw new ForbiddenException("User account is inactive.");
 
-        string token = this._tokenIssuer.Issue(user.Id, user.Name, new Dictionary<string, string>
-        {
-            ["email"] = user.Email
-        });
-
-        return new AuthCommandResult(user.Id, user.Name, token);
+        return await TokenIssueHelper.IssueAsync(
+                user,
+                this._tokenIssuer,
+                this._refreshTokenRepository,
+                this._idGenerator,
+                this._refreshTokenOptions)
+            .ConfigureAwait(false);
     }
 }

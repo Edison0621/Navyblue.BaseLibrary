@@ -8,7 +8,7 @@
     <Company>Navyblue</Company>
     <Description>dotnet new / Visual Studio template for a layered DDD/CQRS Web API on Navyblue.Foundation.</Description>
     <PackageTags>dotnet-new;templates;navyblue;aspnetcore;webapi;cqrs;ddd</PackageTags>
-    <PackageVersion>3.0.0</PackageVersion>
+    <PackageVersion>3.1.0</PackageVersion>
     <IncludeContentInPack>true</IncludeContentInPack>
     <IncludeBuildOutput>false</IncludeBuildOutput>
     <ContentTargetFolders>content</ContentTargetFolders>

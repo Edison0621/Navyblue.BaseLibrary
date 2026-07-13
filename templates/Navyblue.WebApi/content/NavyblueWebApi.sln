@@ -5,6 +5,8 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{A1A1A1A1-1111-1111-1111-111111111111}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{C3C3C3C3-3333-3333-3333-333333333333}"
+EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NavyblueWebApi.Domain", "NavyblueWebApi.Domain\NavyblueWebApi.Domain.csproj", "{D0D0D0D0-0000-0000-0000-000000000001}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NavyblueWebApi.Model", "NavyblueWebApi.Model\NavyblueWebApi.Model.csproj", "{D0D0D0D0-0000-0000-0000-000000000002}"
@@ -14,6 +16,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NavyblueWebApi.Infrastructure", "NavyblueWebApi.Infrastructure\NavyblueWebApi.Infrastructure.csproj", "{D0D0D0D0-0000-0000-0000-000000000004}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NavyblueWebApi.Web", "NavyblueWebApi.Web\NavyblueWebApi.Web.csproj", "{D0D0D0D0-0000-0000-0000-000000000005}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NavyblueWebApi.Tests", "NavyblueWebApi.Tests\NavyblueWebApi.Tests.csproj", "{D0D0D0D0-0000-0000-0000-000000000006}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,6 +45,10 @@ Global
 		{D0D0D0D0-0000-0000-0000-000000000005}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D0D0D0D0-0000-0000-0000-000000000005}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D0D0D0D0-0000-0000-0000-000000000005}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D0D0D0D0-0000-0000-0000-000000000006}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D0D0D0D0-0000-0000-0000-000000000006}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D0D0D0D0-0000-0000-0000-000000000006}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D0D0D0D0-0000-0000-0000-000000000006}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -51,6 +59,7 @@ Global
 		{D0D0D0D0-0000-0000-0000-000000000003} = {A1A1A1A1-1111-1111-1111-111111111111}
 		{D0D0D0D0-0000-0000-0000-000000000004} = {A1A1A1A1-1111-1111-1111-111111111111}
 		{D0D0D0D0-0000-0000-0000-000000000005} = {A1A1A1A1-1111-1111-1111-111111111111}
+		{D0D0D0D0-0000-0000-0000-000000000006} = {C3C3C3C3-3333-3333-3333-333333333333}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B2B2B2B2-2222-2222-2222-222222222222}
