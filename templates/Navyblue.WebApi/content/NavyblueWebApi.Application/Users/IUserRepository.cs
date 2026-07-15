@@ -1,4 +1,17 @@
-﻿using Navyblue.Foundation.Data;
+﻿// ****************************************************************************************************************************************
+// Project          : NavyblueWebApi
+// File             : IUserRepository.cs
+// Created          : 2026-07-10  17:07
+// 
+// Last Modified By : kitt-nostalgic(jstsmaxx@gmail.com)
+// Last Modified On : 2026-07-15  14:44
+// ****************************************************************************************************************************************
+// <copyright file="IUserRepository.cs" company="">
+//     Copyright ©  2011-2026. All rights reserved.
+// </copyright>
+// ****************************************************************************************************************************************
+
+using Navyblue.Foundation.Data;
 using NavyblueWebApi.Domain.Users;
 
 namespace NavyblueWebApi.Application.Users;

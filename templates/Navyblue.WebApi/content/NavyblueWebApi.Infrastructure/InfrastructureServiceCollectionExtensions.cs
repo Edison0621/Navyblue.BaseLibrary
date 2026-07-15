@@ -1,4 +1,17 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿// ****************************************************************************************************************************************
+// Project          : NavyblueWebApi
+// File             : InfrastructureServiceCollectionExtensions.cs
+// Created          : 2026-07-10  17:07
+// 
+// Last Modified By : kitt-nostalgic(jstsmaxx@gmail.com)
+// Last Modified On : 2026-07-15  14:44
+// ****************************************************************************************************************************************
+// <copyright file="InfrastructureServiceCollectionExtensions.cs" company="">
+//     Copyright ©  2011-2026. All rights reserved.
+// </copyright>
+// ****************************************************************************************************************************************
+
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Navyblue.Foundation.Caching;
@@ -23,8 +36,8 @@ public static class InfrastructureServiceCollectionExtensions
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
         string connectionString = configuration.GetConnectionString("Default")
-            ?? throw new InvalidOperationException(
-                "Missing connection string 'ConnectionStrings:Default'. Configure MySQL 8.0 in appsettings.json.");
+                                  ?? throw new InvalidOperationException(
+                                      "Missing connection string 'ConnectionStrings:Default'. Configure MySQL 8.0 in appsettings.json.");
 
         services.AddDbContext<AppDbContext>(options =>
             options.UseMySql(connectionString, new MySqlServerVersion(new Version(8, 0, 36))));
@@ -32,7 +45,7 @@ public static class InfrastructureServiceCollectionExtensions
         services.AddScoped<IUserRepository, EfUserRepository>();
         services.AddScoped<IAuthRepository, EfAuthRepository>();
         services.AddScoped<IRefreshTokenRepository, EfRefreshTokenRepository>();
-        services.Configure<RefreshTokenOptions>(configuration.GetSection(RefreshTokenOptions.SectionName));
+        services.Configure<RefreshTokenOptions>(configuration.GetSection(RefreshTokenOptions.SECTION_NAME));
         services.AddScoped<EfCqrsUnitOfWork>();
         services.AddScoped<ICqrsUnitOfWork>(sp => sp.GetRequiredService<EfCqrsUnitOfWork>());
         services.AddScoped<IUnitOfWork>(sp => sp.GetRequiredService<EfCqrsUnitOfWork>());
@@ -48,7 +61,7 @@ public static class InfrastructureServiceCollectionExtensions
         services.Configure<CacheOptions>(configuration.GetSection("Navyblue:Cache"));
 
         RedisOptions redisOptions = configuration.GetSection(RedisOptions.SectionName).Get<RedisOptions>()
-            ?? new RedisOptions();
+                                    ?? new RedisOptions();
 
         if (string.IsNullOrWhiteSpace(redisOptions.ConnectionString))
         {
@@ -58,7 +71,7 @@ public static class InfrastructureServiceCollectionExtensions
 
         services.AddSingleton<IConnectionMultiplexer>(_ =>
         {
-            var config = ConfigurationOptions.Parse(redisOptions.ConnectionString);
+            ConfigurationOptions config = ConfigurationOptions.Parse(redisOptions.ConnectionString);
             config.AbortOnConnectFail = false;
             return ConnectionMultiplexer.Connect(config);
         });

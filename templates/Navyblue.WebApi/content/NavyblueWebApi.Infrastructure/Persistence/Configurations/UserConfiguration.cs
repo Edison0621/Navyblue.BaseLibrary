@@ -1,3 +1,16 @@
+﻿// ****************************************************************************************************************************************
+// Project          : NavyblueWebApi
+// File             : UserConfiguration.cs
+// Created          : 2026-07-13  10:07
+// 
+// Last Modified By : kitt-nostalgic(jstsmaxx@gmail.com)
+// Last Modified On : 2026-07-15  14:44
+// ****************************************************************************************************************************************
+// <copyright file="UserConfiguration.cs" company="">
+//     Copyright ©  2011-2026. All rights reserved.
+// </copyright>
+// ****************************************************************************************************************************************
+
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using NavyblueWebApi.Domain.Users;
@@ -6,6 +19,8 @@ namespace NavyblueWebApi.Infrastructure.Persistence.Configurations;
 
 public sealed class UserConfiguration : IEntityTypeConfiguration<User>
 {
+    #region IEntityTypeConfiguration<User> Members
+
     public void Configure(EntityTypeBuilder<User> builder)
     {
         builder.ToTable("users");
@@ -27,4 +42,6 @@ public sealed class UserConfiguration : IEntityTypeConfiguration<User>
         builder.Ignore(x => x.DomainEvents);
         builder.HasQueryFilter(x => !x.IsDeleted);
     }
+
+    #endregion
 }

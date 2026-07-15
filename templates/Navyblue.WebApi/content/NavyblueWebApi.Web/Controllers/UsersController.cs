@@ -1,12 +1,25 @@
-﻿using NavyblueWebApi.Application.Users.Commands;
-using NavyblueWebApi.Application.Users.Queries;
-using NavyblueWebApi.Model.Users;
+﻿// ****************************************************************************************************************************************
+// Project          : NavyblueWebApi
+// File             : UsersController.cs
+// Created          : 2026-07-10  17:07
+// 
+// Last Modified By : kitt-nostalgic(jstsmaxx@gmail.com)
+// Last Modified On : 2026-07-15  14:44
+// ****************************************************************************************************************************************
+// <copyright file="UsersController.cs" company="">
+//     Copyright ©  2011-2026. All rights reserved.
+// </copyright>
+// ****************************************************************************************************************************************
+
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Navyblue.Foundation.Application;
 using Navyblue.Foundation.AspNetCore;
 using Navyblue.Foundation.Cqrs;
 using Navyblue.Foundation.Data;
+using NavyblueWebApi.Application.Users.Commands;
+using NavyblueWebApi.Application.Users.Queries;
+using NavyblueWebApi.Model.Users;
 
 namespace NavyblueWebApi.Web.Controllers;
 
@@ -45,7 +58,7 @@ public sealed class UsersController(ICommandBus commandBus, IQueryService queryS
     public async Task<ActionResult<ApiResult<string>>> Create([FromBody] CreateUserRequest request)
     {
         IdCommandResult result = await commandBus.Send(new AddUserCommand(request.Name, request.Email, request.Password));
-        return this.CreatedAtAction(nameof(Get), new { id = long.Parse(result.Id) },
+        return this.CreatedAtAction(nameof(this.Get), new { id = long.Parse(result.Id) },
             ApiResult<string>.Success(result.Id, "User created.", this.HttpContext.GetTraceId()));
     }
 

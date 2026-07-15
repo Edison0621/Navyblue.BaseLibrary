@@ -1,3 +1,16 @@
+﻿// ****************************************************************************************************************************************
+// Project          : NavyblueWebApi
+// File             : FakeUserRepository.cs
+// Created          : 2026-07-13  11:07
+// 
+// Last Modified By : kitt-nostalgic(jstsmaxx@gmail.com)
+// Last Modified On : 2026-07-15  14:44
+// ****************************************************************************************************************************************
+// <copyright file="FakeUserRepository.cs" company="">
+//     Copyright ©  2011-2026. All rights reserved.
+// </copyright>
+// ****************************************************************************************************************************************
+
 using System.Collections.Concurrent;
 using Navyblue.Foundation.Data;
 using NavyblueWebApi.Application.Users;
@@ -10,6 +23,8 @@ internal sealed class FakeUserRepository : IUserRepository
     private readonly ConcurrentDictionary<long, User> _store = new();
 
     private IEnumerable<User> Active => this._store.Values.Where(u => !u.IsDeleted);
+
+    #region IUserRepository Members
 
     public ValueTask<User?> FindAsync(long id, CancellationToken cancellationToken = default)
     {
@@ -55,4 +70,6 @@ internal sealed class FakeUserRepository : IUserRepository
     public void Update(User user) => this._store[user.Id] = user;
 
     public void Remove(User user) => this._store.TryRemove(user.Id, out _);
+
+    #endregion
 }

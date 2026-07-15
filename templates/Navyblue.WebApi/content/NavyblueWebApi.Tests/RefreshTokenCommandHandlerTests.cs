@@ -1,8 +1,22 @@
+// ****************************************************************************************************************************************
+// Project          : NavyblueWebApi
+// File             : RefreshTokenCommandHandlerTests.cs
+// Created          : 2026-07-13  11:07
+// 
+// Last Modified By : kitt-nostalgic(jstsmaxx@gmail.com)
+// Last Modified On : 2026-07-15  14:44
+// ****************************************************************************************************************************************
+// <copyright file="RefreshTokenCommandHandlerTests.cs" company="">
+//     Copyright ©  2011-2026. All rights reserved.
+// </copyright>
+// ****************************************************************************************************************************************
+
 using Microsoft.Extensions.Options;
+using Navyblue.Foundation.Domain;
 using Navyblue.Foundation.Primitives;
-using Navyblue.Foundation.Testing;
 using NavyblueWebApi.Application.Authentication;
 using NavyblueWebApi.Application.Authentication.Commands;
+using NavyblueWebApi.Domain.Authentication;
 using NavyblueWebApi.Domain.Users;
 using NavyblueWebApi.Tests.Fakes;
 using Xunit;
@@ -35,18 +49,22 @@ public sealed class RefreshTokenCommandHandlerTests
         Assert.NotEqual(first.RefreshToken, second.RefreshToken);
         Assert.False(string.IsNullOrWhiteSpace(second.AccessToken));
 
-        Domain.Authentication.RefreshToken? old = await refreshTokens.FindByTokenHashAsync(
+        RefreshToken? old = await refreshTokens.FindByTokenHashAsync(
             RefreshTokenProtector.Hash(first.RefreshToken));
         Assert.NotNull(old);
         Assert.True(old!.IsRevoked);
 
-        await Assert.ThrowsAsync<Navyblue.Foundation.Domain.UnauthorizedException>(() =>
+        await Assert.ThrowsAsync<UnauthorizedException>(() =>
             handler.Handle(new RefreshTokenCommand(first.RefreshToken)));
     }
+
+    #region Nested type: FixedTokenIssuer
 
     private sealed class FixedTokenIssuer : ITokenIssuer
     {
         private int _n;
+
+        #region ITokenIssuer Members
 
         public AccessToken IssueAccessToken(
             long userId,
@@ -56,5 +74,9 @@ public sealed class RefreshTokenCommandHandlerTests
             this._n++;
             return new AccessToken($"access-{this._n}", DateTimeOffset.UtcNow.AddMinutes(30));
         }
+
+        #endregion
     }
+
+    #endregion
 }

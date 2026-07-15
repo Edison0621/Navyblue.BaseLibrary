@@ -97,6 +97,12 @@ public sealed class NavyblueAspNetCoreOptions
     ///     When true, missing correlation/trace header returns 400.
     /// </summary>
     public bool EnforceCorrelationHeader { get; set; }
+
+    /// <summary>
+    ///     When true (default), all <c>IHttpClientFactory</c> clients forward Correlation/Trace
+    ///     and inbound Authorization headers on outbound calls.
+    /// </summary>
+    public bool EnableOutboundHttpClientForwarding { get; set; } = true;
 }
 
 /// <summary>
@@ -268,7 +274,15 @@ public static class NavyblueAspNetCoreExtensions
                     "X-Correlation-ID", "X-Request-ID", "X-CorrelationId", "Correlation-Id", "Request-Id", "X-Trace-Id"
                 ];
             });
-            services.AddNavyblueCorrelationIdForwarding();
+        }
+
+        if (options.EnableOutboundHttpClientForwarding)
+        {
+            services.AddNavyblueHttpClientForwarding(fwd =>
+            {
+                fwd.ForwardCorrelationId = options.EnableTraceId || options.EnableCorrelationId;
+                fwd.ForwardAuthorization = true;
+            });
         }
 
         if (options.WrapApiResult)

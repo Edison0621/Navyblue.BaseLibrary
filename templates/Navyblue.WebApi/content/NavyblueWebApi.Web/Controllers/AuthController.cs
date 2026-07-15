@@ -1,10 +1,23 @@
-﻿using NavyblueWebApi.Application.Authentication.Commands;
+﻿// ****************************************************************************************************************************************
+// Project          : NavyblueWebApi
+// File             : AuthController.cs
+// Created          : 2026-07-10  17:07
+// 
+// Last Modified By : kitt-nostalgic(jstsmaxx@gmail.com)
+// Last Modified On : 2026-07-15  14:44
+// ****************************************************************************************************************************************
+// <copyright file="AuthController.cs" company="">
+//     Copyright ©  2011-2026. All rights reserved.
+// </copyright>
+// ****************************************************************************************************************************************
+
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
 using Navyblue.Foundation.Application;
 using Navyblue.Foundation.AspNetCore;
 using Navyblue.Foundation.Cqrs;
+using NavyblueWebApi.Application.Authentication.Commands;
 
 namespace NavyblueWebApi.Web.Controllers;
 

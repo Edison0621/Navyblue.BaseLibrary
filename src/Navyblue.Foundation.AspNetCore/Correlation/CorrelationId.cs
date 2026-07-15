@@ -63,7 +63,9 @@ public static class CorrelationIdServiceCollectionExtensions
         => builder.AddHttpMessageHandler<CorrelationIdHandler>();
 
     /// <summary>
-    ///     Adds the navyblue correlation identifier forwarding.
+    ///     Registers <see cref="CorrelationIdHandler" /> for DI. Prefer
+    ///     <see cref="HttpClientForwardingServiceCollectionExtensions.AddNavyblueHttpClientForwarding(IServiceCollection, Action{HttpClientForwardingOptions}?)" />
+    ///     so every <c>IHttpClientFactory</c> client gets the handler by default.
     /// </summary>
     /// <param name="services">The services.</param>
     /// <returns></returns>

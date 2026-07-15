@@ -1,9 +1,24 @@
+﻿// ****************************************************************************************************************************************
+// Project          : NavyblueWebApi
+// File             : UserQueryHandlerTests.cs
+// Created          : 2026-07-13  11:07
+// 
+// Last Modified By : kitt-nostalgic(jstsmaxx@gmail.com)
+// Last Modified On : 2026-07-15  14:44
+// ****************************************************************************************************************************************
+// <copyright file="UserQueryHandlerTests.cs" company="">
+//     Copyright ©  2011-2026. All rights reserved.
+// </copyright>
+// ****************************************************************************************************************************************
+
 using Navyblue.Foundation.Application;
-using Navyblue.Foundation.Caching;
 using Navyblue.Foundation.Data;
 using Navyblue.Foundation.Testing;
+using NavyblueWebApi.Application.Users;
+using NavyblueWebApi.Application.Users.Commands;
 using NavyblueWebApi.Application.Users.Queries;
 using NavyblueWebApi.Domain.Users;
+using NavyblueWebApi.Model.Users;
 using NavyblueWebApi.Tests.Fakes;
 using Xunit;
 
@@ -20,7 +35,7 @@ public sealed class ListUsersQueryHandlerTests
         await users.AddAsync(new User(3, "Carol", "carol@navyblue.local"));
 
         ListUsersQueryHandler handler = new(users);
-        PageData<Model.Users.UserModel> page = await handler.Handle(new ListUsersQuery("Alice", pageIndex: 1, pageSize: 10));
+        PageData<UserModel> page = await handler.Handle(new ListUsersQuery("Alice", pageIndex: 1, pageSize: 10));
 
         Assert.Equal(1, page.Total);
         Assert.Single(page.Items);
@@ -38,10 +53,10 @@ public sealed class GetUserQueryHandlerTests
         InMemoryCacheProvider cache = new();
 
         GetUserQueryHandler handler = new(users, cache);
-        Model.Users.UserModel? first = await handler.Handle(new GetUserQuery(10));
+        UserModel? first = await handler.Handle(new GetUserQuery(10));
         users.Remove((await users.FindAsync(10))!);
 
-        Model.Users.UserModel? cached = await handler.Handle(new GetUserQuery(10));
+        UserModel? cached = await handler.Handle(new GetUserQuery(10));
 
         Assert.NotNull(first);
         Assert.NotNull(cached);
@@ -60,14 +75,21 @@ public sealed class ActivateUserCommandHandlerTests
         await users.AddAsync(user);
 
         InMemoryCacheProvider cache = new();
-        await cache.SetAsync(Application.Users.UserCacheKeys.ById(5), new Model.Users.UserModel { Id = 5, Name = "stale" });
+        await cache.SetAsync(UserCacheKeys.ById(5), new UserModel
+        {
+            Id = 5,
+            Name = "stale",
+            Email = "demo@navyblue.local",
+            Status = 1,
+            CreatedAt = DateTimeOffset.UtcNow
+        });
 
-        Application.Users.Commands.ActivateUserCommandHandler handler = new(users, cache, CurrentUser.Anonymous);
-        await handler.Handle(new Application.Users.Commands.ActivateUserCommand(5));
+        ActivateUserCommandHandler handler = new(users, cache, CurrentUser.Anonymous);
+        await handler.Handle(new ActivateUserCommand(5));
 
         User? updated = await users.FindAsync(5);
         Assert.Equal(UserStatus.Active, updated!.Status);
-        Assert.Null(await cache.GetAsync<Model.Users.UserModel>(Application.Users.UserCacheKeys.ById(5)));
+        Assert.Null(await cache.GetAsync<UserModel>(UserCacheKeys.ById(5)));
     }
 }
 
@@ -77,12 +99,12 @@ public sealed class SoftDeleteUserCommandHandlerTests
     public async Task SoftDelete_Hides_User_From_Queries()
     {
         FakeUserRepository users = new();
-        Fakes.FakeAuthRepository auths = new();
+        FakeAuthRepository auths = new();
         await users.AddAsync(new User(9, "Gone", "gone@navyblue.local"));
         InMemoryCacheProvider cache = new();
 
-        Application.Users.Commands.DeleteUserCommandHandler handler = new(users, auths, cache, CurrentUser.Anonymous);
-        await handler.Handle(new Application.Users.Commands.DeleteUserCommand(9));
+        DeleteUserCommandHandler handler = new(users, auths, cache, CurrentUser.Anonymous);
+        await handler.Handle(new DeleteUserCommand(9));
 
         Assert.Null(await users.FindAsync(9));
         Assert.Empty(await users.ListAsync());

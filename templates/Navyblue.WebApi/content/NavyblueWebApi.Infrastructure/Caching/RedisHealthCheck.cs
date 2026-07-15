@@ -1,30 +1,1 @@
-using Microsoft.Extensions.Diagnostics.HealthChecks;
-using StackExchange.Redis;
-
-namespace NavyblueWebApi.Infrastructure.Caching;
-
-/// <summary>
-///     Reports Redis connectivity via <see cref="IConnectionMultiplexer" />.
-/// </summary>
-public sealed class RedisHealthCheck : IHealthCheck
-{
-    private readonly IConnectionMultiplexer _multiplexer;
-
-    public RedisHealthCheck(IConnectionMultiplexer multiplexer) => this._multiplexer = multiplexer;
-
-    public async Task<HealthCheckResult> CheckHealthAsync(HealthCheckContext context, CancellationToken cancellationToken = default)
-    {
-        try
-        {
-            if (!this._multiplexer.IsConnected)
-                return HealthCheckResult.Unhealthy("Redis is not connected.");
-
-            TimeSpan latency = await this._multiplexer.GetDatabase().PingAsync().ConfigureAwait(false);
-            return HealthCheckResult.Healthy($"Redis PING {latency.TotalMilliseconds:0}ms");
-        }
-        catch (Exception ex)
-        {
-            return HealthCheckResult.Unhealthy("Redis health check failed.", ex);
-        }
-    }
-}
+// ****************************************************************************************************************************************// Project          : NavyblueWebApi// File             : RedisHealthCheck.cs// Created          : 2026-07-13  11:07// // Last Modified By : kitt-nostalgic(jstsmaxx@gmail.com)// Last Modified On : 2026-07-15  14:44// ****************************************************************************************************************************************// <copyright file="RedisHealthCheck.cs" company="">//     Copyright ©  2011-2026. All rights reserved.// </copyright>// ****************************************************************************************************************************************using Microsoft.Extensions.Diagnostics.HealthChecks;using StackExchange.Redis;namespace NavyblueWebApi.Infrastructure.Caching;/// <summary>///     Reports Redis connectivity via <see cref="IConnectionMultiplexer" />./// </summary>public sealed class RedisHealthCheck(IConnectionMultiplexer multiplexer) : IHealthCheck{    #region IHealthCheck Members    public async Task<HealthCheckResult> CheckHealthAsync(HealthCheckContext context, CancellationToken cancellationToken = default)    {        try        {            if (!multiplexer.IsConnected)                return HealthCheckResult.Unhealthy("Redis is not connected.");            TimeSpan latency = await multiplexer.GetDatabase().PingAsync().ConfigureAwait(false);            return HealthCheckResult.Healthy($"Redis PING {latency.TotalMilliseconds:0}ms");        }        catch (Exception ex)        {            return HealthCheckResult.Unhealthy("Redis health check failed.", ex);        }    }    #endregion}

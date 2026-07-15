@@ -1,4 +1,17 @@
-﻿using Navyblue.Foundation.Cqrs;
+﻿// ****************************************************************************************************************************************
+// Project          : NavyblueWebApi
+// File             : AddUserCommand.cs
+// Created          : 2026-07-10  17:07
+// 
+// Last Modified By : kitt-nostalgic(jstsmaxx@gmail.com)
+// Last Modified On : 2026-07-15  14:44
+// ****************************************************************************************************************************************
+// <copyright file="AddUserCommand.cs" company="">
+//     Copyright ©  2011-2026. All rights reserved.
+// </copyright>
+// ****************************************************************************************************************************************
+
+using Navyblue.Foundation.Cqrs;
 
 namespace NavyblueWebApi.Application.Users.Commands;
 

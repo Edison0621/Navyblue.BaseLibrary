@@ -29,7 +29,12 @@ public static class HexEncoding
     /// </summary>
     /// <param name="bytes">The bytes.</param>
     /// <returns>A string</returns>
-    public static string ToHexString(ReadOnlySpan<byte> bytes) => Convert.ToHexString(bytes).ToLowerInvariant();
+    public static string ToHexString(ReadOnlySpan<byte> bytes)
+#if NET9_0_OR_GREATER
+        => Convert.ToHexStringLower(bytes);
+#else
+        => Convert.ToHexString(bytes).ToLowerInvariant();
+#endif
 
     /// <summary>
     ///     Froms hex string.
@@ -78,7 +83,20 @@ public static class Hashing
     /// </summary>
     /// <param name="value">The value.</param>
     /// <returns>A string</returns>
-    public static string Sha256Hex(string value) => HexEncoding.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(value)));
+    public static string Sha256Hex(string value)
+    {
+#if NET8_0_OR_GREATER
+        ArgumentException.ThrowIfNullOrWhiteSpace(value);
+#else
+        Guard.NotNullOrWhiteSpace(value, nameof(value));
+#endif
+        int maxUtf8 = Encoding.UTF8.GetMaxByteCount(value.Length);
+        Span<byte> utf8 = maxUtf8 <= 256 ? stackalloc byte[maxUtf8] : new byte[maxUtf8];
+        int written = Encoding.UTF8.GetBytes(value, utf8);
+        Span<byte> hash = stackalloc byte[32];
+        SHA256.HashData(utf8[..written], hash);
+        return HexEncoding.ToHexString(hash);
+    }
 
     /// <summary>
     /// </summary>
@@ -114,6 +132,8 @@ public static class HmacHashing
 /// </summary>
 public static class PasswordHasher
 {
+    private const string AlgorithmPrefix = "pbkdf2-sha256$";
+
     /// <summary>
     /// </summary>
     /// <param name="password">The password.</param>
@@ -124,10 +144,27 @@ public static class PasswordHasher
     /// <returns>A string</returns>
     public static string Hash(string password, int iterations = 100_000, int saltSize = 16, int hashSize = 32)
     {
+#if NET8_0_OR_GREATER
+        ArgumentException.ThrowIfNullOrWhiteSpace(password);
+#else
         Guard.NotNullOrWhiteSpace(password, nameof(password));
+#endif
         byte[] salt = RandomNumberGenerator.GetBytes(saltSize);
         byte[] hash = DerivePbkdf2(password, salt, iterations, hashSize);
-        return $"pbkdf2-sha256${iterations}${Convert.ToBase64String(salt)}${Convert.ToBase64String(hash)}";
+        return $"{AlgorithmPrefix}{iterations}${Convert.ToBase64String(salt)}${Convert.ToBase64String(hash)}";
+    }
+
+    /// <summary>
+    ///     Extracts the Base64 salt segment from a stored PBKDF2 hash string.
+    /// </summary>
+    public static bool TryGetSalt(string stored, out string salt)
+    {
+        salt = string.Empty;
+        if (!TryParseStored(stored, out _, out ReadOnlySpan<char> saltChars, out _))
+            return false;
+
+        salt = saltChars.ToString();
+        return true;
     }
 
     /// <summary>
@@ -137,12 +174,63 @@ public static class PasswordHasher
     /// <returns>A bool</returns>
     public static bool Verify(string password, string stored)
     {
-        string[] parts = stored.Split('$');
-        if (parts.Length != 4 || parts[0] != "pbkdf2-sha256" || !int.TryParse(parts[1], out int iterations)) return false;
-        byte[] salt = Convert.FromBase64String(parts[2]);
-        byte[] expected = Convert.FromBase64String(parts[3]);
-        byte[] actual = DerivePbkdf2(password, salt, iterations, expected.Length);
+        if (string.IsNullOrWhiteSpace(password)
+            || !TryParseStored(stored, out int iterations, out ReadOnlySpan<char> saltChars, out ReadOnlySpan<char> hashChars))
+            return false;
+
+        int saltMax = checked((saltChars.Length * 3) / 4);
+        int hashMax = checked((hashChars.Length * 3) / 4);
+        Span<byte> saltBuf = saltMax <= 64 ? stackalloc byte[saltMax] : new byte[saltMax];
+        Span<byte> expectedBuf = hashMax <= 64 ? stackalloc byte[hashMax] : new byte[hashMax];
+
+        if (!Convert.TryFromBase64Chars(saltChars, saltBuf, out int saltLen)
+            || !Convert.TryFromBase64Chars(hashChars, expectedBuf, out int expectedLen)
+            || saltLen == 0
+            || expectedLen == 0)
+            return false;
+
+        ReadOnlySpan<byte> salt = saltBuf[..saltLen];
+        ReadOnlySpan<byte> expected = expectedBuf[..expectedLen];
+
+#if NET7_0_OR_GREATER
+        Span<byte> actual = expectedLen <= 64 ? stackalloc byte[expectedLen] : new byte[expectedLen];
+        Rfc2898DeriveBytes.Pbkdf2(password, salt, actual, iterations, HashAlgorithmName.SHA256);
         return CryptographicOperations.FixedTimeEquals(actual, expected);
+#else
+        byte[] actual = DerivePbkdf2(password, salt.ToArray(), iterations, expectedLen);
+        return CryptographicOperations.FixedTimeEquals(actual, expected.ToArray());
+#endif
+    }
+
+    private static bool TryParseStored(
+        string? stored,
+        out int iterations,
+        out ReadOnlySpan<char> saltChars,
+        out ReadOnlySpan<char> hashChars)
+    {
+        iterations = 0;
+        saltChars = default;
+        hashChars = default;
+        if (string.IsNullOrWhiteSpace(stored))
+            return false;
+
+        ReadOnlySpan<char> span = stored.AsSpan();
+        if (!span.StartsWith(AlgorithmPrefix, StringComparison.Ordinal))
+            return false;
+
+        span = span[AlgorithmPrefix.Length..];
+        int first = span.IndexOf('$');
+        if (first <= 0 || !int.TryParse(span[..first], out iterations) || iterations <= 0)
+            return false;
+
+        span = span[(first + 1)..];
+        int second = span.IndexOf('$');
+        if (second <= 0)
+            return false;
+
+        saltChars = span[..second];
+        hashChars = span[(second + 1)..];
+        return !saltChars.IsEmpty && !hashChars.IsEmpty;
     }
 
     private static byte[] DerivePbkdf2(string password, byte[] salt, int iterations, int hashSize)

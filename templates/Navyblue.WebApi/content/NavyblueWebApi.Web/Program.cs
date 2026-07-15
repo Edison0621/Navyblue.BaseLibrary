@@ -1,12 +1,16 @@
-﻿using System.Threading.RateLimiting;
-using NavyblueWebApi.Application.Authentication;
-using NavyblueWebApi.Application.Users.Commands;
-using NavyblueWebApi.Domain.Authentication;
-using NavyblueWebApi.Domain.Users;
-using NavyblueWebApi.Infrastructure;
-using NavyblueWebApi.Infrastructure.Caching;
-using NavyblueWebApi.Infrastructure.Persistence;
-using NavyblueWebApi.Web.Authentication;
+﻿// ****************************************************************************************************************************************
+// Project          : NavyblueWebApi
+// File             : Program.cs
+// Created          : 2026-07-10  17:07
+// 
+// Last Modified By : kitt-nostalgic(jstsmaxx@gmail.com)
+// Last Modified On : 2026-07-15  14:44
+// ****************************************************************************************************************************************
+// <copyright file="Program.cs" company="">
+//     Copyright ©  2011-2026. All rights reserved.
+// </copyright>
+// ****************************************************************************************************************************************
+
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
@@ -15,6 +19,14 @@ using Navyblue.Foundation.AspNetCore;
 using Navyblue.Foundation.Cqrs;
 using Navyblue.Foundation.DependencyInjection;
 using Navyblue.Foundation.Security;
+using NavyblueWebApi.Application.Authentication;
+using NavyblueWebApi.Application.Users.Commands;
+using NavyblueWebApi.Domain.Authentication;
+using NavyblueWebApi.Domain.Users;
+using NavyblueWebApi.Infrastructure;
+using NavyblueWebApi.Infrastructure.Caching;
+using NavyblueWebApi.Infrastructure.Persistence;
+using NavyblueWebApi.Web.Authentication;
 using Serilog;
 
 namespace NavyblueWebApi.Web;
@@ -126,7 +138,7 @@ public sealed class Program
                         {
                             Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "Bearer" }
                         },
-                        Array.Empty<string>()
+                        []
                     }
                 });
             });
@@ -156,8 +168,8 @@ public sealed class Program
             using (IServiceScope scope = app.Services.CreateScope())
             {
                 AppDbContext db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-                await db.Database.MigrateAsync();
-                await EnsureDemoAdminAsync(db);
+                await db.Database.MigrateAsync().ConfigureAwait(false);
+                await EnsureDemoAdminAsync(db).ConfigureAwait(false);
             }
 
             await app.RunAsync();
@@ -184,7 +196,7 @@ public sealed class Program
         const string email = "admin@navyblue.local";
         const string password = "Admin@123";
         string hash = PasswordHasher.Hash(password);
-        string salt = hash.Split('$') is { Length: 4 } parts ? parts[2] : string.Empty;
+        string salt = PasswordHashFormat.ExtractSalt(hash);
 
         User admin = new(1L, "Administrator", email, createdBy: "seed");
         Auth auth = new(2L, admin.Id, email, hash, salt);
