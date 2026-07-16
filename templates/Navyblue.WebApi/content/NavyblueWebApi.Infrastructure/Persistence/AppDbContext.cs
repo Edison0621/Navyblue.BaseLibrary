@@ -1,1 +1,44 @@
-﻿// ****************************************************************************************************************************************// Project          : NavyblueWebApi// File             : AppDbContext.cs// Created          : 2026-07-13  10:07// // Last Modified By : kitt-nostalgic(jstsmaxx@gmail.com)// Last Modified On : 2026-07-15  14:44// ****************************************************************************************************************************************// <copyright file="AppDbContext.cs" company="">//     Copyright ©  2011-2026. All rights reserved.// </copyright>// ****************************************************************************************************************************************using Microsoft.EntityFrameworkCore;using NavyblueWebApi.Domain.Authentication;using NavyblueWebApi.Domain.Users;using NavyblueWebApi.Infrastructure.Persistence.Configurations;namespace NavyblueWebApi.Infrastructure.Persistence;/// <summary>///     EF Core <see cref="DbContext" /> for the Navyblue Web API template (MySQL 8.0 via Pomelo)./// </summary>public sealed class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options){    public DbSet<User> Users => this.Set<User>();    public DbSet<Auth> Auths => this.Set<Auth>();    public DbSet<RefreshToken> RefreshTokens => this.Set<RefreshToken>();    protected override void OnModelCreating(ModelBuilder modelBuilder)    {        modelBuilder.ApplyConfiguration(new UserConfiguration());        modelBuilder.ApplyConfiguration(new AuthConfiguration());        modelBuilder.ApplyConfiguration(new RefreshTokenConfiguration());        base.OnModelCreating(modelBuilder);    }}
+// ****************************************************************************************************************************************
+// Project          : NavyblueWebApi
+// File             : AppDbContext.cs
+// Created          : 2026-07-13  10:07
+// 
+// Last Modified By : kitt-nostalgic(jstsmaxx@gmail.com)
+// Last Modified On : 2026-07-15  14:44
+// ****************************************************************************************************************************************
+// <copyright file="AppDbContext.cs" company="">
+//     Copyright ©  2011-2026. All rights reserved.
+// </copyright>
+// ****************************************************************************************************************************************
+
+using Microsoft.EntityFrameworkCore;
+using NavyblueWebApi.Domain.Authentication;
+using NavyblueWebApi.Domain.Users;
+using NavyblueWebApi.Infrastructure.Persistence.Configurations;
+
+namespace NavyblueWebApi.Infrastructure.Persistence;
+
+/// <summary>
+///     EF Core <see cref="DbContext" /> for the Navyblue Web API template (MySQL 8.0 via Pomelo).
+/// </summary>
+public sealed class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options)
+
+{
+    public DbSet<User> Users => this.Set<User>();
+
+    public DbSet<Auth> Auths => this.Set<Auth>();
+
+    public DbSet<RefreshToken> RefreshTokens => this.Set<RefreshToken>();
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+
+    {
+        modelBuilder.ApplyConfiguration(new UserConfiguration());
+
+        modelBuilder.ApplyConfiguration(new AuthConfiguration());
+
+        modelBuilder.ApplyConfiguration(new RefreshTokenConfiguration());
+
+        base.OnModelCreating(modelBuilder);
+    }
+}

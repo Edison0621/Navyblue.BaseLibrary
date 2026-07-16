@@ -18,7 +18,7 @@ From the repository root:
 Output:
 
 ```text
-artifacts/vsix/Navyblue.Templates.WebApi.Vsix.3.1.0.vsix
+artifacts/vsix/Navyblue.Templates.WebApi.Vsix.3.2.0.vsix
 ```
 
 The script validates that the package contains `manifest.json` and `catalog.json`
@@ -36,7 +36,7 @@ Check **View → Output → Navyblue Templates** for status.
 ## Publish to Visual Studio Marketplace
 
 1. Register a publisher: https://marketplace.visualstudio.com/manage  
-2. **New extension** → **Visual Studio** → upload `Navyblue.Templates.WebApi.Vsix.3.1.0.vsix`  
+2. **New extension** → **Visual Studio** → upload `Navyblue.Templates.WebApi.Vsix.3.2.0.vsix`  
 3. Fill overview, categories (`Templates`, `Coding`), and support links  
 4. Submit for review  
 

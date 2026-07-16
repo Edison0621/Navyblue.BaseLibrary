@@ -1,4 +1,4 @@
-﻿using Navyblue.Samples.Application.Users.Commands;
+using Navyblue.Samples.Application.Users.Commands;
 using Navyblue.Samples.Application.Users.Queries;
 using Navyblue.Samples.Model.Users;
 using Microsoft.AspNetCore.Authorization;

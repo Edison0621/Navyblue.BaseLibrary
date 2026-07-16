@@ -1,4 +1,4 @@
-﻿using Navyblue.Foundation.Application;
+using Navyblue.Foundation.Application;
 using Navyblue.Foundation.Caching;
 using Navyblue.Foundation.Cqrs;
 using Navyblue.Foundation.Domain;
@@ -52,4 +52,4 @@ public sealed class InactivateUserCommandHandler(
         return new IdCommandResult(user.Id.ToString());
     }
 }
-
+

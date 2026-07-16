@@ -1,1 +1,105 @@
-﻿// ****************************************************************************************************************************************// Project          : NavyblueWebApi// File             : EfUserRepository.cs// Created          : 2026-07-13  10:07// // Last Modified By : kitt-nostalgic(jstsmaxx@gmail.com)// Last Modified On : 2026-07-15  14:44// ****************************************************************************************************************************************// <copyright file="EfUserRepository.cs" company="">//     Copyright ©  2011-2026. All rights reserved.// </copyright>// ****************************************************************************************************************************************using Microsoft.EntityFrameworkCore;using Navyblue.Foundation.Data;using NavyblueWebApi.Application.Users;using NavyblueWebApi.Domain.Users;using NavyblueWebApi.Infrastructure.Persistence;namespace NavyblueWebApi.Infrastructure.Users;/// <summary>///     EF Core implementation of <see cref="IUserRepository" /> (MySQL via Pomelo)./// </summary>public sealed class EfUserRepository(AppDbContext db) : IUserRepository{    #region IUserRepository Members    public async ValueTask<User?> FindAsync(long id, CancellationToken cancellationToken = default)        => await db.Users.FirstOrDefaultAsync(u => u.Id == id, cancellationToken).ConfigureAwait(false);    public async ValueTask<User?> FindByEmailAsync(string email, CancellationToken cancellationToken = default)    {        ArgumentException.ThrowIfNullOrWhiteSpace(email);        return await db.Users            .FirstOrDefaultAsync(u => u.Email == email, cancellationToken)            .ConfigureAwait(false);    }    public async Task<IReadOnlyList<User>> ListAsync(CancellationToken cancellationToken = default)        => await db.Users            .OrderBy(u => u.Id)            .ToListAsync(cancellationToken)            .ConfigureAwait(false);    public async Task<PageData<User>> PageAsync(PageQuery page, string? keyword = null, CancellationToken cancellationToken = default)    {        ArgumentNullException.ThrowIfNull(page);        int pageIndex = Math.Max(page.PageIndex, 1);        int pageSize = Math.Clamp(page.PageSize, 1, 200);        IQueryable<User> query = db.Users.AsQueryable();        if (!string.IsNullOrWhiteSpace(keyword))        {            string term = keyword.Trim();            query = query.Where(u => u.Name.Contains(term) || u.Email.Contains(term));        }        int total = await query.CountAsync(cancellationToken).ConfigureAwait(false);        List<User> items = await query            .OrderBy(u => u.Id)            .Skip((pageIndex - 1) * pageSize)            .Take(pageSize)            .ToListAsync(cancellationToken)            .ConfigureAwait(false);        return new PageData<User>(items, total, pageIndex, pageSize);    }    public async Task AddAsync(User user, CancellationToken cancellationToken = default)    {        ArgumentNullException.ThrowIfNull(user);        await db.Users.AddAsync(user, cancellationToken).ConfigureAwait(false);    }    public void Update(User user)    {        ArgumentNullException.ThrowIfNull(user);        db.Users.Update(user);    }    public void Remove(User user)    {        ArgumentNullException.ThrowIfNull(user);        db.Users.Remove(user);    }    #endregion}
+// ****************************************************************************************************************************************
+// Project          : NavyblueWebApi
+// File             : EfUserRepository.cs
+// Created          : 2026-07-13  10:07
+// 
+// Last Modified By : kitt-nostalgic(jstsmaxx@gmail.com)
+// Last Modified On : 2026-07-15  14:44
+// ****************************************************************************************************************************************
+// <copyright file="EfUserRepository.cs" company="">
+//     Copyright ©  2011-2026. All rights reserved.
+// </copyright>
+// ****************************************************************************************************************************************
+
+using Microsoft.EntityFrameworkCore;
+using Navyblue.Foundation.Data;
+using NavyblueWebApi.Application.Users;
+using NavyblueWebApi.Domain.Users;
+using NavyblueWebApi.Infrastructure.Persistence;
+
+namespace NavyblueWebApi.Infrastructure.Users;
+
+/// <summary>
+///     EF Core implementation of <see cref="IUserRepository" /> (MySQL via Pomelo).
+/// </summary>
+public sealed class EfUserRepository(AppDbContext db) : IUserRepository
+
+{
+    #region IUserRepository Members
+
+    public async ValueTask<User?> FindAsync(long id, CancellationToken cancellationToken = default)
+        => await db.Users.FirstOrDefaultAsync(u => u.Id == id, cancellationToken).ConfigureAwait(false);
+
+    public async ValueTask<User?> FindByEmailAsync(string email, CancellationToken cancellationToken = default)
+
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(email);
+
+        return await db.Users
+            .FirstOrDefaultAsync(u => u.Email == email, cancellationToken)
+            .ConfigureAwait(false);
+    }
+
+    public async Task<IReadOnlyList<User>> ListAsync(CancellationToken cancellationToken = default)
+        => await db.Users
+            .OrderBy(u => u.Id)
+            .ToListAsync(cancellationToken)
+            .ConfigureAwait(false);
+
+    public async Task<PageData<User>> PageAsync(PageQuery page, string? keyword = null, CancellationToken cancellationToken = default)
+
+    {
+        ArgumentNullException.ThrowIfNull(page);
+
+        int pageIndex = Math.Max(page.PageIndex, 1);
+
+        int pageSize = Math.Clamp(page.PageSize, 1, 200);
+
+        IQueryable<User> query = db.Users.AsQueryable();
+
+        if (!string.IsNullOrWhiteSpace(keyword))
+
+        {
+            string term = keyword.Trim();
+
+            query = query.Where(u => u.Name.Contains(term) || u.Email.Contains(term));
+        }
+
+        int total = await query.CountAsync(cancellationToken).ConfigureAwait(false);
+
+        List<User> items = await query
+            .OrderBy(u => u.Id)
+            .Skip((pageIndex - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync(cancellationToken)
+            .ConfigureAwait(false);
+
+        return new PageData<User>(items, total, pageIndex, pageSize);
+    }
+
+    public async Task AddAsync(User user, CancellationToken cancellationToken = default)
+
+    {
+        ArgumentNullException.ThrowIfNull(user);
+
+        await db.Users.AddAsync(user, cancellationToken).ConfigureAwait(false);
+    }
+
+    public void Update(User user)
+
+    {
+        ArgumentNullException.ThrowIfNull(user);
+
+        db.Users.Update(user);
+    }
+
+    public void Remove(User user)
+
+    {
+        ArgumentNullException.ThrowIfNull(user);
+
+        db.Users.Remove(user);
+    }
+
+    #endregion
+}

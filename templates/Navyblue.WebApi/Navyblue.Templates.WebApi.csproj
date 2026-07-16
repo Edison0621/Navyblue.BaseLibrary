@@ -8,7 +8,7 @@
     <Company>Navyblue</Company>
     <Description>dotnet new / Visual Studio template for a layered DDD/CQRS Web API on Navyblue.Foundation.</Description>
     <PackageTags>dotnet-new;templates;navyblue;aspnetcore;webapi;cqrs;ddd</PackageTags>
-    <PackageVersion>3.1.0</PackageVersion>
+    <PackageVersion>3.2.0</PackageVersion>
     <IncludeContentInPack>true</IncludeContentInPack>
     <IncludeBuildOutput>false</IncludeBuildOutput>
     <ContentTargetFolders>content</ContentTargetFolders>
@@ -21,7 +21,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Include="content\**\*" Exclude="content\**\bin\**;content\**\obj\**" />
+    <Content Include="content\**\*" Exclude="content\**\bin\**;content\**\obj\**;content\**\.vs\**;content\**\*.user" />
     <Compile Remove="**\*" />
     <None Include="README.md" Pack="true" PackagePath="\" Visible="false" />
   </ItemGroup>

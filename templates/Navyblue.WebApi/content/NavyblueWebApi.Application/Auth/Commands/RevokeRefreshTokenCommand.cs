@@ -1,1 +1,71 @@
-﻿// ****************************************************************************************************************************************// Project          : NavyblueWebApi// File             : RevokeRefreshTokenCommand.cs// Created          : 2026-07-13  11:07// // Last Modified By : kitt-nostalgic(jstsmaxx@gmail.com)// Last Modified On : 2026-07-15  14:44// ****************************************************************************************************************************************// <copyright file="RevokeRefreshTokenCommand.cs" company="">//     Copyright ©  2011-2026. All rights reserved.// </copyright>// ****************************************************************************************************************************************using Navyblue.Foundation.Cqrs;using NavyblueWebApi.Domain.Authentication;namespace NavyblueWebApi.Application.Authentication.Commands;/// <summary>///     Revokes a refresh token (logout). Idempotent when the token is unknown/already revoked./// </summary>public sealed class RevokeRefreshTokenCommand : Command<IdCommandResult>{    public RevokeRefreshTokenCommand(string refreshToken) => this.RefreshToken = refreshToken ?? string.Empty;    public string RefreshToken { get; }    public override string DisplayName => "RevokeRefreshToken";    public override string Id { get; } = Guid.NewGuid().ToString("N");    public override bool Validate(out string validationErrorMessage)    {        if (string.IsNullOrWhiteSpace(this.RefreshToken))        {            validationErrorMessage = "Refresh token is required.";            return false;        }        validationErrorMessage = string.Empty;        return true;    }}public sealed class RevokeRefreshTokenCommandHandler(IRefreshTokenRepository refreshTokenRepository)    : CommandHandler<RevokeRefreshTokenCommand, IdCommandResult>{    protected override async Task<IdCommandResult> ProcessRequest(RevokeRefreshTokenCommand command)    {        string hash = RefreshTokenProtector.Hash(command.RefreshToken.Trim());        RefreshToken? existing = await refreshTokenRepository.FindByTokenHashAsync(hash).ConfigureAwait(false);        if (existing is null || existing.IsRevoked)            return new IdCommandResult("revoked");        existing.Revoke();        refreshTokenRepository.Update(existing);        return new IdCommandResult(existing.Id.ToString());    }}
+// ****************************************************************************************************************************************
+// Project          : NavyblueWebApi
+// File             : RevokeRefreshTokenCommand.cs
+// Created          : 2026-07-13  11:07
+// 
+// Last Modified By : kitt-nostalgic(jstsmaxx@gmail.com)
+// Last Modified On : 2026-07-15  14:44
+// ****************************************************************************************************************************************
+// <copyright file="RevokeRefreshTokenCommand.cs" company="">
+//     Copyright ©  2011-2026. All rights reserved.
+// </copyright>
+// ****************************************************************************************************************************************
+
+using Navyblue.Foundation.Cqrs;
+using NavyblueWebApi.Domain.Authentication;
+
+namespace NavyblueWebApi.Application.Authentication.Commands;
+
+/// <summary>
+///     Revokes a refresh token (logout). Idempotent when the token is unknown/already revoked.
+/// </summary>
+public sealed class RevokeRefreshTokenCommand : Command<IdCommandResult>
+
+{
+    public RevokeRefreshTokenCommand(string refreshToken) => this.RefreshToken = refreshToken ?? string.Empty;
+
+    public string RefreshToken { get; }
+
+    public override string DisplayName => "RevokeRefreshToken";
+
+    public override string Id { get; } = Guid.NewGuid().ToString("N");
+
+    public override bool Validate(out string validationErrorMessage)
+
+    {
+        if (string.IsNullOrWhiteSpace(this.RefreshToken))
+
+        {
+            validationErrorMessage = "Refresh token is required.";
+
+            return false;
+        }
+
+        validationErrorMessage = string.Empty;
+
+        return true;
+    }
+}
+
+public sealed class RevokeRefreshTokenCommandHandler(IRefreshTokenRepository refreshTokenRepository)
+    : CommandHandler<RevokeRefreshTokenCommand, IdCommandResult>
+
+{
+    protected override async Task<IdCommandResult> ProcessRequest(RevokeRefreshTokenCommand command)
+
+    {
+        string hash = RefreshTokenProtector.Hash(command.RefreshToken.Trim());
+
+        RefreshToken? existing = await refreshTokenRepository.FindByTokenHashAsync(hash).ConfigureAwait(false);
+
+        if (existing is null || existing.IsRevoked)
+
+            return new IdCommandResult("revoked");
+
+        existing.Revoke();
+
+        refreshTokenRepository.Update(existing);
+
+        return new IdCommandResult(existing.Id.ToString());
+    }
+}

@@ -1,4 +1,4 @@
-﻿using Navyblue.Samples.Application.Authentication;
+using Navyblue.Samples.Application.Authentication;
 using Navyblue.Samples.Domain.Users;
 using Navyblue.Foundation.Cqrs;
 using Navyblue.Foundation.Domain;

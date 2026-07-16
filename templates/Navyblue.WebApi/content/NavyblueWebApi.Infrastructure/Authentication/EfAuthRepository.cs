@@ -1,1 +1,67 @@
-﻿// ****************************************************************************************************************************************// Project          : NavyblueWebApi// File             : EfAuthRepository.cs// Created          : 2026-07-13  10:07// // Last Modified By : kitt-nostalgic(jstsmaxx@gmail.com)// Last Modified On : 2026-07-15  14:44// ****************************************************************************************************************************************// <copyright file="EfAuthRepository.cs" company="">//     Copyright ©  2011-2026. All rights reserved.// </copyright>// ****************************************************************************************************************************************using Microsoft.EntityFrameworkCore;using NavyblueWebApi.Application.Authentication;using NavyblueWebApi.Domain.Authentication;using NavyblueWebApi.Infrastructure.Persistence;namespace NavyblueWebApi.Infrastructure.Authentication;/// <summary>///     EF Core implementation of <see cref="IAuthRepository" /> (MySQL via Pomelo)./// </summary>public sealed class EfAuthRepository(AppDbContext db) : IAuthRepository{    #region IAuthRepository Members    public async ValueTask<Auth?> FindByLoginAsync(string login, CancellationToken cancellationToken = default)    {        ArgumentException.ThrowIfNullOrWhiteSpace(login);        return await db.Auths            .FirstOrDefaultAsync(a => a.Login == login, cancellationToken)            .ConfigureAwait(false);    }    public async ValueTask<Auth?> FindByUserIdAsync(long userId, CancellationToken cancellationToken = default)        => await db.Auths.FirstOrDefaultAsync(a => a.UserId == userId, cancellationToken).ConfigureAwait(false);    public async Task AddAsync(Auth auth, CancellationToken cancellationToken = default)    {        ArgumentNullException.ThrowIfNull(auth);        await db.Auths.AddAsync(auth, cancellationToken).ConfigureAwait(false);    }    public void Update(Auth auth)    {        ArgumentNullException.ThrowIfNull(auth);        db.Auths.Update(auth);    }    public void Remove(Auth auth)    {        ArgumentNullException.ThrowIfNull(auth);        db.Auths.Remove(auth);    }    #endregion}
+// ****************************************************************************************************************************************
+// Project          : NavyblueWebApi
+// File             : EfAuthRepository.cs
+// Created          : 2026-07-13  10:07
+// 
+// Last Modified By : kitt-nostalgic(jstsmaxx@gmail.com)
+// Last Modified On : 2026-07-15  14:44
+// ****************************************************************************************************************************************
+// <copyright file="EfAuthRepository.cs" company="">
+//     Copyright ©  2011-2026. All rights reserved.
+// </copyright>
+// ****************************************************************************************************************************************
+
+using Microsoft.EntityFrameworkCore;
+using NavyblueWebApi.Application.Authentication;
+using NavyblueWebApi.Domain.Authentication;
+using NavyblueWebApi.Infrastructure.Persistence;
+
+namespace NavyblueWebApi.Infrastructure.Authentication;
+
+/// <summary>
+///     EF Core implementation of <see cref="IAuthRepository" /> (MySQL via Pomelo).
+/// </summary>
+public sealed class EfAuthRepository(AppDbContext db) : IAuthRepository
+
+{
+    #region IAuthRepository Members
+
+    public async ValueTask<Auth?> FindByLoginAsync(string login, CancellationToken cancellationToken = default)
+
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(login);
+
+        return await db.Auths
+            .FirstOrDefaultAsync(a => a.Login == login, cancellationToken)
+            .ConfigureAwait(false);
+    }
+
+    public async ValueTask<Auth?> FindByUserIdAsync(long userId, CancellationToken cancellationToken = default)
+        => await db.Auths.FirstOrDefaultAsync(a => a.UserId == userId, cancellationToken).ConfigureAwait(false);
+
+    public async Task AddAsync(Auth auth, CancellationToken cancellationToken = default)
+
+    {
+        ArgumentNullException.ThrowIfNull(auth);
+
+        await db.Auths.AddAsync(auth, cancellationToken).ConfigureAwait(false);
+    }
+
+    public void Update(Auth auth)
+
+    {
+        ArgumentNullException.ThrowIfNull(auth);
+
+        db.Auths.Update(auth);
+    }
+
+    public void Remove(Auth auth)
+
+    {
+        ArgumentNullException.ThrowIfNull(auth);
+
+        db.Auths.Remove(auth);
+    }
+
+    #endregion
+}

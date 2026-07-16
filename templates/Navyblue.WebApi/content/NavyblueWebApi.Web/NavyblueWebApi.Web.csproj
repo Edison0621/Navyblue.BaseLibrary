@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
@@ -11,8 +11,8 @@
   <ItemGroup>
     <ProjectReference Include="..\NavyblueWebApi.Application\NavyblueWebApi.Application.csproj" />
     <ProjectReference Include="..\NavyblueWebApi.Infrastructure\NavyblueWebApi.Infrastructure.csproj" />
-    <PackageReference Include="Navyblue.Foundation.AspNetCore" Version="3.0.0" />
-    <PackageReference Include="Navyblue.Foundation.Cqrs" Version="3.0.0" />
+    <PackageReference Include="Navyblue.Foundation.AspNetCore" Version="3.1.0" />
+    <PackageReference Include="Navyblue.Foundation.Cqrs" Version="3.1.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="9.0.3" />
     <PackageReference Include="Serilog.AspNetCore" Version="9.0.0" />
     <PackageReference Include="Serilog.Settings.Configuration" Version="9.0.0" />

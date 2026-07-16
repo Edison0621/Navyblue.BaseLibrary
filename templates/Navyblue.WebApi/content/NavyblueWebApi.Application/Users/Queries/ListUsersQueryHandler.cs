@@ -1,4 +1,4 @@
-﻿using Navyblue.Foundation.Cqrs;
+using Navyblue.Foundation.Cqrs;
 using Navyblue.Foundation.Data;
 using NavyblueWebApi.Domain.Users;
 using NavyblueWebApi.Model.Users;
@@ -65,4 +65,4 @@ public sealed class ListUsersQueryHandler(IUserRepository userRepository)
             page.PageSize);
     }
 }
-
+

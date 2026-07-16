@@ -1,6 +1,6 @@
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011">
   <Metadata>
-    <Identity Id="Navyblue.Templates.WebApi.Vsix" Version="3.1.0" Language="en-US" Publisher="Navyblue" />
+    <Identity Id="Navyblue.Templates.WebApi.Vsix" Version="3.2.0" Language="en-US" Publisher="Navyblue" />
     <DisplayName>Navyblue ASP.NET Core Web API Templates</DisplayName>
     <Description xml:space="preserve">Installs the Navyblue layered DDD/CQRS ASP.NET Core Web API project template (dotnet new navyblue-webapi) for Visual Studio 2022+.</Description>
     <MoreInfo>https://github.com/Edison0621/Navyblue.BaseLibrary</MoreInfo>

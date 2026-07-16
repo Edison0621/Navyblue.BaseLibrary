@@ -1,4 +1,4 @@
-﻿# Navyblue.Samples
+# Navyblue.Samples
 
 End-to-end DDD/CQRS sample on **Navyblue Foundation** — the reference implementation behind the
 `navyblue-webapi` project template.

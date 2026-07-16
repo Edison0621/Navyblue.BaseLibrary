@@ -1,4 +1,4 @@
-﻿using Navyblue.Foundation.Caching;
+using Navyblue.Foundation.Caching;
 using Navyblue.Foundation.Cqrs;
 using NavyblueWebApi.Domain.Users;
 using NavyblueWebApi.Model.Users;
@@ -69,4 +69,4 @@ public sealed class GetUserQueryHandler(IUserRepository userRepository, IDistrib
         ModifiedBy = user.ModifiedBy
     };
 }
-
+

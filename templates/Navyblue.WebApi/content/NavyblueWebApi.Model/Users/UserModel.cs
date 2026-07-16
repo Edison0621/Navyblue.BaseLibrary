@@ -1,1 +1,49 @@
-﻿// ****************************************************************************************************************************************// Project          : NavyblueWebApi// File             : UserModel.cs// Created          : 2026-07-10  17:07// // Last Modified By : kitt-nostalgic(jstsmaxx@gmail.com)// Last Modified On : 2026-07-15  14:44// ****************************************************************************************************************************************// <copyright file="UserModel.cs" company="">//     Copyright ©  2011-2026. All rights reserved.// </copyright>// ****************************************************************************************************************************************namespace NavyblueWebApi.Model.Users;/// <summary>///     Read model returned by user queries and write endpoints./// </summary>public sealed class UserModel{    public required long Id { get; init; }    public required string Name { get; init; }    public required string Email { get; init; }    /// <summary>Maps to domain <c>UserStatus</c> (1 = Active, 2 = Inactive).</summary>    public required int Status { get; init; }    public string StatusName => this.Status switch    {        1 => "Active",        2 => "Inactive",        _ => "Unknown"    };    public required DateTimeOffset CreatedAt { get; init; }    public string? CreatedBy { get; init; }    public DateTimeOffset? ModifiedAt { get; init; }    public string? ModifiedBy { get; init; }}
+// ****************************************************************************************************************************************
+// Project          : NavyblueWebApi
+// File             : UserModel.cs
+// Created          : 2026-07-10  17:07
+// 
+// Last Modified By : kitt-nostalgic(jstsmaxx@gmail.com)
+// Last Modified On : 2026-07-15  14:44
+// ****************************************************************************************************************************************
+// <copyright file="UserModel.cs" company="">
+//     Copyright ©  2011-2026. All rights reserved.
+// </copyright>
+// ****************************************************************************************************************************************
+
+namespace NavyblueWebApi.Model.Users;
+
+/// <summary>
+///     Read model returned by user queries and write endpoints.
+/// </summary>
+public sealed class UserModel
+
+{
+    public required long Id { get; init; }
+
+    public required string Name { get; init; }
+
+    public required string Email { get; init; }
+
+    /// <summary>Maps to domain <c>UserStatus</c> (1 = Active, 2 = Inactive).</summary>
+
+    public required int Status { get; init; }
+
+    public string StatusName => this.Status switch
+
+    {
+        1 => "Active",
+
+        2 => "Inactive",
+
+        _ => "Unknown"
+    };
+
+    public required DateTimeOffset CreatedAt { get; init; }
+
+    public string? CreatedBy { get; init; }
+
+    public DateTimeOffset? ModifiedAt { get; init; }
+
+    public string? ModifiedBy { get; init; }
+}

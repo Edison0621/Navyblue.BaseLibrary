@@ -1,4 +1,4 @@
-﻿using Navyblue.Samples.Application.Authentication;
+using Navyblue.Samples.Application.Authentication;
 using Navyblue.Samples.Application.Users;
 using Navyblue.Samples.Infrastructure.Authentication;
 using Navyblue.Samples.Infrastructure.Persistence;

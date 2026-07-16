@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Options;
 using Navyblue.Foundation.Cqrs;
 using Navyblue.Foundation.Domain;
 using Navyblue.Foundation.Primitives;
@@ -84,4 +84,4 @@ public sealed class AuthCommandHandler(
             .ConfigureAwait(false);
     }
 }
-
+

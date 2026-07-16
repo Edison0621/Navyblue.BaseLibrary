@@ -1,4 +1,4 @@
-﻿using Navyblue.Samples.Application.Authentication.Commands;
+using Navyblue.Samples.Application.Authentication.Commands;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Navyblue.Foundation.Application;

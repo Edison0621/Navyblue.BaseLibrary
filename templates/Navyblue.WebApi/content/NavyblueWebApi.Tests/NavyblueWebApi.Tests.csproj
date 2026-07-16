@@ -16,7 +16,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Navyblue.Foundation" Version="3.0.0" />
+    <PackageReference Include="Navyblue.Foundation" Version="3.1.0" />
     <PackageReference Include="Navyblue.Foundation.Testing" Version="3.0.0" />
   </ItemGroup>
 

@@ -1,4 +1,4 @@
-﻿# NavyblueWebApi
+# NavyblueWebApi
 
 Layered DDD/CQRS ASP.NET Core Web API generated from the **Navyblue** project template.  
 Persistence: **EF Core + Pomelo + MySQL 8.0** · Cache: **Redis** (StackExchange.Redis).

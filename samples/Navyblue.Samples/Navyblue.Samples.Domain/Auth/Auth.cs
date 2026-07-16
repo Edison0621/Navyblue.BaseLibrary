@@ -1,4 +1,4 @@
-﻿using Navyblue.Foundation.Domain;
+using Navyblue.Foundation.Domain;
 
 namespace Navyblue.Samples.Domain.Authentication;
 

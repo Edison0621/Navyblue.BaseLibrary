@@ -132,7 +132,7 @@ public static class HmacHashing
 /// </summary>
 public static class PasswordHasher
 {
-    private const string AlgorithmPrefix = "pbkdf2-sha256$";
+    private const string ALGORITHM_PREFIX = "pbkdf2-sha256$";
 
     /// <summary>
     /// </summary>
@@ -151,7 +151,7 @@ public static class PasswordHasher
 #endif
         byte[] salt = RandomNumberGenerator.GetBytes(saltSize);
         byte[] hash = DerivePbkdf2(password, salt, iterations, hashSize);
-        return $"{AlgorithmPrefix}{iterations}${Convert.ToBase64String(salt)}${Convert.ToBase64String(hash)}";
+        return $"{ALGORITHM_PREFIX}{iterations}${Convert.ToBase64String(salt)}${Convert.ToBase64String(hash)}";
     }
 
     /// <summary>
@@ -215,10 +215,10 @@ public static class PasswordHasher
             return false;
 
         ReadOnlySpan<char> span = stored.AsSpan();
-        if (!span.StartsWith(AlgorithmPrefix, StringComparison.Ordinal))
+        if (!span.StartsWith(ALGORITHM_PREFIX, StringComparison.Ordinal))
             return false;
 
-        span = span[AlgorithmPrefix.Length..];
+        span = span[ALGORITHM_PREFIX.Length..];
         int first = span.IndexOf('$');
         if (first <= 0 || !int.TryParse(span[..first], out iterations) || iterations <= 0)
             return false;

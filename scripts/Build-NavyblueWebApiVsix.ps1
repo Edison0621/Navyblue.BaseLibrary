@@ -60,7 +60,7 @@ if (-not (Test-Path $built)) {
 }
 if (-not $built -or -not (Test-Path $built)) { throw "No .vsix produced under $VsixDir" }
 
-$dest = Join-Path $VsixOut "Navyblue.Templates.WebApi.Vsix.3.1.0.vsix"
+$dest = Join-Path $VsixOut "Navyblue.Templates.WebApi.Vsix.3.2.0.vsix"
 Copy-Item $built $dest -Force
 
 Write-Host ""

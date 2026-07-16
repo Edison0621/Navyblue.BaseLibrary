@@ -1,4 +1,4 @@
-﻿using Navyblue.Foundation.Application;
+using Navyblue.Foundation.Application;
 using Navyblue.Foundation.Cqrs;
 using Navyblue.Foundation.Domain;
 using Navyblue.Foundation.Primitives;
@@ -83,4 +83,4 @@ public sealed class AddUserCommandHandler(
         return new IdCommandResult(userId.ToString());
     }
 }
-
+

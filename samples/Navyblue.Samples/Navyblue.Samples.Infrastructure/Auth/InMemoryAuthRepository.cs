@@ -1,4 +1,4 @@
-﻿using System.Collections.Concurrent;
+using System.Collections.Concurrent;
 using Navyblue.Samples.Application.Authentication;
 using Navyblue.Samples.Domain.Authentication;
 
