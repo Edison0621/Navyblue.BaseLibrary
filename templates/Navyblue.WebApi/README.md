@@ -35,7 +35,7 @@ Open Swagger at the launch URL (default `http://localhost:5180/swagger`).
 ## Install (NuGet package)
 
 ```bash
-dotnet new install Navyblue.Templates.WebApi::3.2.0
+dotnet new install Navyblue.Templates.WebApi::3.3.0
 dotnet new navyblue-webapi -n MyCompany.MyService
 ```
 
