@@ -8,11 +8,9 @@ namespace NavyblueWebApi.Application.Users.Queries;
 /// <summary>
 ///     Returns a single user by id, or null when not found.
 /// </summary>
-public sealed class GetUserQuery : Query<UserModel?>
+public sealed class GetUserQuery(long userId) : Query<UserModel?>
 {
-    public GetUserQuery(long userId) => this.UserId = userId;
-
-    public long UserId { get; }
+    public long UserId { get; } = userId;
 
     public override string DisplayName => "GetUser";
 

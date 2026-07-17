@@ -11,21 +11,14 @@ namespace NavyblueWebApi.Application.Users.Commands;
 /// <summary>
 ///     Updates an existing user's name and/or email.
 /// </summary>
-public sealed class UpdateUserCommand : Command<IdCommandResult>
+public sealed class UpdateUserCommand(long userId, string? name, string? email) : Command<IdCommandResult>
 {
-    public UpdateUserCommand(long userId, string? name, string? email)
-    {
-        this.UserId = userId;
-        this.Name = name;
-        this.Email = email;
-    }
-
     /// <summary>Identifier of the user to update.</summary>
-    public long UserId { get; }
+    public long UserId { get; } = userId;
 
-    public string? Name { get; }
+    public string? Name { get; } = name;
 
-    public string? Email { get; }
+    public string? Email { get; } = email;
 
     public override string DisplayName => "UpdateUser";
 

@@ -8,20 +8,13 @@ namespace NavyblueWebApi.Application.Users.Queries;
 /// <summary>
 ///     Paged user list query.
 /// </summary>
-public sealed class ListUsersQuery : Query<PageData<UserModel>>
+public sealed class ListUsersQuery(string? keyword = null, int pageIndex = 1, int pageSize = 20) : Query<PageData<UserModel>>
 {
-    public ListUsersQuery(string? keyword = null, int pageIndex = 1, int pageSize = 20)
-    {
-        this.Keyword = keyword;
-        this.PageIndex = pageIndex;
-        this.PageSize = pageSize;
-    }
+    public string? Keyword { get; } = keyword;
 
-    public string? Keyword { get; }
+    public int PageIndex { get; } = pageIndex;
 
-    public int PageIndex { get; }
-
-    public int PageSize { get; }
+    public int PageSize { get; } = pageSize;
 
     public override string DisplayName => "ListUsers";
 

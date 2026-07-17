@@ -12,21 +12,14 @@ namespace NavyblueWebApi.Application.Users.Commands;
 /// <summary>
 ///     Creates a new user. Returns the generated user id.
 /// </summary>
-public sealed class AddUserCommand : Command<IdCommandResult>
+public sealed class AddUserCommand(string name, string email, string? password = null) : Command<IdCommandResult>
 {
-    public AddUserCommand(string name, string email, string? password = null)
-    {
-        this.Name = name;
-        this.Email = email;
-        this.Password = password;
-    }
+    public string Name { get; } = name;
 
-    public string Name { get; }
-
-    public string Email { get; }
+    public string Email { get; } = email;
 
     /// <summary>Optional initial password. When supplied, an Auth credential is created alongside the user.</summary>
-    public string? Password { get; }
+    public string? Password { get; } = password;
 
     public override string DisplayName => "AddUser";
 

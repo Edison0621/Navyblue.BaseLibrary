@@ -23,7 +23,6 @@ namespace NavyblueWebApi.Infrastructure.Caching;
 ///     StackExchange.Redis implementation of <see cref="IDistributedCacheProvider" />.
 /// </summary>
 public sealed class RedisDistributedCacheProvider : IDistributedCacheProvider
-
 {
     private static readonly JsonSerializerOptions _serializerOptions = new(JsonSerializerDefaults.Web);
 

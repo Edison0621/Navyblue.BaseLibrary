@@ -23,7 +23,6 @@ namespace NavyblueWebApi.Infrastructure.Users;
 ///     EF Core implementation of <see cref="IUserRepository" /> (MySQL via Pomelo).
 /// </summary>
 public sealed class EfUserRepository(AppDbContext db) : IUserRepository
-
 {
     #region IUserRepository Members
 
@@ -31,7 +30,6 @@ public sealed class EfUserRepository(AppDbContext db) : IUserRepository
         => await db.Users.FirstOrDefaultAsync(u => u.Id == id, cancellationToken).ConfigureAwait(false);
 
     public async ValueTask<User?> FindByEmailAsync(string email, CancellationToken cancellationToken = default)
-
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(email);
 
@@ -47,21 +45,16 @@ public sealed class EfUserRepository(AppDbContext db) : IUserRepository
             .ConfigureAwait(false);
 
     public async Task<PageData<User>> PageAsync(PageQuery page, string? keyword = null, CancellationToken cancellationToken = default)
-
     {
         ArgumentNullException.ThrowIfNull(page);
 
         int pageIndex = Math.Max(page.PageIndex, 1);
-
         int pageSize = Math.Clamp(page.PageSize, 1, 200);
-
         IQueryable<User> query = db.Users.AsQueryable();
 
         if (!string.IsNullOrWhiteSpace(keyword))
-
         {
             string term = keyword.Trim();
-
             query = query.Where(u => u.Name.Contains(term) || u.Email.Contains(term));
         }
 
@@ -78,7 +71,6 @@ public sealed class EfUserRepository(AppDbContext db) : IUserRepository
     }
 
     public async Task AddAsync(User user, CancellationToken cancellationToken = default)
-
     {
         ArgumentNullException.ThrowIfNull(user);
 
@@ -86,7 +78,6 @@ public sealed class EfUserRepository(AppDbContext db) : IUserRepository
     }
 
     public void Update(User user)
-
     {
         ArgumentNullException.ThrowIfNull(user);
 
@@ -94,7 +85,6 @@ public sealed class EfUserRepository(AppDbContext db) : IUserRepository
     }
 
     public void Remove(User user)
-
     {
         ArgumentNullException.ThrowIfNull(user);
 

@@ -24,22 +24,17 @@ namespace NavyblueWebApi.Application.Authentication.Commands;
 /// <summary>
 ///     Exchanges a valid refresh token for a new access + refresh token pair (rotation).
 /// </summary>
-public sealed class RefreshTokenCommand : Command<AuthCommandResult>
-
+public sealed class RefreshTokenCommand(string refreshToken) : Command<AuthCommandResult>
 {
-    public RefreshTokenCommand(string refreshToken) => this.RefreshToken = refreshToken ?? string.Empty;
-
-    public string RefreshToken { get; }
+    public string RefreshToken { get; } = refreshToken ?? string.Empty;
 
     public override string DisplayName => "RefreshToken";
 
     public override string Id { get; } = Guid.NewGuid().ToString("N");
 
     public override bool Validate(out string validationErrorMessage)
-
     {
         if (string.IsNullOrWhiteSpace(this.RefreshToken))
-
         {
             validationErrorMessage = "Refresh token is required.";
 
@@ -59,12 +54,10 @@ public sealed class RefreshTokenCommandHandler(
     IIdGenerator<long> idGenerator,
     IOptions<RefreshTokenOptions> refreshTokenOptions)
     : CommandHandler<RefreshTokenCommand, AuthCommandResult>
-
 {
     private readonly RefreshTokenOptions _refreshTokenOptions = refreshTokenOptions.Value;
 
     protected override async Task<AuthCommandResult> ProcessRequest(RefreshTokenCommand command)
-
     {
         string hash = RefreshTokenProtector.Hash(command.RefreshToken.Trim());
 
@@ -72,14 +65,12 @@ public sealed class RefreshTokenCommandHandler(
                                  ?? throw new UnauthorizedException("Invalid refresh token.");
 
         if (!existing.IsActive())
-
             throw new UnauthorizedException("Refresh token is expired or revoked.");
 
         User? user = await userRepository.FindAsync(existing.UserId).ConfigureAwait(false)
                      ?? throw new UnauthorizedException("Invalid refresh token.");
 
         if (user.Status is not UserStatus.Active)
-
             throw new ForbiddenException("User account is inactive.");
 
         AuthCommandResult issued = await TokenIssueHelper.IssueAsync(
@@ -91,7 +82,6 @@ public sealed class RefreshTokenCommandHandler(
             .ConfigureAwait(false);
 
         existing.Revoke(RefreshTokenProtector.Hash(issued.RefreshToken));
-
         refreshTokenRepository.Update(existing);
 
         return issued;

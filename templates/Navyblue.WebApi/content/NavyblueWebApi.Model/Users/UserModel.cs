@@ -17,7 +17,6 @@ namespace NavyblueWebApi.Model.Users;
 ///     Read model returned by user queries and write endpoints.
 /// </summary>
 public sealed class UserModel
-
 {
     public required long Id { get; init; }
 

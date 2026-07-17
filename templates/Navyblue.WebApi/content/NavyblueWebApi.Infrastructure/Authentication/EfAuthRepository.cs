@@ -22,7 +22,6 @@ namespace NavyblueWebApi.Infrastructure.Authentication;
 ///     EF Core implementation of <see cref="IAuthRepository" /> (MySQL via Pomelo).
 /// </summary>
 public sealed class EfAuthRepository(AppDbContext db) : IAuthRepository
-
 {
     #region IAuthRepository Members
 

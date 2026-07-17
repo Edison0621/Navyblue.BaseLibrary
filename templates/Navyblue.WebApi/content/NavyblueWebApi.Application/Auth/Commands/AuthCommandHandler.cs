@@ -12,17 +12,11 @@ namespace NavyblueWebApi.Application.Authentication.Commands;
 /// <summary>
 ///     Authenticates a user by login (email) and password.
 /// </summary>
-public sealed class AuthCommand : Command<AuthCommandResult>
+public sealed class AuthCommand(string login, string password) : Command<AuthCommandResult>
 {
-    public AuthCommand(string login, string password)
-    {
-        this.Login = login;
-        this.Password = password;
-    }
+    public string Login { get; } = login;
 
-    public string Login { get; }
-
-    public string Password { get; }
+    public string Password { get; } = password;
 
     public override string DisplayName => "Auth";
 

@@ -25,18 +25,15 @@ public sealed class AuthCommandResult(
     string refreshToken,
     DateTimeOffset accessTokenExpiresAt,
     DateTimeOffset refreshTokenExpiresAt) : CommandResult(true)
-
 {
     public long UserId { get; } = userId;
 
     public string UserName { get; } = userName;
 
     /// <summary>JWT bearer access token.</summary>
-
     public string AccessToken { get; } = accessToken;
 
     /// <summary>Opaque refresh token (store securely; shown only once).</summary>
-
     public string RefreshToken { get; } = refreshToken;
 
     public DateTimeOffset AccessTokenExpiresAt { get; } = accessTokenExpiresAt;
@@ -44,6 +41,5 @@ public sealed class AuthCommandResult(
     public DateTimeOffset RefreshTokenExpiresAt { get; } = refreshTokenExpiresAt;
 
     /// <summary>Alias for <see cref="AccessToken" /> (older clients).</summary>
-
     public string Token => this.AccessToken;
 }

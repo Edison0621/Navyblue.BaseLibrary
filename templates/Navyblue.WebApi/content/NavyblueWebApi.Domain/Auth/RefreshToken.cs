@@ -19,25 +19,19 @@ namespace NavyblueWebApi.Domain.Authentication;
 ///     Opaque refresh token persisted as a SHA-256 hash. Plaintext is returned to the client once.
 /// </summary>
 public sealed class RefreshToken : Entity<long>
-
 {
     private RefreshToken() : base(default)
-
     {
         this.TokenHash = null!;
     }
 
     public RefreshToken(long id, long userId, string tokenHash, DateTimeOffset expiresAt) : base(id)
-
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(tokenHash);
 
         this.UserId = userId;
-
         this.TokenHash = tokenHash;
-
         this.ExpiresAt = expiresAt;
-
         this.CreatedAt = DateTimeOffset.UtcNow;
     }
 
@@ -52,7 +46,6 @@ public sealed class RefreshToken : Entity<long>
     public DateTimeOffset? RevokedAt { get; private set; }
 
     /// <summary>Hash of the replacement token after rotation (audit trail).</summary>
-
     public string? ReplacedByTokenHash { get; private set; }
 
     public bool IsRevoked => this.RevokedAt is not null;
@@ -62,12 +55,10 @@ public sealed class RefreshToken : Entity<long>
     public bool IsActive(DateTimeOffset? utcNow = null) => !this.IsRevoked && !this.IsExpired(utcNow);
 
     public void Revoke(string? replacedByTokenHash = null, DateTimeOffset? revokedAt = null)
-
     {
         if (this.IsRevoked) return;
 
         this.RevokedAt = revokedAt ?? DateTimeOffset.UtcNow;
-
         this.ReplacedByTokenHash = replacedByTokenHash;
     }
 }

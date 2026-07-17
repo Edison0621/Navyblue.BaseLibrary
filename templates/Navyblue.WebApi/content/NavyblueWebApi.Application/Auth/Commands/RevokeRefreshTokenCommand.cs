@@ -19,22 +19,17 @@ namespace NavyblueWebApi.Application.Authentication.Commands;
 /// <summary>
 ///     Revokes a refresh token (logout). Idempotent when the token is unknown/already revoked.
 /// </summary>
-public sealed class RevokeRefreshTokenCommand : Command<IdCommandResult>
-
+public sealed class RevokeRefreshTokenCommand(string refreshToken) : Command<IdCommandResult>
 {
-    public RevokeRefreshTokenCommand(string refreshToken) => this.RefreshToken = refreshToken ?? string.Empty;
-
-    public string RefreshToken { get; }
+    public string RefreshToken { get; } = refreshToken ?? string.Empty;
 
     public override string DisplayName => "RevokeRefreshToken";
 
     public override string Id { get; } = Guid.NewGuid().ToString("N");
 
     public override bool Validate(out string validationErrorMessage)
-
     {
         if (string.IsNullOrWhiteSpace(this.RefreshToken))
-
         {
             validationErrorMessage = "Refresh token is required.";
 
@@ -49,23 +44,17 @@ public sealed class RevokeRefreshTokenCommand : Command<IdCommandResult>
 
 public sealed class RevokeRefreshTokenCommandHandler(IRefreshTokenRepository refreshTokenRepository)
     : CommandHandler<RevokeRefreshTokenCommand, IdCommandResult>
-
 {
     protected override async Task<IdCommandResult> ProcessRequest(RevokeRefreshTokenCommand command)
-
     {
         string hash = RefreshTokenProtector.Hash(command.RefreshToken.Trim());
-
         RefreshToken? existing = await refreshTokenRepository.FindByTokenHashAsync(hash).ConfigureAwait(false);
 
         if (existing is null || existing.IsRevoked)
-
             return new IdCommandResult("revoked");
 
         existing.Revoke();
-
         refreshTokenRepository.Update(existing);
-
         return new IdCommandResult(existing.Id.ToString());
     }
 }

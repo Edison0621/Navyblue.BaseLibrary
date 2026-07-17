@@ -9,11 +9,9 @@ namespace NavyblueWebApi.Application.Users.Commands;
 /// <summary>
 ///     Marks a user inactive without deleting the record.
 /// </summary>
-public sealed class InactivateUserCommand : Command<IdCommandResult>
+public sealed class InactivateUserCommand(long userId) : Command<IdCommandResult>
 {
-    public InactivateUserCommand(long userId) => this.UserId = userId;
-
-    public long UserId { get; }
+    public long UserId { get; } = userId;
 
     public override string DisplayName => "InactivateUser";
 

@@ -20,7 +20,6 @@ namespace NavyblueWebApi.Infrastructure.Caching;
 ///     Reports Redis connectivity via <see cref="IConnectionMultiplexer" />.
 /// </summary>
 public sealed class RedisHealthCheck(IConnectionMultiplexer multiplexer) : IHealthCheck
-
 {
     #region IHealthCheck Members
 

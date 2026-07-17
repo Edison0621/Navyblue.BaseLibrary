@@ -22,7 +22,6 @@ namespace NavyblueWebApi.Infrastructure.Persistence;
 ///     EF Core <see cref="DbContext" /> for the Navyblue Web API template (MySQL 8.0 via Pomelo).
 /// </summary>
 public sealed class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options)
-
 {
     public DbSet<User> Users => this.Set<User>();
 
@@ -31,12 +30,9 @@ public sealed class AppDbContext(DbContextOptions<AppDbContext> options) : DbCon
     public DbSet<RefreshToken> RefreshTokens => this.Set<RefreshToken>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
-
     {
         modelBuilder.ApplyConfiguration(new UserConfiguration());
-
         modelBuilder.ApplyConfiguration(new AuthConfiguration());
-
         modelBuilder.ApplyConfiguration(new RefreshTokenConfiguration());
 
         base.OnModelCreating(modelBuilder);

@@ -18,7 +18,6 @@ using NavyblueWebApi.Domain.Users;
 namespace NavyblueWebApi.Application.Authentication.Commands;
 
 public static class TokenIssueHelper
-
 {
     public static async Task<AuthCommandResult> IssueAsync(
         User user,

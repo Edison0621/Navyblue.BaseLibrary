@@ -11,11 +11,9 @@ namespace NavyblueWebApi.Application.Users.Commands;
 /// <summary>
 ///     Soft-deletes a user permanently from the active set (row retained).
 /// </summary>
-public sealed class DeleteUserCommand : Command<IdCommandResult>
+public sealed class DeleteUserCommand(long userId) : Command<IdCommandResult>
 {
-    public DeleteUserCommand(long userId) => this.UserId = userId;
-
-    public long UserId { get; }
+    public long UserId { get; } = userId;
 
     public override string DisplayName => "DeleteUser";
 

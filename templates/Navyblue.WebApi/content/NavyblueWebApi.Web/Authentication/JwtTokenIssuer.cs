@@ -21,7 +21,6 @@ namespace NavyblueWebApi.Web.Authentication;
 ///     Issues JWT access tokens via Navyblue <see cref="IJwtTokenService" />.
 /// </summary>
 public sealed class JwtTokenIssuer(IJwtTokenService jwtTokenService, JwtOptions jwtOptions) : ITokenIssuer
-
 {
     #region ITokenIssuer Members
 
@@ -29,12 +28,10 @@ public sealed class JwtTokenIssuer(IJwtTokenService jwtTokenService, JwtOptions 
         long userId,
         string userName,
         IEnumerable<KeyValuePair<string, string>>? extraClaims = null)
-
     {
         List<Claim> claims = [new(ClaimTypes.Name, userName)];
 
         if (extraClaims is not null)
-
         {
             claims.AddRange(extraClaims.Select(claim => new Claim(claim.Key, claim.Value)));
         }
@@ -42,12 +39,9 @@ public sealed class JwtTokenIssuer(IJwtTokenService jwtTokenService, JwtOptions 
         DateTimeOffset expiresAt = DateTimeOffset.UtcNow.Add(jwtOptions.Expire);
 
         string value = jwtTokenService.CreateToken(new JwtTokenDescriptor
-
         {
             Subject = userId.ToString(),
-
             Claims = claims,
-
             Expires = expiresAt
         });
 

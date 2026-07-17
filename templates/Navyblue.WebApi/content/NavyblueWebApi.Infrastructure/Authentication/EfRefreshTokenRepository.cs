@@ -19,7 +19,6 @@ using NavyblueWebApi.Infrastructure.Persistence;
 namespace NavyblueWebApi.Infrastructure.Authentication;
 
 public sealed class EfRefreshTokenRepository(AppDbContext db) : IRefreshTokenRepository
-
 {
     #region IRefreshTokenRepository Members
 

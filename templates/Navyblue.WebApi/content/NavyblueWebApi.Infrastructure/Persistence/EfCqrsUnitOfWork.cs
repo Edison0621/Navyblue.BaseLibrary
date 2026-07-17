@@ -22,47 +22,38 @@ namespace NavyblueWebApi.Infrastructure.Persistence;
 ///     Begins a MySQL transaction, persists changes on commit, rolls back on failure.
 /// </summary>
 public sealed class EfCqrsUnitOfWork(AppDbContext db) : ICqrsUnitOfWork, IUnitOfWork
-
 {
     private IDbContextTransaction? _transaction;
 
     #region ICqrsUnitOfWork Members
 
     public async Task BeginAsync()
-
     {
         if (this._transaction is not null)
-
             return;
 
         this._transaction = await db.Database.BeginTransactionAsync().ConfigureAwait(false);
     }
 
     public async Task CommitAsync()
-
     {
         await db.SaveChangesAsync().ConfigureAwait(false);
 
         if (this._transaction is null)
-
             return;
 
         await this._transaction.CommitAsync().ConfigureAwait(false);
-
         await this._transaction.DisposeAsync().ConfigureAwait(false);
 
         this._transaction = null;
     }
 
     public async Task RollbackAsync()
-
     {
         if (this._transaction is null)
-
             return;
 
         await this._transaction.RollbackAsync().ConfigureAwait(false);
-
         await this._transaction.DisposeAsync().ConfigureAwait(false);
 
         this._transaction = null;
