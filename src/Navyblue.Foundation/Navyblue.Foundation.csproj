@@ -13,7 +13,7 @@
     <PackageId>Navyblue.Foundation</PackageId>
     <Title>Navyblue.Foundation</Title>
     <Product>Navyblue.Foundation</Product>
-    <VersionPrefix>3.1.0</VersionPrefix>
+    <VersionPrefix>3.1.1</VersionPrefix>
     <Authors>Edison.Ma;Navyblue</Authors>
     <Company>Navyblue</Company>
     <Copyright>Copyright (c) 2020-2026 Edison.Ma</Copyright>
@@ -45,6 +45,6 @@
     <PackageReference Include="Microsoft.Extensions.Options" Version="$(MicrosoftExtensionsVersion)" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Navyblue.BaseLibrary\Navyblue.BaseLibrary.csproj" />
+    <PackageReference Include="Navyblue.BaseLibrary" Version="3.0.0" />
   </ItemGroup>
 </Project>

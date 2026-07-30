@@ -25,13 +25,13 @@ public static class AiTelemetry
     /// <summary>Activity source name used for pipeline and tool spans.</summary>
     public const string ActivitySourceName = "Navyblue.Foundation.AI";
 
-    private static readonly Meter _meterInstance = new(MeterName, "3.1.0");
+    private static readonly Meter _meterInstance = new(MeterName, "3.1.1");
 
     /// <summary>Meter name used for pipeline and tool metrics.</summary>
     public const string MeterName = "Navyblue.Foundation.AI";
 
     /// <summary>Activity source for pipeline stages, tool calls, and agent steps.</summary>
-    public static readonly ActivitySource Source = new(ActivitySourceName, "3.1.0");
+    public static readonly ActivitySource Source = new(ActivitySourceName, "3.1.1");
 
     /// <summary>Counts completed pipeline runs by status.</summary>
     public static readonly Counter<long> PipelineRuns = _meterInstance.CreateCounter<long>("navyblue.ai.pipeline.runs");

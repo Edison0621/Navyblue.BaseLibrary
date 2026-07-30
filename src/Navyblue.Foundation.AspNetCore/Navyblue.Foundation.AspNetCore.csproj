@@ -13,7 +13,7 @@
     <PackageId>Navyblue.Foundation.AspNetCore</PackageId>
     <Title>Navyblue.Foundation.AspNetCore</Title>
     <Product>Navyblue.Foundation</Product>
-    <VersionPrefix>3.1.0</VersionPrefix>
+    <VersionPrefix>3.1.1</VersionPrefix>
     <Authors>Edison.Ma;Navyblue</Authors>
     <Company>Navyblue</Company>
     <Copyright>Copyright (c) 2020-2026 Edison.Ma</Copyright>
@@ -41,7 +41,7 @@
   <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="$(JwtBearerPackageVersion)" />
-    <ProjectReference Include="..\..\Navyblue.BaseLibrary\Navyblue.BaseLibrary.csproj" />
-    <ProjectReference Include="..\Navyblue.Foundation\Navyblue.Foundation.csproj" />
+    <PackageReference Include="Navyblue.BaseLibrary" Version="3.0.0" />
+    <PackageReference Include="Navyblue.Foundation" Version="3.1.1" />
   </ItemGroup>
 </Project>

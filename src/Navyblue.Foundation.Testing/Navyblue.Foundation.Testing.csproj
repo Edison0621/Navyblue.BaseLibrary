@@ -13,7 +13,7 @@
     <PackageId>Navyblue.Foundation.Testing</PackageId>
     <Title>Navyblue.Foundation.Testing</Title>
     <Product>Navyblue.Foundation</Product>
-    <VersionPrefix>3.0.0</VersionPrefix>
+    <VersionPrefix>3.1.1</VersionPrefix>
     <Authors>Edison.Ma;Navyblue</Authors>
     <Company>Navyblue</Company>
     <Copyright>Copyright (c) 2020-2026 Edison.Ma</Copyright>
@@ -30,7 +30,7 @@
     <IsTrimmable Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net8.0'))">false</IsTrimmable>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Navyblue.Foundation\Navyblue.Foundation.csproj" />
-    <ProjectReference Include="..\Navyblue.Foundation.AspNetCore\Navyblue.Foundation.AspNetCore.csproj" />
+    <PackageReference Include="Navyblue.Foundation" Version="3.1.1" />
+    <PackageReference Include="Navyblue.Foundation.AspNetCore" Version="3.1.1" />
   </ItemGroup>
 </Project>

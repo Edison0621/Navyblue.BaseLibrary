@@ -13,7 +13,7 @@
     <PackageId>Navyblue.Foundation.AI</PackageId>
     <Title>Navyblue.Foundation.AI</Title>
     <Product>Navyblue.Foundation</Product>
-    <VersionPrefix>3.1.0</VersionPrefix>
+    <VersionPrefix>3.1.1</VersionPrefix>
     <Authors>Edison.Ma;Navyblue</Authors>
     <Company>Navyblue</Company>
     <Copyright>Copyright (c) 2020-2026 Edison.Ma</Copyright>
@@ -41,6 +41,6 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="$(MicrosoftExtensionsVersion)" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="$(MicrosoftExtensionsVersion)" />
-    <PackageReference Include="Navyblue.Foundation" Version="3.1.0" />
+    <PackageReference Include="Navyblue.Foundation" Version="3.1.1" />
   </ItemGroup>
 </Project>
