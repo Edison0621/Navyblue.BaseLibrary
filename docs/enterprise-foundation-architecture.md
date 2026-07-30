@@ -11,6 +11,7 @@
 | Navyblue.Foundation.Cqrs | CQRS Command/Query/Event 总线、Handler、Pipeline Behaviors、Inbox/Outbox、`AddNavyblueCqrs()` | Application 层 / 需要 CQRS 的业务项目 |
 | Navyblue.Foundation.AspNetCore | ASP.NET Core 接入层：全局异常、TraceId/Correlation、请求日志、当前用户/租户解析、`AddNavyblueFramework()`、`UseNavyblueFramework()` | Web API 项目 |
 | Navyblue.Foundation.Testing | 测试辅助：Fake 用户/租户、审计、TestClock、内存仓储/缓存/幂等/锁、事件 Spy、AspNetCore/JWT 辅助 | 单元测试/集成测试项目 |
+| Navyblue.Foundation.AI | AI 基础：Domain 分类、Intent/Slot 候选、ToolGateway（参数校验 + 弹性）、原子草稿确认与双人复核、多轮会话、权限过滤 RAG、配额、遥测、MCP 桥接（不绑定 LLM SDK） | 需要自然语言意图编排的应用 |
 
 这个结构比“每个能力一个项目”更适合企业内部基础库的第一阶段：开发者心智负担更低，业务项目引用更简单，同时仍然通过命名空间和接口保持模块边界。
 
@@ -120,7 +121,32 @@ app.Run();
 - `InMemoryAuditLogSink` / `FakeHttpRequestContext` / `FakeTenantIdAccessor` / `HttpContextTestHelper` / `JwtTestHelper`
 - `AddNavyblueTestingFoundation()` / `AddNavyblueTestingAspNetCore()`
 
-这些新增能力仍然遵循低耦合原则：核心包不绑定 EF Core、Redis、RabbitMQ、Kafka 等重依赖，后续需要时再做适配包。
+### AI 新增（Navyblue.Foundation.AI）
+
+- `AiWellKnownDomains`：仅 `unknown` / `clarify`（**不内置** HR/Sales 等业务域）
+- `RuleBasedDomainClassifier` + `NavyblueAiOptions.DomainRules`：应用自定义 Domain 字符串与关键词
+- `IIntentRecognizer` / `ISlotResolver` / `ILlmClient`：LLM 仅产候选；最终参数由 Resolver 决定
+- `IAiOrchestrator` / `AiOrchestrator`：Safety → Quota → Conversation → Classify → Recognize → Resolve → Knowledge/Draft/Execute；支持 `IAiPipelineBehavior`
+- `IToolRegistry`（进程单例工具目录）与 `IToolGateway`（请求级执行）分离，避免权限守卫被单例捕获当前用户
+- `ToolGateway`：租户可见性 → 参数校验 → 权限 → 业务规则 → 风险闸门 → 弹性执行 → 审计；缺工具 fail-closed
+- `ToolDefinition.Parameters` / `IToolArgumentValidator`：后端强制校验 LLM 产出的参数（必填、类型、范围、枚举、长度）
+- `ToolExecutionPolicy` / `ToolResilienceCoordinator`：按工具的超时、重试、熔断、并发限流
+- `IDraftStore`：原子状态跃迁 + `TryBeginExecutionAsync` 执行认领，杜绝并发确认重复写；支持取消与过期清理
+- `RequireDistinctApprovers`：高风险草稿的双人复核（maker-checker）
+- `IAiAuditLogger`（返回 `Result`）+ `AuditFailurePolicy.FailClosed`：审计不可用时拒绝工具调用；写操作执行前先落 `tool.executing`
+- `IAiAgent` / `ToolCallingAgent`：多步 Agent，仅经 Gateway，Write 不自动执行；内置 `AiBudget` 与重复调用检测
+- `IConversationStore` + `UserUtterance.ConversationId`：多轮 Clarify 补槽与草稿挂起状态
+- `IKnowledgeRetriever` / `KnowledgeQuery` / `PermissionFilteringKnowledgeRetriever`：RAG 的租户与权限隔离
+- `IContentSafetyFilter` / `IPromptInjectionGuard`：输入拦截、输出脱敏、检索内容注入防护
+- `IAiQuotaGuard`：按用户/租户的调用配额
+- `AiTelemetry`：`ActivitySource` + `Meter`（均为 `Navyblue.Foundation.AI`），可直接接入 OpenTelemetry
+- `IntentEvaluationHarness`：负样本必须 Clarify 的黄金集回归夹具
+- `McpSchemaGenerator`：由参数声明生成 MCP JSON Schema，发布与校验同源
+- `IMcpToolBridge`：MCP 转发到 Gateway
+- 生产 DI：`AddNavyblueAi()` 默认 `FailClosedPermissionGuard`，**不**预置业务 Domain
+- Samples：`DemoDomains` / `DemoErpDomainClassifier` 演示应用如何定义 ERP 业务域
+
+这些新增能力仍然遵循低耦合原则：核心包不绑定 EF Core、Redis、RabbitMQ、Kafka、OpenAI 等重依赖，后续需要时再做适配包。
 
 ## 7. DDD 能力增强
 

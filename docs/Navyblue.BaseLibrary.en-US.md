@@ -18,6 +18,7 @@ Navyblue.BaseLibrary is a modern foundation library for .NET enterprise applicat
 | `Navyblue.Foundation` | `net6.0;net7.0;net8.0;net9.0;net10.0` | DDD, application models, Result, paging, events, caching, idempotency, DI, diagnostics, files, HTTP, locks |
 | `Navyblue.Foundation.AspNetCore` | `net6.0;net7.0;net8.0;net9.0;net10.0` | Standard Web API responses, JWT issuance/JwtBearer, exception mapping, TraceId, tenant context, audit, security headers, Minimal API helpers |
 | `Navyblue.Foundation.Testing` | `net6.0;net7.0;net8.0;net9.0;net10.0` | Test clock, fake user/tenant/auditor, in-memory repo/cache/idempotency/lock, event spies, AspNetCore/JWT helpers, DI |
+| `Navyblue.Foundation.AI` | `net6.0;net7.0;net8.0;net9.0;net10.0` | Domain classify, intent/slot candidates, tool gateway, draft confirmation, audit, MCP bridge (no LLM SDK) |
 
 ## Installation
 
@@ -35,6 +36,9 @@ dotnet add package Navyblue.Foundation.AspNetCore
 
 # Unit and integration testing helpers
 dotnet add package Navyblue.Foundation.Testing
+
+# AI intent pipeline, ToolGateway, draft confirmation (no LLM SDK binding)
+dotnet add package Navyblue.Foundation.AI
 ```
 
 Use project references inside the repository:
@@ -512,15 +516,99 @@ Common types:
 
 Use `AddNavyblueTestingFoundation()` or `AddNavyblueTestingAspNetCore()` to swap production implementations in integration tests; build claims with `TestClaimsPrincipal` and issue tokens with `JwtTestHelper.CreateTokenService()`.
 
+## AI Capabilities (Navyblue.Foundation.AI)
+
+Production AI orchestration: fail-closed by default; **no built-in business domains** (only `unknown`/`clarify`); Domain→Intent→Resolve→Draft/Execute, Knowledge RAG, multi-step Agent, draft ownership/TTL, HighRisk acknowledgement. LLM produces candidates only; final parameters from `ISlotResolver`; writes require draft confirmation; Tools/MCP/Agent go through `IToolGateway`.
+
+```csharp
+using Microsoft.Extensions.DependencyInjection;
+using Navyblue.Foundation.AI;
+using Navyblue.Foundation.Primitives;
+
+var services = new ServiceCollection();
+services.AddNavyblueAi(options =>
+{
+    // Apps register their own domains — the framework does not ship HR/Sales enums
+    options.DomainRules.Add(new DomainKeywordRule("hr", "员工", "工号", "人事"));
+    options.DomainRules.Add(new DomainKeywordRule("sales", "销售额", "毛利", "销售排名"));
+    options.KnowledgeDomains.Add("knowledge");
+    options.DraftTimeToLive = TimeSpan.FromMinutes(30);
+    options.RequireHighRiskAcknowledgement = true;
+    options.RequireDistinctApprovers = true;              // maker-checker for high-risk drafts
+    options.QuotaPermitLimit = 60;                        // per user, per minute
+    options.DefaultToolExecutionPolicy = new ToolExecutionPolicy(
+        Timeout: TimeSpan.FromSeconds(10),
+        MaxRetries: 2,
+        RetryDelay: TimeSpan.FromMilliseconds(200),
+        CircuitBreakerFailureThreshold: 5,
+        CircuitBreakerDuration: TimeSpan.FromSeconds(30));
+});
+
+// The permission guard depends on the current user, so it must be scoped; the rest of the
+// per-request pipeline is scoped by default too.
+services.AddScoped<IPermissionGuard>(sp => new PermissionCheckerGuard(sp.GetRequiredService<IPermissionChecker>()));
+services.AddScoped<IIntentRecognizer, MyIntentRecognizer>();
+services.AddScoped<ISlotResolver, MySlotResolver>();
+
+// Production must register durable stores; otherwise drafts and auditing fail closed.
+services.AddSingleton<IDraftStore, SqlDraftStore>();
+services.AddSingleton<IAiAuditLogger, SqlAiAuditLogger>();
+
+// The tool catalog is a process-wide singleton. Declared parameters are enforced by the gateway,
+// so an LLM cannot smuggle extra or malformed arguments into an Application Service.
+services.AddNavyblueAiTool(new ToolDefinition(
+    "GetSalesRank",
+    "sales rank",
+    ToolRiskLevel.Read,
+    PermissionName: "sales.rank.read",
+    ExecuteAsync: (_, _) => ValueTask.FromResult<object?>(new { Rank = 1 }),
+    Parameters: [new ToolParameterSpec("period", ToolParameterType.String, AllowedValues: ["month", "year"])]));
+
+await using ServiceProvider sp = services.BuildServiceProvider();
+sp.UseNavyblueAiTools();
+
+using IServiceScope scope = sp.CreateScope();
+IAiOrchestrator orchestrator = scope.ServiceProvider.GetRequiredService<IAiOrchestrator>();
+
+// Passing a ConversationId enables multi-turn: the reply to a Clarify is merged with the original question.
+Result<AiPipelineResult> result = await orchestrator.ProcessAsync(
+    new UserUtterance("本月销售额排名", UserId: "u1", TenantId: "t1", ConversationId: "conv-1"));
+```
+
+Production readiness at a glance:
+
+| Concern | Framework default | Notes |
+| --- | --- | --- |
+| Service lifetime | Per-request services are `Scoped` | Configurable via `NavyblueAiOptions.PipelineLifetime`; the tool catalog and circuit state stay singleton |
+| Draft concurrency | Atomic transitions plus an execution claim | Only one concurrent confirmation executes; the rest get `ai.draft.already_executing` |
+| Auditing | `AuditFailurePolicy.FailClosed` | Tool calls fail when no durable audit sink is registered; writes are journalled as `tool.executing` before execution |
+| Draft storage | Fails closed until configured | Use `options.AllowInMemoryPersistence = true` or `UseDevelopmentDefaults()` for development |
+| Tool arguments | Enforced once declared | Required/type/range/enum/length checks; undeclared arguments are rejected |
+| Resilience | Timeout, retry, circuit breaker, concurrency limit | Per-tool `ToolExecutionPolicy`; throw `NonRetryableToolException` for business rejections |
+| Multi-tenancy | `ToolDefinition.TenantIds` | Cross-tenant calls return `ai.tool.tenant_denied` |
+| RAG safety | Tenant and permission filtering, injection screening | `AddNavyblueAiKnowledgeRetriever<T>()` wraps your retriever with the permission filter |
+| Observability | ActivitySource and Meter | Both named `Navyblue.Foundation.AI`; wire straight into OpenTelemetry |
+| Agent | Planner fails closed by default | Built-in budgets (steps, wall clock, tool calls, tokens) and repeat-call detection |
+| Regression guard | `IntentEvaluationHarness` | Negative samples must clarify; run it as a unit test to catch rule regressions |
+
+Rules: framework domains are only `unknown`/`clarify`; apps define business domains as strings; Domain before Intent; multi-domain/low confidence → Clarify; no catch-all SQL tools. ERP demo domains live in Samples (`DemoDomains`).
+
+```bash
+dotnet test tests/Navyblue.Foundation.AI.Tests -c Release
+dotnet test tests/Navyblue.Foundation.AI.Samples -c Release
+```
+
 ## Recommended Layering
 
 ```text
 Web/API Project
   -> Navyblue.Foundation.AspNetCore
+  -> Navyblue.Foundation.AI   (optional)
   -> Navyblue.Foundation
   -> Navyblue.BaseLibrary
 
 Application Project
+  -> Navyblue.Foundation.AI   (optional)
   -> Navyblue.Foundation
   -> Navyblue.BaseLibrary
 

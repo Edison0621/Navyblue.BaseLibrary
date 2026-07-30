@@ -18,10 +18,12 @@ Navyblue.BaseLibrary 是一个面向 .NET 企业应用的现代化基础库，�
 | `Navyblue.Foundation.Cqrs` | `net6.0;net7.0;net8.0;net9.0;net10.0` | Command/Query/Event buses, pipeline behaviors, inbox/outbox, `AddNavyblueCqrs()` |
 | `Navyblue.Foundation.AspNetCore` | `net6.0;net7.0;net8.0;net9.0;net10.0` | ApiResult, JWT, exception mapping, TraceId/CorrelationId, tenant, audit, security headers |
 | `Navyblue.Foundation.Testing` | `net6.0;net7.0;net8.0;net9.0;net10.0` | Fake user/tenant/auditor, TestClock, in-memory repo/cache/idempotency/lock, event spies |
+| `Navyblue.Foundation.AI` | `net6.0;net7.0;net8.0;net9.0;net10.0` | Production AI pipeline: domain/intent/slots, ToolGateway with argument validation and resilience, atomic draft confirm with maker-checker, multi-turn conversations, permission-filtered RAG, quotas, OpenTelemetry, MCP bridge (no LLM SDK; fail-closed) |
 
 ## Samples / 样板
 
 - [Navyblue.Samples](samples/Navyblue.Samples/README.md) — end-to-end CQRS + ApiResult + JWT + Swagger + in-memory repos
+- [Navyblue.Foundation.AI.Samples](tests/Navyblue.Foundation.AI.Samples/README.md) — runnable cookbook for AI intent pipeline / ToolGateway / draft confirm
 - [Web API template](templates/Navyblue.WebApi/README.md) — `dotnet new navyblue-webapi` / Visual Studio project template
 - [VSIX extension](vsix/Navyblue.Templates.WebApi.Vsix/README.md) — install template into Visual Studio / publish to Marketplace
 

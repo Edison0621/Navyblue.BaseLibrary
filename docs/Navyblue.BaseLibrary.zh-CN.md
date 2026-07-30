@@ -18,6 +18,7 @@ Navyblue.BaseLibrary 是一个面向 .NET 企业应用的基础库集合。它�
 | `Navyblue.Foundation` | `net6.0;net7.0;net8.0;net9.0;net10.0` | DDD、应用层模型、Result、分页、事件、缓存、幂等、DI、诊断、文件、HTTP、锁 |
 | `Navyblue.Foundation.AspNetCore` | `net6.0;net7.0;net8.0;net9.0;net10.0` | Web API 标准响应、JWT 签发/JwtBearer、异常映射、TraceId、租户、审计、安全响应头、Minimal API 辅助 |
 | `Navyblue.Foundation.Testing` | `net6.0;net7.0;net8.0;net9.0;net10.0` | 测试时钟、Fake 用户/租户/审计、内存仓储/缓存/幂等/锁、事件收集与 Spy、AspNetCore/JWT 测试辅助与 DI |
+| `Navyblue.Foundation.AI` | `net6.0;net7.0;net8.0;net9.0;net10.0` | Domain 分类、Intent/Slot 候选、ToolGateway、草稿确认、审计、MCP 桥接（不绑定 LLM SDK） |
 
 ## 安装
 
@@ -35,6 +36,9 @@ dotnet add package Navyblue.Foundation.AspNetCore
 
 # 单元测试和集成测试辅助
 dotnet add package Navyblue.Foundation.Testing
+
+# AI 意图管道、ToolGateway、草稿确认（不绑定具体 LLM SDK）
+dotnet add package Navyblue.Foundation.AI
 ```
 
 仓库内项目引用：
@@ -69,6 +73,7 @@ var hash = "hello"u8.ToArray().AsSpan().Sha256();
 | 领域建模、Result、分页、DI | 再加 `Navyblue.Foundation` | 看「DDD 建模」「Result、API Result 和分页」 |
 | Web API / Minimal API | 再加 `Navyblue.Foundation.AspNetCore` | 看「ASP.NET Core 基础设施」「JWT 签发与自动解析」 |
 | 单元测试 Fake | 再加 `Navyblue.Foundation.Testing` | 看「测试辅助」 |
+| AI 意图管道 / ToolGateway | 再加 `Navyblue.Foundation.AI` | 看「AI 能力」 |
 
 最短 Web API 路径：安装 `Navyblue.Foundation.AspNetCore`（会传递引用 Foundation 与 BaseLibrary）→ 复制「ASP.NET Core 基础设施」示例 → 运行后访问 `/_navyblue/ping` 和 `/orders`。
 
@@ -511,15 +516,101 @@ FakeCurrentUser fromPrincipal = FakeCurrentUser.FromPrincipal(principal);
 
 在集成测试里用 `AddNavyblueTestingFoundation()` 或 `AddNavyblueTestingAspNetCore()` 一键替换生产实现；用 `TestClaimsPrincipal` / `JwtTestHelper.CreateTokenService()` 构造 Claims 与真实签发服务。
 
+## AI 能力（Navyblue.Foundation.AI）
+
+生产可用的 AI 编排框架：默认 **fail-closed**；**不内置业务 Domain**（仅 `unknown`/`clarify`）；支持 Domain→Intent→Resolve→Draft/Execute、Knowledge RAG、多步 Agent、草稿归属与 TTL、HighRisk 二次确认。LLM 只产出候选 Intent/Slots；最终参数由 `ISlotResolver` 决定；写操作必须草稿确认；Tool/MCP/Agent 一律经 `IToolGateway`。
+
+```csharp
+using Microsoft.Extensions.DependencyInjection;
+using Navyblue.Foundation.AI;
+using Navyblue.Foundation.Primitives;
+
+var services = new ServiceCollection();
+services.AddNavyblueAi(options =>
+{
+    // 业务域由应用注册，框架不提供 HR/Sales 等枚举
+    options.DomainRules.Add(new DomainKeywordRule("hr", "员工", "工号", "人事"));
+    options.DomainRules.Add(new DomainKeywordRule("sales", "销售额", "毛利", "销售排名"));
+    options.KnowledgeDomains.Add("knowledge");
+    options.DraftTimeToLive = TimeSpan.FromMinutes(30);
+    options.RequireHighRiskAcknowledgement = true;
+    options.RequireDistinctApprovers = true;              // 高风险双人复核
+    options.QuotaPermitLimit = 60;                        // 每用户每分钟 60 次
+    options.DefaultToolExecutionPolicy = new ToolExecutionPolicy(
+        Timeout: TimeSpan.FromSeconds(10),
+        MaxRetries: 2,
+        RetryDelay: TimeSpan.FromMilliseconds(200),
+        CircuitBreakerFailureThreshold: 5,
+        CircuitBreakerDuration: TimeSpan.FromSeconds(30));
+});
+
+// 权限守卫依赖当前用户，必须是 Scoped；框架其余请求级服务默认也是 Scoped。
+services.AddScoped<IPermissionGuard>(sp => new PermissionCheckerGuard(sp.GetRequiredService<IPermissionChecker>()));
+services.AddScoped<IIntentRecognizer, MyIntentRecognizer>();
+services.AddScoped<ISlotResolver, MySlotResolver>();
+
+// 生产必须注册持久化实现，否则草稿与审计会 fail-closed
+services.AddSingleton<IDraftStore, SqlDraftStore>();
+services.AddSingleton<IAiAuditLogger, SqlAiAuditLogger>();
+
+// 工具目录是进程级单例；声明参数后由网关强制校验，LLM 无法夹带额外参数
+services.AddNavyblueAiTool(new ToolDefinition(
+    "GetSalesRank",
+    "销售额排名",
+    ToolRiskLevel.Read,
+    PermissionName: "sales.rank.read",
+    ExecuteAsync: (_, _) => ValueTask.FromResult<object?>(new { Rank = 1 }),
+    Parameters: [new ToolParameterSpec("period", ToolParameterType.String, AllowedValues: ["month", "year"])]));
+
+await using ServiceProvider sp = services.BuildServiceProvider();
+sp.UseNavyblueAiTools();
+
+using IServiceScope scope = sp.CreateScope();
+IAiOrchestrator orchestrator = scope.ServiceProvider.GetRequiredService<IAiOrchestrator>();
+
+// 传入 ConversationId 即可支持多轮：Clarify 之后的下一句会自动与上一句合并补槽
+Result<AiPipelineResult> result = await orchestrator.ProcessAsync(
+    new UserUtterance("本月销售额排名", UserId: "u1", TenantId: "t1", ConversationId: "conv-1"));
+
+// 写操作确认（校验归属；并发确认只会执行一次）
+// await orchestrator.ConfirmDraftAsync(new DraftConfirmationRequest(draftId, true, "u1", "t1", HighRiskAcknowledged: true));
+// await orchestrator.CancelDraftAsync(draftId, "u1", "t1");
+```
+
+生产就绪要点：
+
+| 关注点 | 框架默认 | 说明 |
+| --- | --- | --- |
+| 服务生命周期 | 请求级服务默认 `Scoped` | `NavyblueAiOptions.PipelineLifetime` 可改；工具目录与熔断状态是单例 |
+| 草稿并发 | 原子状态跃迁 + 执行认领 | 并发确认只有一个能进入执行，其余返回 `ai.draft.already_executing` |
+| 审计 | `AuditFailurePolicy.FailClosed` | 未注册持久化审计时工具调用直接失败；写操作执行前先落一条 `tool.executing` |
+| 草稿存储 | 未配置即 fail-closed | 开发期用 `options.AllowInMemoryPersistence = true` 或 `UseDevelopmentDefaults()` |
+| 工具参数 | 声明后强制校验 | 必填、类型、范围、枚举、长度；未声明的参数默认拒绝 |
+| 弹性 | 超时 / 重试 / 熔断 / 并发限流 | 按工具配置 `ToolExecutionPolicy`；业务拒绝抛 `NonRetryableToolException` 不重试 |
+| 多租户 | `ToolDefinition.TenantIds` | 跨租户调用返回 `ai.tool.tenant_denied` |
+| RAG 安全 | 租户 + 权限过滤、注入拦截 | `AddNavyblueAiKnowledgeRetriever<T>()` 自动包一层权限过滤 |
+| 可观测性 | ActivitySource / Meter | 名称均为 `Navyblue.Foundation.AI`，可直接接 OpenTelemetry |
+| Agent | Planner 默认 fail-closed | 预算（步数/时长/工具调用/Token）与重复调用检测内置 |
+| 回归防护 | `IntentEvaluationHarness` | 负样本必须 Clarify，作为单测防止规则回归 |
+
+约束摘要：框架 Domain 仅为 `unknown`/`clarify`；业务域用字符串自定义；先 Domain 再 Intent；多 Domain/低置信度 → Clarify；禁止万能 SQL 工具。ERP 示例见 Samples（`DemoDomains`）。
+
+```bash
+dotnet test tests/Navyblue.Foundation.AI.Tests -c Release
+dotnet test tests/Navyblue.Foundation.AI.Samples -c Release
+```
+
 ## 推荐分层引用
 
 ```text
 Web/API Project
   -> Navyblue.Foundation.AspNetCore
+  -> Navyblue.Foundation.AI   (可选)
   -> Navyblue.Foundation
   -> Navyblue.BaseLibrary
 
 Application Project
+  -> Navyblue.Foundation.AI   (可选)
   -> Navyblue.Foundation
   -> Navyblue.BaseLibrary
 
